@@ -1,20 +1,8 @@
 <template>
-  <div>
-    <section class="hero is-primary">
-      <div class="hero-body">
-        <p class="title">
-          dfdfdfsds
-        </p>
-        <p class="subtitle">
-          Boilerplate for Chrome extension using Vue.js and Webpack with
-          auto-reload enabled.
-        </p>
-      </div>
-    </section>
-    <section>
-      <h1>{{ msg }}</h1>
-    </section>
-  </div>
+  <el-container class="container">
+    <el-header>Fuck Mock</el-header>
+    <el-main>Main</el-main>
+  </el-container>
 </template>
 
 <script>
@@ -27,4 +15,9 @@ export default {
 }
 </script>
 
-<style lang="sass"></style>
+<style lang="scss" scoped>
+.container {
+  width: 600px;
+  height: 600px;
+}
+</style>

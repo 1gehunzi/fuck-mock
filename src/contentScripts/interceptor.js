@@ -5,10 +5,10 @@ import { proxy } from 'ajax-hook'
 console.log('dfdfdfdf')
 function hijack(url, { method }) {
   console.log('---------', url, method)
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     // 稍后再替换这段代码
     console.log(`拦截请求 ${method} ${url}`)
-  resolve()
+  reject()
 })
 }
 

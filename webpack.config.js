@@ -17,9 +17,10 @@ function configFunc(env, argv) {
     entry: {
       options: './options/index.js',
       popup: './popup/index.js',
+      webContent: './webContent/index.js',
       background: './background/index.js',
       contentScripts: './contentScripts/index.js',
-      interceptor: './contentScripts/interceptor.js'
+      interceptor: './contentScripts/interceptor.js',
     },
     output: {
       path: path.resolve(__dirname, './dist'),
@@ -61,13 +62,21 @@ function configFunc(env, argv) {
           use: ['vue-style-loader', 'css-loader'],
         },
         {
-          test: /\.(png|jpg|gif|svg)$/,
+          test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
           loader: 'file-loader',
           options: {
             name: '[name].[ext]?[hash]',
             esModule: false,
           },
         },
+        // {
+        //   test: /\.(png|jpg|gif|svg)$/,
+        //   loader: 'file-loader',
+        //   options: {
+        //     name: '[name].[ext]?[hash]',
+        //     esModule: false,
+        //   },
+        // },
       ],
     },
     resolve: {
@@ -99,6 +108,12 @@ function configFunc(env, argv) {
         template: './index.html',
         filename: 'popup.html',
         chunks: ['popup'],
+      }),
+      new HtmlWebpackPlugin({
+        title: 'Fuck Mock',
+        template: './index.html',
+        filename: 'webContent.html',
+        chunks: ['webContent'],
       }),
     ],
   }
