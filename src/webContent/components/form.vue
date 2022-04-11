@@ -1,0 +1,65 @@
+<template>
+  <el-form
+    :inline="false"
+    :model="formData"
+    label-width="80px"
+    label-position="left"
+  >
+    <el-form-item label="Path">
+      <el-input
+        v-model="formData.path"
+        placeholder="请输入接口路径"
+      />
+    </el-form-item>
+    <el-form-item label="Method">
+      <el-select
+        v-model="formData.method"
+        placeholder="请选择请求方法"
+      >
+        <el-option
+          label="GET"
+          value="get"
+        />
+        <el-option
+          label="POST"
+          value="post"
+        />
+      </el-select>
+    </el-form-item>
+    <el-form-item label="Response">
+      <VueJsonEditor v-model="formData.response" />
+    </el-form-item>
+    <el-form-item>
+      <el-button
+        type="primary"
+        @click="onSubmit"
+      >
+        创建
+      </el-button>
+    </el-form-item>
+  </el-form>
+</template>
+
+<script>
+import VueJsonEditor from 'vue-json-editor'
+
+export default {
+  components: {
+    VueJsonEditor,
+  },
+  data() {
+    return {
+      formData: {
+        path: '',
+        method: 'get',
+        response: ''
+      },
+    }
+  },
+  methods: {
+    onSubmit() {
+      console.log('this.formData!', this.formData)
+    },
+  },
+}
+</script>

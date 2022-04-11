@@ -3,22 +3,25 @@
     <el-header>Fuck Mock</el-header>
     <el-main>
       <el-switch v-model="value" />
-      <vue-json-editor
+      <EditorForm />
+      <!-- <vue-json-editor
         v-model="json"
         :show-btns="true"
         :expanded-on-start="true"
         @json-change="onJsonChange"
-      />
+      /> -->
     </el-main>
   </el-container>
 </template>
 
 <script>
-import vueJsonEditor from 'vue-json-editor'
+// import vueJsonEditor from 'vue-json-editor'
+import EditorForm from './components/form.vue'
 
 export default {
   components: {
-    vueJsonEditor,
+    // vueJsonEditor,
+    EditorForm,
   },
   data() {
     return {

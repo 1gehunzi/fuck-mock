@@ -1,8 +1,8 @@
 {
   "author": {
-    "email": "mubaidr@gmail.com",
-    "name": "Muhammad Ubaid Raza",
-    "url": "https://mubaidr.github.io/"
+    "email": "xiyuanyuan91@163.com",
+    "name": "xiyuanyuan",
+    "url": "https://segmentfault.com/u/1023"
   },
   "dependencies": {
     "ajax-hook": "^2.0.3",
@@ -10,7 +10,7 @@
     "vue": "^2.6.11",
     "vue-json-editor": "^1.4.3"
   },
-  "description": "vue-chrome-extension-boilerplate",
+  "description": "help fe mock data",
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
@@ -44,7 +44,7 @@
   "name": "vue-chrome-extension-boilerplate",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mubaidr/vue-chrome-extension-boilerplate.git"
+    "url": "git+https://github.com/xiyuanyuan/fuck-mock.git"
   },
   "scripts": {
     "build": "npm run pack && npm run remove-evals && npm run zip",
