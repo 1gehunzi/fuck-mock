@@ -11,13 +11,15 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 function configFunc(env, argv) {
   const isDevMode = env.NODE_ENV === 'development'
   const config = {
-    devtool: isDevMode ? 'eval-source-map' : false,
+    // devtool: isDevMode ? 'eval-source-map' : false,
+    devtool: false,
     context: path.resolve(__dirname, './src'),
     entry: {
       options: './options/index.js',
       popup: './popup/index.js',
       background: './background/index.js',
       contentScripts: './contentScripts/index.js',
+      interceptor: './contentScripts/interceptor.js'
     },
     output: {
       path: path.resolve(__dirname, './dist'),

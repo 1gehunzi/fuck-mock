@@ -2,7 +2,9 @@
   <div>
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">vue-chrome-extension-boilerplate</p>
+        <p class="title">
+          dfdfdfsds
+        </p>
         <p class="subtitle">
           Boilerplate for Chrome extension using Vue.js and Webpack with
           auto-reload enabled.
