@@ -2,14 +2,7 @@
   <el-container class="container">
     <el-header>Fuck Mock</el-header>
     <el-main>
-      <el-switch v-model="value" />
       <EditorForm />
-      <!-- <vue-json-editor
-        v-model="json"
-        :show-btns="true"
-        :expanded-on-start="true"
-        @json-change="onJsonChange"
-      /> -->
     </el-main>
   </el-container>
 </template>
@@ -25,10 +18,7 @@ export default {
   },
   data() {
     return {
-      value: true,
-      json: {
-        msg: 'demo of jsoneditor',
-      },
+
     }
   },
   methods: {

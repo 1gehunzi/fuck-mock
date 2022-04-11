@@ -1,21 +1,27 @@
-
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
 
-console.log('dfdfdfdf')
+window.addEventListener(
+  'message',
+   (event) => {
+    console.log(event)
+  },
+  false
+)
+
 function hijack(url, { method }) {
   console.log('---------', url, method)
   return new Promise((resolve, reject) => {
     // 稍后再替换这段代码
     console.log(`拦截请求 ${method} ${url}`)
-  reject()
-})
+    reject()
+  })
 }
 
 console.log(proxy)
 
 proxy({
-  onRequest: (config, handler) =>{
+  onRequest: (config, handler) => {
     console.log('config, handler', config, handler)
     hijack(config.url, config)
       .then(({ response }) => {
@@ -51,4 +57,3 @@ if (window.fetch) {
       .catch(() => f(req, config))
   }
 }
-

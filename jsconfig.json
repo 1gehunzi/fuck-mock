@@ -1,6 +1,12 @@
 {
-  "include": ["./src/**/*"],
   "typeAcquisition": {
     "include": ["chrome", "vue", "dom"]
-  }
+  },
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
 }

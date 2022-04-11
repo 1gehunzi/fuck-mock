@@ -7,6 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 
+const resolve = dir => path.resolve(__dirname, dir);
+
 // eslint-disable-next-line
 function configFunc(env, argv) {
   const isDevMode = env.NODE_ENV === 'development'
@@ -82,7 +84,7 @@ function configFunc(env, argv) {
     resolve: {
       alias: {
         vue$: 'vue/dist/vue.runtime.esm.js',
-        bulma$: 'bulma/css/bulma.css',
+         '@': resolve('src')// 这样配置后 @ 可以指向 src 目录
       },
       // extensions: ['.js'],
     },
