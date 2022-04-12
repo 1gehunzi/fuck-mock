@@ -10,6 +10,16 @@ document.documentElement.appendChild(input)
 
 const keys = ['ajaxInterceptor_switchOn', 'ajaxInterceptor_rules']
 
+window.addEventListener(
+      'xxxxxxxxxxxx',
+      function (event) {
+        // chrome.runtime.sendMessage(msg);
+        //  chrome.runtime.sendMessage(chrome.runtime.id, {msg});
+         chrome.runtime.sendMessage(chrome.runtime.id, {type: 'ajaxInterceptor', to: 'background', detail: event.detail});
+      },
+      false
+    )
+
 const executeScript = (data) => {
   const code = JSON.stringify(data)
   document.getElementById('ajaxInterceptor').value = code

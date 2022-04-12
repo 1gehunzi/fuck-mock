@@ -8,18 +8,19 @@
 </template>
 
 <script>
-// import vueJsonEditor from 'vue-json-editor'
 import EditorForm from './components/form.vue'
 
 export default {
   components: {
-    // vueJsonEditor,
     EditorForm,
   },
   data() {
-    return {
-
-    }
+    return {}
+  },
+  mounted() {
+    chrome.runtime.onMessage.addListener((event) => {
+       console.log(' chrome.runtime.onMessage.addListener', JSON.parse(event.detail))
+    });
   },
   methods: {
     onJsonChange(value) {
