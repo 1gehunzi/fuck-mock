@@ -40,7 +40,8 @@
     "storage",
     "tabs",
     "webRequest",
-    "activeTab"
+    "activeTab",
+    "unlimitedStorage"
   ],
   "version": "1.0.0"
 }

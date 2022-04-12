@@ -24,11 +24,11 @@
         >
           <el-option
             label="GET"
-            value="get"
+            value="GET"
           />
           <el-option
             label="POST"
-            value="post"
+            value="POST"
           />
         </el-select>
       </el-form-item>
@@ -63,11 +63,12 @@ export default {
     return {
       toggle: false,
       editorMode: 'code',
-      modes: ['code'],
+      modes: ['code', 'tree', 'text'],
       formData: {
         path: '',
-        method: 'get',
+        method: 'GET',
         response: '',
+        switchOn: true
       },
     }
   },
@@ -77,11 +78,11 @@ export default {
     })
 
     getStorageItem(AJAX_INTERCEPTOR_RULES).then((result) => {
-      console.log(result, '------------------- result')
       this.formData = result || {
         path: '',
-        method: 'get',
+        method: 'GET',
         response: '',
+        switchOn: true
       }
     })
   },

@@ -15,7 +15,8 @@ const executeScript = (data) => {
   document.getElementById('ajaxInterceptor').value = code
 }
 const injectGlobalData = () => {
-  chrome.storage.sync.get(keys, (result) => {
+  chrome.storage.local.get(keys, (result) => {
+    console.log('chrome.storage.local.get(keys, (result)', result)
     executeScript(result)
   })
 }

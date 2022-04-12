@@ -2,13 +2,27 @@
 import { proxy } from 'ajax-hook'
 
 
-function hijack(url, { method }) {
+function mockCore(url, { method }) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
+  console.log('mockCore-----------------', config)
+
 
   return new Promise((resolve, reject) => {
-    // 稍后再替换这段代码
-    console.log('拦截请求', config, method, url)
+    // 进入 mock 的逻辑判断
+    if (config.ajaxInterceptor_switchOn) {
+      // const matchRule = config.ajaxInterceptor_rules.find(rule => {
+      //   // 此处逻辑需要进一步调整，精确匹配、正则、在创业公司用的接口
+      //   return rule.path === url
+      // })
+      const matchRule = config.ajaxInterceptor_rules
+      console.log(matchRule.switchOn, matchRule.method, method,  matchRule.path, url, matchRule.path === url )
+      if (matchRule.switchOn && method === matchRule.method && matchRule.path === url) {
+        console.log('拦截请求', config, method, url, matchRule.response)
+
+        resolve(matchRule.response)
+      }
+    }
     reject()
   })
 }
@@ -16,9 +30,9 @@ function hijack(url, { method }) {
 proxy({
   onRequest: (config, handler) => {
     console.log('config, handler', config, handler)
-    hijack(config.url, config)
-      .then(({ response }) => {
-        return handler.resolve({
+    mockCore(config.url, config)
+      .then((response) => {
+         handler.resolve({
           config,
           status: 200,
           headers: [],
@@ -31,16 +45,16 @@ proxy({
       })
   },
   onResponse: (response, handler) => {
+    console.log(response)
     handler.resolve(response)
   },
 })
 
 if (window.fetch) {
-  console.log('-----------------------', window.fetch)
   const f = window.fetch
   window.fetch = (req, config) => {
     console.log('reqxxxxxxx', config)
-    return hijack(req, config)
+    return mockCore(req, config)
       .then(({ response }) => {
         return new Response(response, {
           headers: new Headers([]),
