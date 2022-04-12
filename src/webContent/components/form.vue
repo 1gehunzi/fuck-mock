@@ -78,7 +78,11 @@ export default {
 
     getStorageItem(AJAX_INTERCEPTOR_RULES).then((result) => {
       console.log(result, '------------------- result')
-      this.formData = result
+      this.formData = result || {
+        path: '',
+        method: 'get',
+        response: '',
+      }
     })
   },
   methods: {

@@ -1,24 +1,17 @@
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
 
-window.addEventListener(
-  'message',
-   (event) => {
-    console.log(event)
-  },
-  false
-)
 
 function hijack(url, { method }) {
-  console.log('---------', url, method)
+  const configStr = document.getElementById('ajaxInterceptor').value
+  const config = JSON.parse(configStr)
+
   return new Promise((resolve, reject) => {
     // 稍后再替换这段代码
-    console.log(`拦截请求 ${method} ${url}`)
+    console.log('拦截请求', config, method, url)
     reject()
   })
 }
-
-console.log(proxy)
 
 proxy({
   onRequest: (config, handler) => {
