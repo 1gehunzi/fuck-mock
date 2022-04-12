@@ -53,8 +53,8 @@ proxy({
 if (window.fetch) {
   const f = window.fetch
   window.fetch = (req, config) => {
-    console.log('reqxxxxxxx', config)
-    return mockCore(req, config)
+    // 此处的 req 和 config 的含义和具体使用方式需要调整一下
+    return mockCore(req.url, req)
       .then(({ response }) => {
         return new Response(response, {
           headers: new Headers([]),
