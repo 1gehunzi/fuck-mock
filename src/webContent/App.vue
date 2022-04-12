@@ -7,6 +7,12 @@
         :key="item.config.url + index"
       >
         {{ item.config.url }}
+        <el-tag
+          effect="dark"
+          type="success"
+        >
+          {{ item.config.method }}
+        </el-tag>
       </div>
       <EditorForm />
     </el-main>
@@ -31,7 +37,7 @@ export default {
       try {
         if (event.type === 'ajaxInterceptor') {
           const result = parse(event.detail)
-
+          console.log(result.config)
           this.list = [result, ...this.list]
         }
 
