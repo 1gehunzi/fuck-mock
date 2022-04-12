@@ -13,8 +13,8 @@ const resolve = dir => path.resolve(__dirname, dir);
 function configFunc(env, argv) {
   const isDevMode = env.NODE_ENV === 'development'
   const config = {
-    // devtool: isDevMode ? 'eval-source-map' : false,
-    devtool: false,
+    devtool: isDevMode ? 'cheap-module-source-map' : false,
+    // devtool: false,
     context: path.resolve(__dirname, './src'),
     entry: {
       options: './options/index.js',

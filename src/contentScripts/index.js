@@ -1,3 +1,5 @@
+// import {stringify} from 'flatted'
+
 const script = document.createElement('script')
 script.setAttribute('type', 'text/javascript')
 script.setAttribute('src', chrome.extension.getURL('interceptor.js'))

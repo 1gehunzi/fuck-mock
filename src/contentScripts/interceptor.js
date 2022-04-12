@@ -1,8 +1,7 @@
 /* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
-import { stringify} from 'flatted';
-
+import { parse, stringify } from 'flatted';
 
 // import { EventBus } from "@/event-bus";
 const sendMsg = msg => {
@@ -16,7 +15,6 @@ const sendMsg = msg => {
 function mockCore(url, { method }) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
-  console.log('mockCore-----------------', config)
 
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
