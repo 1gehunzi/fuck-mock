@@ -1,25 +1,13 @@
+/* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
+import { stringify} from 'flatted';
 
-function simpleStringify (object){
-    const simpleObject = {};
-    for (const prop in object ){
-        if (!object.hasOwnProperty(prop)){
-            continue;
-        }
-        if (typeof(object[prop]) === 'object'){
-            continue;
-        }
-        if (typeof(object[prop]) === 'function'){
-            continue;
-        }
-        simpleObject[prop] = object[prop];
-    }
-    return JSON.stringify(simpleObject); // returns cleaned up JSON
-};
+
 // import { EventBus } from "@/event-bus";
 const sendMsg = msg => {
-  const str = simpleStringify(msg)
+  console.log(msg, 'responce')
+  const str = stringify(msg)
   // msg.toStri
   const event = new CustomEvent("xxxxxxxxxxxx", {detail: str});
   window.dispatchEvent(event);

@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import {parse } from 'flatted';
 import EditorForm from './components/form.vue'
 
 export default {
@@ -19,7 +20,7 @@ export default {
   },
   mounted() {
     chrome.runtime.onMessage.addListener((event) => {
-       console.log(' chrome.runtime.onMessage.addListener', JSON.parse(event.detail))
+       console.log(' chrome.runtime.onMessage.addListener', parse(event.detail))
     });
   },
   methods: {
