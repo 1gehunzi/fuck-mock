@@ -109,7 +109,7 @@ class FetchInterceptor {
 
       if (typeof this.onBeforeRequest === 'function') {
 
-        const responce = new Response(body)
+        const responce = new Response()
         const json = () => {
           return Promise.resolve({aa: "sdsdsds"})
         }
