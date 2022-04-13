@@ -4,7 +4,6 @@ import { proxy } from 'ajax-hook'
 import { stringify } from 'flatted'
 import FetchInterceptor from '@/fetch-interceptor'
 
-// import { EventBus } from "@/event-bus";
 const sendMsg = (msg) => {
   const str = stringify(msg)
   // msg.toStri
@@ -93,10 +92,18 @@ if (window.fetch) {
     onBeforeRequest(request, controller) {
       // Hook before request
       // console.log('onBeforeRequest', request, controller)
+        // const tmp = payload
+        // const text = JSON.stringify(tmp)
+        // const responce = new Response()
+        // responce.json = () => Promise.resolve(tmp)
+        // responce.text = () => Promise.resolve(text)
+        //  return Promise.resolve(responce)
     },
     onRequestSuccess(response, request, controller) {
       // Hook on response success
-      console.log('onRequestSuccess', response)
+      // TODO: 数据格式化，流是不能直接转成字符串的
+      sendMsg({config: {url: request.url, method: request.method}, status: 200})
+      console.log('onRequestSuccess', request)
     },
     onRequestFailure(response, request, controller) {
       // Hook on response failure

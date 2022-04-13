@@ -4,7 +4,7 @@
     <el-main>
       <div
         v-for="(item, index) in list"
-        :key="item.config.url + index"
+        :key="item.config.url"
       >
         {{ item.config.url }}
         <el-tag
@@ -39,7 +39,7 @@ export default {
         if (event.type === 'ajaxInterceptor') {
           const result = parse(event.detail)
           console.log(result)
-          this.list = [result, ...this.list]
+          this.list = [...this.list, result]
         }
 
       } catch (e) {
