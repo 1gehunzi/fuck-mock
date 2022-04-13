@@ -13,6 +13,7 @@
         >
           {{ item.config.method }}
         </el-tag>
+        <span>{{ item.status }}</span>
       </div>
       <EditorForm />
     </el-main>
@@ -37,7 +38,7 @@ export default {
       try {
         if (event.type === 'ajaxInterceptor') {
           const result = parse(event.detail)
-          console.log(result.config)
+          console.log(result)
           this.list = [result, ...this.list]
         }
 

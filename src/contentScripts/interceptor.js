@@ -1,15 +1,16 @@
 /* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
-import { parse, stringify } from 'flatted';
+import { stringify } from 'flatted'
+import FetchInterceptor from '@/fetch-interceptor'
 
 // import { EventBus } from "@/event-bus";
-const sendMsg = msg => {
+const sendMsg = (msg) => {
   console.log(msg, 'responce')
   const str = stringify(msg)
   // msg.toStri
-  const event = new CustomEvent("xxxxxxxxxxxx", {detail: str});
-  window.dispatchEvent(event);
+  const event = new CustomEvent('xxxxxxxxxxxx', { detail: str })
+  window.dispatchEvent(event)
 }
 //
 function mockCore(url, { method }) {
@@ -48,15 +49,16 @@ function mockCore(url, { method }) {
 
 proxy({
   onRequest: (config, handler) => {
-    console.log('config, handler', config, handler)
     mockCore(config.url, config)
       .then((response) => {
-        handler.resolve({
+        const result = {
           config,
           status: 200,
           headers: [],
           response,
-        })
+        }
+        sendMsg(response)
+        handler.resolve(result)
       })
       .catch((err) => {
         handler.next(config)
@@ -72,18 +74,34 @@ proxy({
     handler.resolve(response)
   },
 })
-
+// TODO: ajax hook 对于 fetch 的实现需要调整
+// if (window.fetch) {
+//   const f = window.fetch
+//   window.fetch = (req, config) => {
+//     // 此处的 req 和 config 的含义和具体使用方式需要调整一下
+//     return mockCore(req.url, req)
+//       .then(({ response }) => {
+//         return new Response(response, {
+//           headers: new Headers([]),
+//           status: 200,
+//         })
+//       })
+//       .catch(() => f(req, config))
+//   }
+// }
 if (window.fetch) {
-  const f = window.fetch
-  window.fetch = (req, config) => {
-    // 此处的 req 和 config 的含义和具体使用方式需要调整一下
-    return mockCore(req.url, req)
-      .then(({ response }) => {
-        return new Response(response, {
-          headers: new Headers([]),
-          status: 200,
-        })
-      })
-      .catch(() => f(req, config))
-  }
+  FetchInterceptor.register({
+    onBeforeRequest(request, controller) {
+      // Hook before request
+      console.log('onBeforeRequest', request, controller)
+    },
+    onRequestSuccess(response, request, controller) {
+      // Hook on response success
+      console.log('onRequestSuccess', response, request)
+    },
+    onRequestFailure(response, request, controller) {
+      // Hook on response failure
+      console.log('onRequestFailure', response, request)
+    },
+  })
 }
