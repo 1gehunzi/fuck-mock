@@ -28,7 +28,6 @@ const executeScript = (data) => {
 }
 const injectGlobalData = () => {
   chrome.storage.local.get(keys, (result) => {
-    console.log('chrome.storage.local.get(keys, (result)', result)
     executeScript(result)
   })
 }

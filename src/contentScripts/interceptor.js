@@ -6,7 +6,6 @@ import FetchInterceptor from '@/fetch-interceptor'
 
 // import { EventBus } from "@/event-bus";
 const sendMsg = (msg) => {
-  console.log(msg, 'responce')
   const str = stringify(msg)
   // msg.toStri
   const event = new CustomEvent('xxxxxxxxxxxx', { detail: str })
@@ -93,11 +92,11 @@ if (window.fetch) {
   FetchInterceptor.register({
     onBeforeRequest(request, controller) {
       // Hook before request
-      console.log('onBeforeRequest', request, controller)
+      // console.log('onBeforeRequest', request, controller)
     },
     onRequestSuccess(response, request, controller) {
       // Hook on response success
-      console.log('onRequestSuccess', response, request)
+      console.log('onRequestSuccess', response)
     },
     onRequestFailure(response, request, controller) {
       // Hook on response failure

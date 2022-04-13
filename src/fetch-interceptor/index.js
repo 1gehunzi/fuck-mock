@@ -2,7 +2,8 @@
  * 使用开源库进行改造
  * https://github.com/itsfadnis/fetch-interceptor/blob/master/src/index.js
  */
-class FetchInterceptor {
+import {payload} from "./test"
+export default class FetchInterceptor {
   /**
    * Recognize global environment and attach fetch
    */
@@ -109,14 +110,12 @@ class FetchInterceptor {
 
       if (typeof this.onBeforeRequest === 'function') {
 
+        const tmp = payload
+        const text = JSON.stringify(tmp)
         const responce = new Response()
-        const json = () => {
-          return Promise.resolve({aa: "sdsdsds"})
-        }
-        responce.json = json;
-
+        responce.json = () => Promise.resolve(tmp)
+        responce.text = () => Promise.resolve(text)
         beforeReqPromise = Promise.resolve(responce)
-        // beforeReqPromise = this.onBeforeRequest(request, controller)
       }
       // 如果 request 之前返回了 promise, 则将 promise 给
       const promise = beforeReqPromise || this.fetch.call(this.env, request)
@@ -148,4 +147,3 @@ class FetchInterceptor {
   }
 }
 
-module.exports = FetchInterceptor
