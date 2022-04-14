@@ -50,7 +50,8 @@ proxy({
     const request = {
       url: config.url,
       method: config.method,
-      headers: config.headers
+      headers: config.headers,
+      type: 'xhr'
     }
     mockCore(config.url, config)
       .then((response) => {
@@ -85,6 +86,7 @@ proxy({
           method: config.method,
           url: config.url,
           headers: config.headers,
+          type: 'xhr'
         },
         response: {
           status,
@@ -114,9 +116,9 @@ if (window.fetch) {
       //  return Promise.resolve(responce)
     },
     onRequestSuccess(response, request) {
-      // Hook on response success
       const payload = {
         request: {
+          type: 'fetch',
           method: request.method,
           url: request.url,
           headers: request.headers,

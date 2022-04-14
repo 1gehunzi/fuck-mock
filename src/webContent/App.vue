@@ -14,6 +14,7 @@
           {{ item.request.method }}
         </el-tag>
         <span>{{ item.response.status }}</span>
+        <span>{{ item.request.type }}</span>
       </div>
       <EditorForm />
     </el-main>
