@@ -3,7 +3,7 @@
     <el-header>Fuck Mock</el-header>
     <el-main>
       <div
-        v-for="(item, index) in list"
+        v-for="(item) in list"
         :key="item.config.url"
       >
         {{ item.config.url }}
