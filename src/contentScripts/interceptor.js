@@ -90,7 +90,7 @@ if (window.fetch) {
       // Hook on response success
       // TODO: 数据格式化，流是不能直接转成字符串的
       sendMsg({config: {url: request.url, method: request.method}, status: 200})
-      console.log('onRequestSuccess', request)
+      console.log('onRequestSuccess', response)
     },
     onRequestFailure(response, request, controller) {
       // Hook on response failure
