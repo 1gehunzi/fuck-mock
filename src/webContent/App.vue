@@ -4,16 +4,16 @@
     <el-main>
       <div
         v-for="(item) in list"
-        :key="item.config.url"
+        :key="item.request.url"
       >
-        {{ item.config.url }}
+        {{ item.request.url }}
         <el-tag
           effect="dark"
           type="success"
         >
-          {{ item.config.method }}
+          {{ item.request.method }}
         </el-tag>
-        <span>{{ item.status }}</span>
+        <span>{{ item.response.status }}</span>
       </div>
       <EditorForm />
     </el-main>
@@ -38,7 +38,7 @@ export default {
       try {
         if (event.type === 'ajaxInterceptor') {
           const result = parse(event.detail)
-          console.log(result)
+          console.log(result.request, result.response)
           this.list = [...this.list, result]
         }
 

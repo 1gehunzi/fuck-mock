@@ -1,5 +1,3 @@
-// import {stringify} from 'flatted'
-
 const script = document.createElement('script')
 script.setAttribute('type', 'text/javascript')
 script.setAttribute('src', chrome.extension.getURL('interceptor.js'))
@@ -13,7 +11,7 @@ document.documentElement.appendChild(input)
 const keys = ['ajaxInterceptor_switchOn', 'ajaxInterceptor_rules']
 
 window.addEventListener(
-      'xxxxxxxxxxxx',
+      'CUSTOMEVENT',
       function (event) {
         // chrome.runtime.sendMessage(msg);
         //  chrome.runtime.sendMessage(chrome.runtime.id, {msg});

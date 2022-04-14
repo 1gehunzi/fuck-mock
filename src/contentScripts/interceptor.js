@@ -7,7 +7,7 @@ import FetchInterceptor from '@/fetch-interceptor'
 const sendMsg = (msg) => {
   const str = stringify(msg)
   // msg.toStri
-  const event = new CustomEvent('xxxxxxxxxxxx', { detail: str })
+  const event = new CustomEvent('CUSTOMEVENT', { detail: str })
   window.dispatchEvent(event)
 }
 //
@@ -47,7 +47,11 @@ function mockCore(url, { method }) {
 
 proxy({
   onRequest: (config, handler) => {
-    console.log(config)
+    const request = {
+      url: config.url,
+      method: config.method,
+      headers: config.headers
+    }
     mockCore(config.url, config)
       .then((response) => {
         const result = {
@@ -56,7 +60,18 @@ proxy({
           headers: [],
           response,
         }
-        sendMsg(response)
+        const payload = {
+          request,
+          response: {
+            status: result.status,
+            headers: result.headers,
+            statusText: result.statusText,
+            url: result.url,
+            response: result
+          }
+        }
+
+        sendMsg(payload)
         handler.resolve(result)
       })
       .catch((err) => {
@@ -64,11 +79,24 @@ proxy({
       })
   },
   onResponse: (response, handler) => {
-    // EventBus.$emit("aMsg", response);
-    // Chrome提供的大部分API是不支持在content_scripts中运行
-    // sendMessage onMessage 是可以使用
+    const {statusText, status, config, headers, response: res} = response
+    const payload = {
+        request: {
+          method: config.method,
+          url: config.url,
+          headers: config.headers,
+        },
+        response: {
+          status,
+          statusText,
+          url: config.url,
+          headers: res.headers,
+          response: res.response,
+        },
+      }
 
-    sendMsg(response)
+
+    sendMsg(payload)
 
     handler.resolve(response)
   },
@@ -78,19 +106,36 @@ if (window.fetch) {
   FetchInterceptor.register({
     onBeforeRequest(request, controller) {
       // Hook before request
-      console.log('onBeforeRequest', request)
-        // const tmp = payload
-        // const text = JSON.stringify(tmp)
-        // const responce = new Response()
-        // responce.json = () => Promise.resolve(tmp)
-        // responce.text = () => Promise.resolve(text)
-        //  return Promise.resolve(responce)
+      // const tmp = payload
+      // const text = JSON.stringify(tmp)
+      // const responce = new Response()
+      // responce.json = () => Promise.resolve(tmp)
+      // responce.text = () => Promise.resolve(text)
+      //  return Promise.resolve(responce)
     },
-    onRequestSuccess(response, request, controller) {
+    onRequestSuccess(response, request) {
       // Hook on response success
-      // TODO: 数据格式化，流是不能直接转成字符串的
-      sendMsg({config: {url: request.url, method: request.method}, status: 200})
-      console.log('onRequestSuccess', response)
+      const payload = {
+        request: {
+          method: request.method,
+          url: request.url,
+          headers: request.headers,
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          headers: response.headers,
+          response: '',
+        },
+      }
+      // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
+      const cloneRes = response.clone()
+      cloneRes.json().then((res) => {
+        payload.response = res
+      })
+
+      sendMsg(payload)
     },
     onRequestFailure(response, request, controller) {
       // Hook on response failure
