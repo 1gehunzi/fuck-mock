@@ -30,7 +30,7 @@ const payload = {
 ```
 
 ## TODO:
-* 先把mock做好
+* 先把 mock 做好
 * 设置接口相应时间
 * 404 的接口快速获取
 * 区分是mock还是穿透

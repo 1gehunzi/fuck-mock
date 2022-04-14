@@ -111,7 +111,10 @@ export default class FetchInterceptor {
         beforeReqPromise = this.onBeforeRequest(request, controller)
       }
       // 如果 request 之前返回了 promise, 则将 promise 给
-      const promise = beforeReqPromise || this.fetch.call(this.env, request)
+      // const promise = beforeReqPromise || this.fetch.call(this.env, request)
+      const promise = beforeReqPromise.then(res => res).catch(err => {
+        return this.fetch.call(this.env, request)
+      });
       if (typeof this.onAfterRequest === 'function') {
         this.onAfterRequest(request, controller)
       }

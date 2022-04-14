@@ -11,7 +11,7 @@ const sendMsg = (msg) => {
   window.dispatchEvent(event)
 }
 //
-function mockCore(url, { method }) {
+function mockCore(url, method) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
 
@@ -53,7 +53,7 @@ proxy({
       headers: config.headers,
       type: 'xhr'
     }
-    mockCore(config.url, config)
+    mockCore(config.url, config.method)
       .then((response) => {
         const result = {
           config,
@@ -114,6 +114,11 @@ if (window.fetch) {
       // responce.json = () => Promise.resolve(tmp)
       // responce.text = () => Promise.resolve(text)
       //  return Promise.resolve(responce)
+
+    return mockCore(request.url, request.method)
+      .then((response) => {
+        return response
+      })
     },
     onRequestSuccess(response, request) {
       const payload = {
