@@ -23,14 +23,17 @@ function mockCore(url, method) {
       //   return rule.path === url
       // })
       const matchRule = config.ajaxInterceptor_rules
-      console.log(
-        matchRule.switchOn,
-        matchRule.method,
-        method,
-        matchRule.path,
-        url,
-        matchRule.path === url
-      )
+      if (method === matchRule.method && matchRule.path === url) {
+        console.log(
+          matchRule.switchOn,
+          matchRule.method,
+          method,
+          matchRule.path,
+          url,
+          matchRule.path === url
+        )
+      }
+
       if (
         matchRule.switchOn &&
         method === matchRule.method &&
@@ -51,7 +54,7 @@ proxy({
       url: config.url,
       method: config.method,
       headers: config.headers,
-      type: 'xhr'
+      type: 'xhr',
     }
     mockCore(config.url, config.method)
       .then((response) => {
@@ -68,8 +71,8 @@ proxy({
             headers: result.headers,
             statusText: result.statusText,
             url: result.url,
-            response: result
-          }
+            response: result,
+          },
         }
 
         sendMsg(payload)
@@ -80,23 +83,22 @@ proxy({
       })
   },
   onResponse: (response, handler) => {
-    const {statusText, status, config, headers, response: res} = response
+    const { statusText, status, config, headers, response: res } = response
     const payload = {
-        request: {
-          method: config.method,
-          url: config.url,
-          headers: config.headers,
-          type: 'xhr'
-        },
-        response: {
-          status,
-          statusText,
-          url: config.url,
-          headers: res.headers,
-          response: res.response,
-        },
-      }
-
+      request: {
+        method: config.method,
+        url: config.url,
+        headers: config.headers,
+        type: 'xhr',
+      },
+      response: {
+        status,
+        statusText,
+        url: config.url,
+        headers: res.headers,
+        response: res.response,
+      },
+    }
 
     sendMsg(payload)
 
@@ -115,8 +117,12 @@ if (window.fetch) {
       // responce.text = () => Promise.resolve(text)
       //  return Promise.resolve(responce)
 
-    return mockCore(request.url, request.method)
-      .then((response) => {
+      return mockCore(request.url, request.method).then((res) => {
+        const text = JSON.stringify(res)
+        const response = new Response()
+        response.json = () => Promise.resolve(res)
+        response.text = () => Promise.resolve(text)
+        response.mock = true
         return response
       })
     },
@@ -137,12 +143,18 @@ if (window.fetch) {
         },
       }
       // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
-      const cloneRes = response.clone()
-      cloneRes.json().then((res) => {
-        payload.response = res
-      })
-
-      sendMsg(payload)
+      if (response.mock) {
+        response.json().then((res) => {
+          payload.response = res
+          sendMsg(payload)
+        })
+      } else {
+        const cloneRes = response.clone()
+        cloneRes.json().then((res) => {
+          payload.response = res
+          sendMsg(payload)
+        })
+      }
     },
     onRequestFailure(response, request, controller) {
       // Hook on response failure
