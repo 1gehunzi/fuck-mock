@@ -39,3 +39,15 @@ const payload = {
 调研清楚为什么有的url带host, 有的不带呢
 "path-to-regexp": "2.4.0",
 "qs": "^6.9.6",
+
+https://www.jianshu.com/p/7d2dbfdd1b0f 的使用方法
+```js
+var pathToRegexp = require('path-to-regexp')
+
+var re = pathToRegexp('/foo/:bar');     // 匹配规则
+var match1 = re.exec('/test/route');    // url 路径
+var match2 = re.exec('/foo/route');     // url 路径
+
+console.log(match1);
+console.log(match2);
+```
