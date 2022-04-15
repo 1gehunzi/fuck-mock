@@ -8,6 +8,7 @@
     "ajax-hook": "^2.0.3",
     "element-ui": "^2.15.6",
     "flatted": "^3.2.5",
+    "url-parse": "^1.5.10",
     "vue": "^2.6.11",
     "vue-json-editor": "^1.4.3"
   },

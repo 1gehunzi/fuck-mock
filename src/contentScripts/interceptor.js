@@ -2,6 +2,7 @@
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
 import { stringify } from 'flatted'
+import Url from 'url-parse'
 import FetchInterceptor from '@/fetch-interceptor'
 
 const sendMsg = (msg) => {
@@ -50,13 +51,17 @@ function mockCore(url, method) {
 
 proxy({
   onRequest: (config, handler) => {
+    // TODO: url 对象里面的信息非常有用啊
+    const url = new Url(config.url)
+    console.log('onRequest', config.url, url)
+
     const request = {
-      url: config.url,
+      url: url.href,
       method: config.method,
       headers: config.headers,
       type: 'xhr',
     }
-    mockCore(config.url, config.method)
+    mockCore(url.href, config.method)
       .then((response) => {
         const result = {
           config,
@@ -84,10 +89,12 @@ proxy({
   },
   onResponse: (response, handler) => {
     const { statusText, status, config, headers, response: res } = response
+        const url = new Url(config.url)
+    console.log('onRequest', config.url, url)
     const payload = {
       request: {
         method: config.method,
-        url: config.url,
+        url: url.href,
         headers: config.headers,
         type: 'xhr',
       },
