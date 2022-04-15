@@ -21,7 +21,7 @@
   "web_accessible_resources": [
     "interceptor.js"
   ],
-  "description": "vue-chrome-extension-boilerplate",
+  "description": "Mock is easy",
   "icons": {
     "16": "assets/icons/icon_16.png",
     "32": "assets/icons/icon_32.png",
@@ -29,7 +29,7 @@
     "128": "assets/icons/icon_128.png"
   },
   "manifest_version": 2,
-  "name": "vue-chrome-extension-boilerplate",
+  "name": "Fuck Mock",
   "options_ui": {
     "chrome_style": false,
     "page": "./options.html"
