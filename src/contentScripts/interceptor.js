@@ -3,6 +3,7 @@
 import { proxy } from 'ajax-hook'
 import { stringify } from 'flatted'
 import Url from 'url-parse'
+import {pathToRegexp, match } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
 
 const sendMsg = (msg) => {
@@ -15,21 +16,29 @@ const sendMsg = (msg) => {
 function mockCore(url, method) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
+  const targetUrl = new Url(url)
+  // const str = targetUrl.pathname + targetUrl.query
+  const str = targetUrl.pathname
 
+
+
+  console.log(targetUrl)
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (config.ajaxInterceptor_switchOn) {
       const rules = config.ajaxInterceptor_rules || []
       const currentRule = rules.find(item => {
-        return item.switchOn && item.method === method && item.path === url
+        const re = pathToRegexp(item.path);     // 匹配规则
+        const match1 = re.exec(str);
+        console.log(match1, item.path, str, '----------------------------------')
+        return item.switchOn && item.method === method && match1
       })
-
-      const matchRule = config.ajaxInterceptor_rules
 
       console.log('----------------currentRule----------------', rules, currentRule);
 
       if (currentRule) {
-        console.log('拦截请求', config, method, url, matchRule.response)
+         // url 路径
+        console.log('拦截请求', method, url, currentRule.response)
 
         resolve(currentRule.response)
       }
@@ -56,7 +65,8 @@ proxy({
           config,
           status: 200,
           headers: [],
-          response,
+          // TODO: 为啥要 stringfy 呢
+          response: JSON.stringify(response)
         }
         const payload = {
           request,
@@ -77,9 +87,9 @@ proxy({
       })
   },
   onResponse: (response, handler) => {
+    console.log('onResponse-----------------', response)
     const { statusText, status, config, headers, response: res } = response
         const url = new Url(config.url)
-    console.log('onRequest', config.url, url)
     const payload = {
       request: {
         method: config.method,
