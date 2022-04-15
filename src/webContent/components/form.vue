@@ -97,8 +97,19 @@ export default {
   methods: {
     onSubmit() {
       console.log(this.formData)
-      const { rules } = this
-      this.rules = [...rules, this.formData]
+      let { rules } = this
+
+      const index = rules.findIndex(item => {
+        return item.path === this.formData.path && item.method === this.formData.method
+      })
+
+      console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
+      if (index >= 0) {
+        rules[index] = this.formData
+      } else {
+        rules = [...rules, this.formData]
+      }
+      this.rules = rules
       saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
     },
     toggleSwitch(event) {
