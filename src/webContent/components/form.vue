@@ -53,7 +53,12 @@
 
 <script>
 import VueJsonEditor from 'vue-json-editor'
-import { saveStorage, getStorageItem, AJAX_INTERCEPTOR_RULES, AJAX_INTERCEPTOR_SWITCHON } from '@/store'
+import {
+  saveStorage,
+  getStorageItem,
+  AJAX_INTERCEPTOR_RULES,
+  AJAX_INTERCEPTOR_SWITCHON,
+} from '@/store'
 
 export default {
   components: {
@@ -64,11 +69,12 @@ export default {
       toggle: false,
       editorMode: 'code',
       modes: ['code', 'tree', 'text'],
+      rules: [],
       formData: {
         path: '',
         method: 'GET',
         response: '',
-        switchOn: true
+        switchOn: true,
       },
     }
   },
@@ -77,19 +83,23 @@ export default {
       this.toggle = result
     })
 
-    getStorageItem(AJAX_INTERCEPTOR_RULES).then((result) => {
-      this.formData = result || {
+    getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
+      this.rules = result
+
+      this.formData = result[0] || {
         path: '',
         method: 'GET',
         response: '',
-        switchOn: true
+        switchOn: true,
       }
     })
   },
   methods: {
     onSubmit() {
       console.log(this.formData)
-      saveStorage(AJAX_INTERCEPTOR_RULES, this.formData)
+      const { rules } = this
+      this.rules = [...rules, this.formData]
+      saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
     },
     toggleSwitch(event) {
       console.log(event)

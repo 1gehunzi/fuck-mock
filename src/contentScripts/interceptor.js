@@ -19,30 +19,19 @@ function mockCore(url, method) {
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (config.ajaxInterceptor_switchOn) {
-      // const matchRule = config.ajaxInterceptor_rules.find(rule => {
-      //   // 此处逻辑需要进一步调整，精确匹配、正则、在创业公司用的接口
-      //   return rule.path === url
-      // })
-      const matchRule = config.ajaxInterceptor_rules
-      if (method === matchRule.method && matchRule.path === url) {
-        console.log(
-          matchRule.switchOn,
-          matchRule.method,
-          method,
-          matchRule.path,
-          url,
-          matchRule.path === url
-        )
-      }
+      const rules = config.ajaxInterceptor_rules || []
+      const currentRule = rules.find(item => {
+        return item.switchOn && item.method === method && item.path === url
+      })
 
-      if (
-        matchRule.switchOn &&
-        method === matchRule.method &&
-        matchRule.path === url
-      ) {
+      const matchRule = config.ajaxInterceptor_rules
+
+      console.log('----------------currentRule----------------', rules, currentRule);
+
+      if (currentRule) {
         console.log('拦截请求', config, method, url, matchRule.response)
 
-        resolve(matchRule.response)
+        resolve(currentRule.response)
       }
     }
     reject()
