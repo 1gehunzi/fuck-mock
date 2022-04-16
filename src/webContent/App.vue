@@ -7,7 +7,19 @@
     </div>
     <div class="main">
       <div class="menu">
-        <div class="box" />
+        <div class="box">
+          <div class="projects-list">
+            <div class="item active">
+              localhost
+            </div>
+            <div class="item">
+              localhost
+            </div>
+            <div class="item">
+              localhost
+            </div>
+          </div>
+        </div>
         <div class="operator">
           +添加
         </div>
@@ -203,6 +215,18 @@ body {
     width: 800px;
     padding: 0;
     background-color: #F3F4F6;
+  }
+}
+.projects-list {
+  .item {
+    padding-left: 8px;
+    height: 38px;
+    line-height: 38px;
+    background-color: #fff;
+    &.active {
+      background-color: #f5f5f5;
+      border-color: #f5f5f5;
+    }
   }
 }
 </style>
