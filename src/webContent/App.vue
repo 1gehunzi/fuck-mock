@@ -13,7 +13,25 @@
         </div>
       </div>
       <div class="content">
-        ss
+        <div
+          class="logs"
+          style="overflow-y: scroll;height: 100%;"
+        >
+          <div
+            v-for="(item) in list"
+            :key="item.request.url"
+          >
+            {{ item.request.url }}
+            <el-tag
+              effect="dark"
+              type="success"
+            >
+              {{ item.request.method }}
+            </el-tag>
+            <span>{{ item.response.status }}</span>
+            <span>{{ item.request.type }}</span>
+          </div>
+        </div>
       </div>
     </div>
     <!-- <el-container class="container">
@@ -28,20 +46,7 @@
         </el-col>
         <el-col :span="19">
           <div style="height: 100vh; overflow: scroll">
-            <div
-              v-for="(item) in list"
-              :key="item.request.url"
-            >
-              {{ item.request.url }}
-              <el-tag
-                effect="dark"
-                type="success"
-              >
-                {{ item.request.method }}
-              </el-tag>
-              <span>{{ item.response.status }}</span>
-              <span>{{ item.request.type }}</span>
-            </div>
+
           </div>
         </el-col>
       </el-row>
@@ -192,7 +197,7 @@ body {
     }
   }
   .content {
-    osition: relative;
+    position: relative;
     flex-grow: 1;
     flex-shrink: 1;
     width: 800px;
