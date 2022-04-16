@@ -1,11 +1,16 @@
 <template>
   <el-container class="container">
     <div class="header">
-      hijack, just mock.
+      <div style="line-height: 50px;padding: 0 12px">
+        hijack, just mock.
+      </div>
     </div>
     <div class="main">
       <div class="menu">
-        ss
+        <div class="box" />
+        <div class="operator">
+          +添加
+        </div>
       </div>
       <div class="content">
         ss
@@ -140,8 +145,7 @@ body {
 <style lang="scss" scoped>
 
 .container {
-  // height: 100vh;
-  // width: 100vw;
+  height: 100%;
   .header {
     position: fixed;
     top: 0;
@@ -166,11 +170,26 @@ body {
     flex-basis: 280px;
     flex-grow: 0;
     flex-shrink: 0;
-    height: 100%;
     background: #fff;
     box-shadow: 0 0 3px 1px rgb(237 237 237 / 50%);
     padding-bottom: 42px;
     z-index: 10;
+    .box {
+      overflow-x: hidden;
+      overflow-y: scroll;
+      padding-top: 12px;
+      width: 100%;
+      height: 100%;
+    }
+    .operator {
+      position: absolute;
+      bottom: 0;
+      height: 42px;
+      width: 100%;
+      border-top: 1px solid #f4f4f4;
+      background-color: #fff;
+      padding: 8px 12px 10px 12px;
+    }
   }
   .content {
     osition: relative;
