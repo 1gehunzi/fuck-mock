@@ -6,25 +6,10 @@
       </div>
     </div>
     <div class="main">
-      <div class="menu">
-        <div class="box">
-          <div class="projects-list">
-            <div class="item active">
-              localhost
-            </div>
-            <div class="item">
-              localhost
-            </div>
-            <div class="item">
-              localhost
-            </div>
-          </div>
-        </div>
-        <div class="operator">
-          +添加
-        </div>
-      </div>
-      <div class="content">
+      <menus />
+      <div
+        class="content"
+      >
         <div
           class="logs"
           style="overflow-y: scroll;height: 100%;"
@@ -70,10 +55,12 @@
 <script>
 import { parse } from 'flatted'
 import EditorForm from './components/form.vue'
+import Menus from './components/menus.vue'
 
 export default {
   components: {
     EditorForm,
+    Menus,
   },
   data() {
     return {
@@ -182,32 +169,7 @@ body {
     overflow: hidden;
     display: flex;
   }
-  .menu {
-    position: relative;
-    flex-basis: 280px;
-    flex-grow: 0;
-    flex-shrink: 0;
-    background: #fff;
-    box-shadow: 0 0 3px 1px rgb(237 237 237 / 50%);
-    padding-bottom: 42px;
-    z-index: 10;
-    .box {
-      overflow-x: hidden;
-      overflow-y: scroll;
-      padding-top: 12px;
-      width: 100%;
-      height: 100%;
-    }
-    .operator {
-      position: absolute;
-      bottom: 0;
-      height: 42px;
-      width: 100%;
-      border-top: 1px solid #f4f4f4;
-      background-color: #fff;
-      padding: 8px 12px 10px 12px;
-    }
-  }
+
   .content {
     position: relative;
     flex-grow: 1;
@@ -217,16 +179,5 @@ body {
     background-color: #F3F4F6;
   }
 }
-.projects-list {
-  .item {
-    padding-left: 8px;
-    height: 38px;
-    line-height: 38px;
-    background-color: #fff;
-    &.active {
-      background-color: #f5f5f5;
-      border-color: #f5f5f5;
-    }
-  }
-}
+
 </style>
