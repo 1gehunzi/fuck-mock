@@ -1,23 +1,34 @@
 <template>
   <el-container class="container">
-    <el-header>Fuck Mock</el-header>
-    <el-main>
-      <div
-        v-for="(item) in list"
-        :key="item.request.url"
+    <el-row type="flex">
+      <el-col
+        :span="7"
+        style="height: 100vh; overflow: scroll"
       >
-        {{ item.request.url }}
-        <el-tag
-          effect="dark"
-          type="success"
-        >
-          {{ item.request.method }}
-        </el-tag>
-        <span>{{ item.response.status }}</span>
-        <span>{{ item.request.type }}</span>
-      </div>
-      <EditorForm />
-    </el-main>
+        <div class="grid-content bg-purple">
+          dfdfdf
+        </div>
+      </el-col>
+      <el-col :span="19">
+        <div style="height: 100vh; overflow: scroll">
+          <div
+            v-for="(item) in list"
+            :key="item.request.url"
+          >
+            {{ item.request.url }}
+            <el-tag
+              effect="dark"
+              type="success"
+            >
+              {{ item.request.method }}
+            </el-tag>
+            <span>{{ item.response.status }}</span>
+            <span>{{ item.request.type }}</span>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- <EditorForm /> -->
   </el-container>
 </template>
 
@@ -59,5 +70,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  height: 100vh;
 }
 </style>
