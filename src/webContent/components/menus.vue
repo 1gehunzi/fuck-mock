@@ -98,7 +98,9 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      form: {}
+      form: {
+          color: '#409EFF',
+      }
     }
   },
   methods: {
