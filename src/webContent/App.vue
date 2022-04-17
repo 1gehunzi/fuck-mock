@@ -1,21 +1,19 @@
 <template>
   <el-container class="container">
     <div class="header">
-      <div style="line-height: 50px;padding: 0 12px">
+      <div style="line-height: 50px; padding: 0 12px">
         hijack, just mock.
       </div>
     </div>
     <div class="main">
-      <menus />
-      <div
-        class="content"
-      >
+      <menus :rules="rules" />
+      <div class="content">
         <div
           class="logs"
-          style="overflow-y: scroll;height: 100%;"
+          style="overflow-y: scroll; height: 100%"
         >
           <div
-            v-for="(item) in list"
+            v-for="item in list"
             :key="item.request.url"
           >
             {{ item.request.url }}
@@ -31,24 +29,15 @@
         </div>
       </div>
     </div>
-    <!-- <el-container class="container">
-      <el-row type="flex">
-        <el-col
-          :span="7"
-          style="height: 100vh; overflow: scroll"
-        >
-          <div class="grid-content bg-purple">
-            dfdfdf
-          </div>
-        </el-col>
-        <el-col :span="19">
-          <div style="height: 100vh; overflow: scroll">
-
-          </div>
-        </el-col>
-      </el-row>
-      <EditorForm />
-    </el-container> -->
+    <el-drawer
+      title="我是标题"
+      size="50%"
+      :visible.sync="addItem"
+      direction="rtl"
+      :before-close="handleClose"
+    >
+      <EditorForm @save-form="onSubmit" />
+    </el-drawer>
   </el-container>
 </template>
 
@@ -56,6 +45,12 @@
 import { parse } from 'flatted'
 import EditorForm from './components/form.vue'
 import Menus from './components/menus.vue'
+import {
+  saveStorage,
+  getStorageItem,
+  AJAX_INTERCEPTOR_RULES,
+  AJAX_INTERCEPTOR_SWITCHON,
+} from '@/store'
 
 export default {
   components: {
@@ -64,10 +59,33 @@ export default {
   },
   data() {
     return {
+      addItem: true,
+      toggle: false,
+      formData: {
+        path: '',
+        method: 'GET',
+        response: '',
+        switchOn: true,
+      },
       list: [],
+      rules: [],
     }
   },
   mounted() {
+    getStorageItem(AJAX_INTERCEPTOR_SWITCHON).then((result) => {
+      this.toggle = result
+    })
+
+    getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
+      this.rules = result
+
+      this.formData = result[0] || {
+        path: '',
+        method: 'GET',
+        response: '',
+        switchOn: true,
+      }
+    })
     chrome.runtime.onMessage.addListener((event) => {
       try {
         if (event.type === 'ajaxInterceptor') {
@@ -84,70 +102,90 @@ export default {
     onJsonChange(value) {
       console.log('value:', value)
     },
+    onSubmit(formData) {
+      console.log(formData)
+      let { rules } = this
+
+      const index = rules.findIndex(item => {
+        return item.path === formData.path && item.method === formData.method
+      })
+
+      console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
+      if (index >= 0) {
+        rules[index] = formData
+      } else {
+        rules = [...rules, formData]
+      }
+      this.rules = rules
+      saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
+    },
+    toggleSwitch(event) {
+      console.log(event)
+      saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
+    },
   },
 }
 </script>
 <style>
-
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    cursor: default
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  cursor: default;
 }
 
 ul {
-    margin: 0
+  margin: 0;
 }
 
 li {
-    list-style: none
+  list-style: none;
 }
 
 html {
-    font-size: 14px;
-    user-select: none;
-    height: 100%;
-    width: 100%;
-    min-height: 650px;
-    min-width: 1000px;
-    -ms-overflow-style: none
+  font-size: 14px;
+  user-select: none;
+  height: 100%;
+  width: 100%;
+  min-height: 650px;
+  min-width: 1000px;
+  -ms-overflow-style: none;
 }
 
 body {
-    font-family: Helvetica,Tahoma,Arial,'Microsoft YaHei','微软雅黑',SimSun,Heiti,'黑体',sans-serif,STXihei,'华文细黑';
-    font-size: 1em;
-    height: 100%;
-    width: 100%;
-    min-height: 650px;
-    min-width: 1000px
+  font-family: Helvetica, Tahoma, Arial, 'Microsoft YaHei', '微软雅黑', SimSun,
+    Heiti, '黑体', sans-serif, STXihei, '华文细黑';
+  font-size: 1em;
+  height: 100%;
+  width: 100%;
+  min-height: 650px;
+  min-width: 1000px;
 }
 
 *::-webkit-input-placeholder {
-    color: #aeaeae;
-    font-size: 12px;
-    line-height: 20px
+  color: #aeaeae;
+  font-size: 12px;
+  line-height: 20px;
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
-    background-color: rgba(0,0,0,0)
+  width: 6px;
+  height: 8px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background-color: rgba(0,0,0,0)
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: rgba(174,174,174,0.5)
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: rgba(174, 174, 174, 0.5);
 }
 </style>
 <style lang="scss" scoped>
-
 .container {
   height: 100%;
   .header {
@@ -176,8 +214,7 @@ body {
     flex-shrink: 1;
     width: 800px;
     padding: 0;
-    background-color: #F3F4F6;
+    background-color: #f3f4f6;
   }
 }
-
 </style>

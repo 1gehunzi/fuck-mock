@@ -66,10 +66,8 @@ export default {
   },
   data() {
     return {
-      toggle: false,
       editorMode: 'code',
       modes: ['code', 'tree', 'text'],
-      rules: [],
       formData: {
         path: '',
         method: 'GET',
@@ -79,13 +77,7 @@ export default {
     }
   },
   mounted() {
-    getStorageItem(AJAX_INTERCEPTOR_SWITCHON).then((result) => {
-      this.toggle = result
-    })
-
     getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
-      this.rules = result
-
       this.formData = result[0] || {
         path: '',
         method: 'GET',
@@ -96,21 +88,23 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.formData)
-      let { rules } = this
+      this.$emit('save-form', this.formData)
 
-      const index = rules.findIndex(item => {
-        return item.path === this.formData.path && item.method === this.formData.method
-      })
+      // console.log(this.formData)
+      // let { rules } = this
 
-      console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
-      if (index >= 0) {
-        rules[index] = this.formData
-      } else {
-        rules = [...rules, this.formData]
-      }
-      this.rules = rules
-      saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
+      // const index = rules.findIndex(item => {
+      //   return item.path === this.formData.path && item.method === this.formData.method
+      // })
+
+      // console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
+      // if (index >= 0) {
+      //   rules[index] = this.formData
+      // } else {
+      //   rules = [...rules, this.formData]
+      // }
+      // this.rules = rules
+      // saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
     },
     toggleSwitch(event) {
       console.log(event)

@@ -3,7 +3,25 @@
     <div class="box">
       <div class="projects-list">
         <div class="item active">
-          localhost
+          <label>
+            localhost
+          </label>
+          <span>
+            <el-dropdown>
+              <i class="el-icon-more-outline" />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  icon="el-icon-circle-plus"
+                ><span @click="alertInfo(123)">新增规则</span></el-dropdown-item>
+                <el-dropdown-item icon="el-icon-circle-plus-outline">重命名</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+        </div>
+        <div class="path-items">
+          <div v-for="item in rules">
+            {{ item.path }}
+          </div>
         </div>
         <div class="item">
           localhost
@@ -14,13 +32,25 @@
       </div>
     </div>
     <div class="operator">
-      +添加
+      +添加项目
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    rules: {
+      type: Array,
+    }
+  },
+  methods: {
+    alertInfo() {
+      // alert(12212)
+      console.log(this.rules)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -52,14 +82,27 @@ export default {}
 }
 .projects-list {
   .item {
-    padding-left: 8px;
+    padding: 0 8px;
     height: 38px;
-    line-height: 38px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #fff;
     &.active {
       background-color: #f5f5f5;
       border-color: #f5f5f5;
+      border-radius: 4px;
     }
+  }
+}
+.path-items {
+  padding: 0 8px;
+  margin-left: 8px;
+  background-color: #f9f5f5;
+  border-color: #f5f5f5;
+  &>div {
+    height: 20px;
+    line-height: 20px;
   }
 }
 </style>
