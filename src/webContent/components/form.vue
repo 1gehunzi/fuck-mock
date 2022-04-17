@@ -11,6 +11,12 @@
       label-width="80px"
       label-position="left"
     >
+      <el-form-item label="Name">
+        <el-input
+          v-model="formData.name"
+          placeholder="请输入接口名称"
+        />
+      </el-form-item>
       <el-form-item label="Path">
         <el-input
           v-model="formData.path"
@@ -31,6 +37,12 @@
             value="POST"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="Delay">
+        <el-input
+          v-model="formData.delay"
+          placeholder="请属于延时毫秒"
+        />
       </el-form-item>
       <el-form-item label="Response">
         <VueJsonEditor
@@ -69,6 +81,7 @@ export default {
       editorMode: 'code',
       modes: ['code', 'tree', 'text'],
       formData: {
+        name: '',
         path: '',
         method: 'GET',
         response: '',

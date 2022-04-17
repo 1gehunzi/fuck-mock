@@ -6,7 +6,10 @@
       </div>
     </div>
     <div class="main">
-      <menus :rules="rules" />
+      <menus
+        :rules="rules"
+        @add="addRules"
+      />
       <div class="content">
         <div
           class="logs"
@@ -59,7 +62,7 @@ export default {
   },
   data() {
     return {
-      addItem: true,
+      addItem: false,
       toggle: false,
       formData: {
         path: '',
@@ -123,6 +126,9 @@ export default {
       console.log(event)
       saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
     },
+    addRules() {
+      this.addItem = true
+    }
   },
 }
 </script>

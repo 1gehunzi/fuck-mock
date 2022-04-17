@@ -12,15 +12,17 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item
                   icon="el-icon-circle-plus"
-                ><span @click="alertInfo(123)">新增规则</span></el-dropdown-item>
+                ><span @click="addRule()">新增规则</span></el-dropdown-item>
                 <el-dropdown-item icon="el-icon-circle-plus-outline">重命名</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-circle-plus-outline">导出</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-circle-plus-outline">删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </span>
         </div>
         <div class="path-items">
           <div v-for="item in rules">
-            {{ item.path }}
+            {{ item.name }}
           </div>
         </div>
         <div class="item">
@@ -31,8 +33,57 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      title="新增项目"
+      :visible.sync="dialogFormVisible"
+      width="400px"
+      :show-close="false"
+      :modal-append-to-body="false"
+    >
+      <el-form
+        :model="form"
+        label-width="80px"
+      >
+        <el-form-item label="项目名称">
+          <el-input
+            v-model="form.name"
+            placeholder="项目名称"
+          />
+        </el-form-item>
+        <el-form-item label="项目域名">
+          <el-input
+            v-model="form.host"
+            placeholder="项目域名"
+          />
+        </el-form-item>
+        <el-form-item label="标识色">
+          <el-color-picker
+            v-model="form.color"
+          />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveProject"
+        >
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
     <div class="operator">
-      +添加项目
+      <div @click="addProject()">
+        <i
+          class="el-icon-plus"
+        />
+        添加项目
+      </div>
     </div>
   </div>
 </template>
@@ -44,10 +95,21 @@ export default {
       type: Array,
     }
   },
+  data() {
+    return {
+      dialogFormVisible: false,
+      form: {}
+    }
+  },
   methods: {
-    alertInfo() {
-      // alert(12212)
-      console.log(this.rules)
+    addRule() {
+      this.$emit('add')
+    },
+    addProject() {
+      this.dialogFormVisible = true
+    },
+    saveProject() {
+      //
     }
   }
 }
@@ -71,9 +133,11 @@ export default {
     height: 100%;
   }
   .operator {
+    cursor: pointer;
+    color: rgb(253, 85, 83);
+    font-size: 14px;
     position: absolute;
     bottom: 0;
-    height: 42px;
     width: 100%;
     border-top: 1px solid #f4f4f4;
     background-color: #fff;
