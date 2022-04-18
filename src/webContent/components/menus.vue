@@ -2,10 +2,19 @@
   <div class="menu">
     <div class="box">
       <div class="projects-list">
-        <div class="item active">
-          <label>
-            localhost
-          </label>
+        <div
+          v-for="item in projectList"
+          :key="item.name"
+          :class="['item', item.name === currentProject.name ? 'active' : '']"
+        >
+          <div @click="editProject(item)">
+            <span
+              class="icon-circle"
+              :style="{ background: item.color }"
+            />{{
+              item.name
+            }}
+          </div>
           <span>
             <el-dropdown>
               <i class="el-icon-more-outline" />
@@ -13,23 +22,18 @@
                 <el-dropdown-item
                   icon="el-icon-circle-plus"
                 ><span @click="addRule()">新增规则</span></el-dropdown-item>
-                <el-dropdown-item icon="el-icon-circle-plus-outline">重命名</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-circle-plus-outline">导出</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-circle-plus-outline">删除</el-dropdown-item>
+                <el-dropdown-item
+                  icon="el-icon-circle-plus-outline"
+                >重命名</el-dropdown-item>
+                <el-dropdown-item
+                  icon="el-icon-circle-plus-outline"
+                >导出</el-dropdown-item>
+                <el-dropdown-item
+                  icon="el-icon-circle-plus-outline"
+                >删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </span>
-        </div>
-        <div class="path-items">
-          <div v-for="item in rules">
-            {{ item.name }}
-          </div>
-        </div>
-        <div class="item">
-          localhost
-        </div>
-        <div class="item">
-          localhost
         </div>
       </div>
     </div>
@@ -57,9 +61,7 @@
           />
         </el-form-item>
         <el-form-item label="标识色">
-          <el-color-picker
-            v-model="form.color"
-          />
+          <el-color-picker v-model="form.color" />
         </el-form-item>
       </el-form>
       <div
@@ -79,9 +81,7 @@
     </el-dialog>
     <div class="operator">
       <div @click="addProject()">
-        <i
-          class="el-icon-plus"
-        />
+        <i class="el-icon-plus" />
         添加项目
       </div>
     </div>
@@ -89,19 +89,36 @@
 </template>
 
 <script>
+import {
+  saveStorage,
+  getStorageItem,
+  AJAX_INTERCEPTOR_PROJECTS,
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+} from '@/store'
+
 export default {
   props: {
     rules: {
       type: Array,
-    }
+    },
   },
   data() {
     return {
       dialogFormVisible: false,
+      projectList: [],
+      currentProject: {},
       form: {
-          color: '#409EFF',
-      }
+        color: '#409EFF',
+      },
     }
+  },
+  mounted() {
+    getStorageItem(AJAX_INTERCEPTOR_PROJECTS).then((result) => {
+      this.projectList = result || []
+    })
+    getStorageItem(AJAX_INTERCEPTOR_CURRENT_PROJECT).then((result) => {
+      this.currentProject = result || {}
+    })
   },
   methods: {
     addRule() {
@@ -111,9 +128,25 @@ export default {
       this.dialogFormVisible = true
     },
     saveProject() {
-      //
-    }
-  }
+      let { projectList } = this
+
+      const index = projectList.findIndex((item) => {
+        return item.name === this.form.name
+      })
+
+      if (index >= 0) {
+        projectList[index] = this.form
+      } else {
+        projectList = [...projectList, this.form]
+      }
+      this.projectList = projectList
+      saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+    },
+    editProject(project) {
+      this.currentProject = project
+      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
+    },
+  },
 }
 </script>
 
@@ -148,6 +181,7 @@ export default {
 }
 .projects-list {
   .item {
+    cursor: pointer;
     padding: 0 8px;
     height: 38px;
     display: flex;
@@ -166,9 +200,17 @@ export default {
   margin-left: 8px;
   background-color: #f9f5f5;
   border-color: #f5f5f5;
-  &>div {
+  & > div {
     height: 20px;
     line-height: 20px;
   }
+}
+.icon-circle {
+  vertical-align: middle;
+  margin-right: 6px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 </style>
