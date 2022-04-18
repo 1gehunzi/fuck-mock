@@ -1,16 +1,22 @@
 <template>
-  <el-container class="container">
-    <div class="header">
-      <div style="line-height: 50px; padding: 0 12px">
-        hijack, just mock.
-      </div>
-    </div>
+  <div class="container">
     <div class="main">
       <menus
         :rules="rules"
         @add="addRules"
       />
       <div class="content">
+        <div class="header">
+          <div
+            class="info"
+          >
+            {{ currentProject.host }}
+            <el-switch
+              v-model="currentProject.toggle"
+              width="30"
+            />
+          </div>
+        </div>
         <div
           class="logs"
           style="overflow-y: scroll; height: 100%"
@@ -41,7 +47,7 @@
     >
       <EditorForm @save-form="onSubmit" />
     </el-drawer>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -53,6 +59,8 @@ import {
   getStorageItem,
   AJAX_INTERCEPTOR_RULES,
   AJAX_INTERCEPTOR_SWITCHON,
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS
 } from '@/store'
 
 export default {
@@ -62,6 +70,8 @@ export default {
   },
   data() {
     return {
+      currentProject: {},
+      projectList: [],
       addItem: false,
       toggle: false,
       formData: {
@@ -75,9 +85,13 @@ export default {
     }
   },
   mounted() {
-    getStorageItem(AJAX_INTERCEPTOR_SWITCHON).then((result) => {
-      this.toggle = result
+    chrome.storage.local.get([AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT], (result) => {
+      this.currentProject = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
+      this.projectList = result[AJAX_INTERCEPTOR_PROJECTS]
     })
+    // getStorageItem(AJAX_INTERCEPTOR_SWITCHON).then((result) => {
+    //   this.toggle = result
+    // })
 
     getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
       this.rules = result
@@ -124,7 +138,9 @@ export default {
     },
     toggleSwitch(event) {
       console.log(event)
-      saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
+      this.currentProject.toggle = event
+      // saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
+      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, this.currentProject)
     },
     addRules() {
       this.addItem = true
@@ -194,14 +210,21 @@ body {
 <style lang="scss" scoped>
 .container {
   height: 100%;
+  width: 100%;
   .header {
-    position: fixed;
+    position: absolute;
     top: 0;
-    z-index: 1000;
+    z-index: 12;
     width: 100%;
-    height: 50px;
     background: #fff;
-    box-shadow: 0 0 3px 1px rgb(224 224 224 / 50%);
+    padding: 0 16px;
+    .info {
+      height: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    // box-shadow: 0 0 0px 1px rgb(224 224 224 / 50%);
   }
   .main {
     height: 100%;
@@ -209,17 +232,15 @@ body {
     min-height: 650px;
     min-width: 900px;
     position: relative;
-    padding-top: 50px;
     overflow: hidden;
     display: flex;
   }
 
   .content {
+    padding-top: 50px;
     position: relative;
     flex-grow: 1;
     flex-shrink: 1;
-    width: 800px;
-    padding: 0;
     background-color: #f3f4f6;
   }
 }
