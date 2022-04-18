@@ -5,35 +5,50 @@
         <div
           v-for="item in projectList"
           :key="item.name"
-          :class="['item', item.name === currentProject.name ? 'active' : '']"
+          class="item"
         >
-          <div @click="changeProject(item)">
-            <span
-              class="icon-circle"
-              :style="{ background: item.color }"
-            />{{
-              item.name
-            }}
+          <div
+            :class="['project-name', item.name === currentProject ? 'active' : '']"
+          >
+            <div @click="changeProject(item.name)">
+              <span
+                class="icon-circle"
+                :style="{ background: item.color }"
+              />{{
+                item.name
+              }}
+            </div>
+            <span>
+              <el-dropdown>
+                <i class="el-icon-more-outline" />
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item
+                    icon="el-icon-circle-plus"
+                  ><span @click="addRule(item.name)">新增规则</span></el-dropdown-item>
+                  <el-dropdown-item
+                    icon="el-icon-circle-plus-outline"
+                  >重命名</el-dropdown-item>
+                  <el-dropdown-item
+                    icon="el-icon-circle-plus-outline"
+                  >导出</el-dropdown-item>
+                  <el-dropdown-item
+                    icon="el-icon-circle-plus-outline"
+                  >删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </span>
           </div>
-          <span>
-            <el-dropdown>
-              <i class="el-icon-more-outline" />
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  icon="el-icon-circle-plus"
-                ><span @click="addRule()">新增规则</span></el-dropdown-item>
-                <el-dropdown-item
-                  icon="el-icon-circle-plus-outline"
-                >重命名</el-dropdown-item>
-                <el-dropdown-item
-                  icon="el-icon-circle-plus-outline"
-                >导出</el-dropdown-item>
-                <el-dropdown-item
-                  icon="el-icon-circle-plus-outline"
-                >删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </span>
+          <div
+            v-if="item.name === currentProject"
+            class="project-rules"
+          >
+            <div
+              v-for="rule in rules"
+              :key="rule.path"
+            >
+              {{ rule.path }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -89,12 +104,7 @@
 </template>
 
 <script>
-import {
-  saveStorage,
-  getStorageItem,
-  AJAX_INTERCEPTOR_PROJECTS,
-  AJAX_INTERCEPTOR_CURRENT_PROJECT,
-} from '@/store'
+// import { saveStorage, getStorageItem, AJAX_INTERCEPTOR_PROJECTS } from '@/store'
 
 export default {
   props: {
@@ -102,52 +112,34 @@ export default {
       type: Array,
     },
     currentProject: {
-      type: Object
-    }
+      type: String,
+    },
+    projectList: {
+      type: Array,
+    },
   },
   data() {
     return {
       dialogFormVisible: false,
-      projectList: [],
       form: {
         color: '#409EFF',
       },
     }
   },
-  mounted() {
-    getStorageItem(AJAX_INTERCEPTOR_PROJECTS).then((result) => {
-      this.projectList = result || []
-    })
-    getStorageItem(AJAX_INTERCEPTOR_CURRENT_PROJECT).then((result) => {
-      this.currentProject = result || {}
-    })
-  },
+  mounted() {},
   methods: {
-    addRule() {
-      this.$emit('add')
+    addRule(projectName) {
+      console.log('add rule', projectName)
+      this.$emit('add', projectName)
     },
     addProject() {
       this.dialogFormVisible = true
     },
     saveProject() {
-      let { projectList } = this
-
-      const index = projectList.findIndex((item) => {
-        return item.name === this.form.name
-      })
-
-      if (index >= 0) {
-        projectList[index] = this.form
-      } else {
-        projectList = [...projectList, this.form]
-      }
-      this.projectList = projectList
-      saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+      this.$emit('saveProject', this.form)
     },
     changeProject(project) {
       this.$emit('changeActiveProject', project)
-      // this.currentProject = project
-      // saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
     },
   },
 }
@@ -184,17 +176,19 @@ export default {
 }
 .projects-list {
   .item {
-    cursor: pointer;
-    padding: 0 8px;
-    height: 38px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    &.active {
-      background-color: #f5f5f5;
-      border-color: #f5f5f5;
-      border-radius: 4px;
+    .project-name {
+      cursor: pointer;
+      padding: 0 8px;
+      height: 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #fff;
+      &.active {
+        background-color: #f5f5f5;
+        border-color: #f5f5f5;
+        border-radius: 4px;
+      }
     }
   }
 }

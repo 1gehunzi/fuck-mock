@@ -1,10 +1,5 @@
 <template>
   <div>
-    <el-switch
-      v-model="toggle"
-      @change="toggleSwitch"
-    />
-
     <el-form
       :inline="false"
       :model="formData"
@@ -65,12 +60,6 @@
 
 <script>
 import VueJsonEditor from 'vue-json-editor'
-import {
-  saveStorage,
-  getStorageItem,
-  AJAX_INTERCEPTOR_RULES,
-  AJAX_INTERCEPTOR_SWITCHON,
-} from '@/store'
 
 export default {
   components: {
@@ -90,38 +79,11 @@ export default {
     }
   },
   mounted() {
-    getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
-      this.formData = result[0] || {
-        path: '',
-        method: 'GET',
-        response: '',
-        switchOn: true,
-      }
-    })
+
   },
   methods: {
     onSubmit() {
       this.$emit('save-form', this.formData)
-
-      // console.log(this.formData)
-      // let { rules } = this
-
-      // const index = rules.findIndex(item => {
-      //   return item.path === this.formData.path && item.method === this.formData.method
-      // })
-
-      // console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
-      // if (index >= 0) {
-      //   rules[index] = this.formData
-      // } else {
-      //   rules = [...rules, this.formData]
-      // }
-      // this.rules = rules
-      // saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
-    },
-    toggleSwitch(event) {
-      console.log(event)
-      saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
     },
   },
 }

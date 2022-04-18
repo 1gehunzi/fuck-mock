@@ -3,19 +3,19 @@
     <div class="main">
       <menus
         :rules="rules"
+        :project-list="projectList"
         :current-project="currentProject"
+        @saveProject="saveProject"
         @add="addRules"
         @changeActiveProject="changeActiveProject"
       />
       <div class="content">
         <div class="header">
-          <div
-            class="info"
-          >
-            {{ currentProject.host }}
+          <div class="info">
+            {{ activeProject.host }}
             <el-switch
-              v-model="currentProject.toggle"
-              width="30"
+              v-model="activeProject.toggle"
+              :width="30"
               @change="toggleSwitch"
             />
           </div>
@@ -46,7 +46,6 @@
       size="50%"
       :visible.sync="addItem"
       direction="rtl"
-      :before-close="handleClose"
     >
       <EditorForm @save-form="onSubmit" />
     </el-drawer>
@@ -59,11 +58,8 @@ import EditorForm from './components/form.vue'
 import Menus from './components/menus.vue'
 import {
   saveStorage,
-  getStorageItem,
-  AJAX_INTERCEPTOR_RULES,
-  // AJAX_INTERCEPTOR_SWITCHON,
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
-  AJAX_INTERCEPTOR_PROJECTS
+  AJAX_INTERCEPTOR_PROJECTS,
 } from '@/store'
 
 export default {
@@ -73,10 +69,10 @@ export default {
   },
   data() {
     return {
-      currentProject: {},
+      currentProject: '',
+      editKey: '',
       projectList: [],
       addItem: false,
-      toggle: false,
       formData: {
         path: '',
         method: 'GET',
@@ -84,25 +80,28 @@ export default {
         switchOn: true,
       },
       list: [],
-      rules: [],
+    }
+  },
+  computed: {
+    activeProject() {
+      const current = this.projectList.find(item => item.name === this.currentProject) || {}
+      return current
+    },
+    rules() {
+      return this.activeProject.rules || []
+    },
+    toggle() {
+      return this.activeProject.switchOn
     }
   },
   mounted() {
-    chrome.storage.local.get([AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT], (result) => {
-      this.currentProject = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
-      this.projectList = result[AJAX_INTERCEPTOR_PROJECTS]
-    })
-
-    getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
-      this.rules = result
-
-      this.formData = result[0] || {
-        path: '',
-        method: 'GET',
-        response: '',
-        switchOn: true,
+    chrome.storage.local.get(
+      [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT],
+      (result) => {
+        this.currentProject = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
+        this.projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
       }
-    })
+    )
     chrome.runtime.onMessage.addListener((event) => {
       try {
         if (event.type === 'ajaxInterceptor') {
@@ -116,36 +115,53 @@ export default {
     })
   },
   methods: {
-    onJsonChange(value) {
-      console.log('value:', value)
-    },
     onSubmit(formData) {
-      console.log(formData)
-      let { rules } = this
+      const editKey = this.editKey
+      console.log('---------------------------', editKey)
 
-      const index = rules.findIndex(item => {
+      const current = this.projectList.find(item => item.name === this.editKey)
+      console.log('current 在添加 rules', current)
+      let  rules  = current.rules || []
+
+      const index = rules.findIndex((item) => {
         return item.path === formData.path && item.method === formData.method
       })
 
-      console.log(index === -1 ? '新增' : '编辑', 'onSubmit------------------------');
       if (index >= 0) {
         rules[index] = formData
       } else {
         rules = [...rules, formData]
       }
-      this.rules = rules
-      saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
+      const activeProject = {...current, rules}
+      this.saveProject(activeProject)
     },
-    addRules() {
+    addRules(projectName) {
       this.addItem = true
+      this.editKey = projectName
     },
     changeActiveProject(project) {
-       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
-       this.currentProject = project
+      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
+      this.currentProject = project
     },
-    toggleSwitch() {
-      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT,  this.currentProject)
-    }
+    toggleSwitch(event) {
+      const activeProject = {...this.activeProject, switchOn: event}
+      this.saveProject(activeProject)
+    },
+    saveProject(project) {
+      let { projectList } = this
+
+      const index = projectList.findIndex((item) => {
+        return item.name === project.name
+      })
+
+      if (index >= 0) {
+        projectList[index] = project
+      } else {
+        projectList = [...projectList, project]
+      }
+      this.projectList = [...projectList]
+      saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+    },
   },
 }
 </script>
