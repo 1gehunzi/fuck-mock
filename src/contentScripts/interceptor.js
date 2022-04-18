@@ -17,16 +17,20 @@ function mockCore(url, method) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
   const targetUrl = new Url(url)
-  // const str = targetUrl.pathname + targetUrl.query
   const str = targetUrl.pathname
+  console.log(config, 'config configconfigconfigconfigconfigconfig')
 
 
+  const {
+    ajaxInterceptor_current_project,
+    ajaxInterceptor_projects
+  } = config
 
-  console.log(targetUrl)
+  const currentProject = ajaxInterceptor_projects.find(item => item.name === ajaxInterceptor_current_project) || {}
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
-    if (config.ajaxInterceptor_switchOn) {
-      const rules = config.ajaxInterceptor_rules || []
+    if (currentProject.switchOn) {
+      const rules = currentProject.rules || []
       const currentRule = rules.find(item => {
         const re = pathToRegexp(item.path);     // 匹配规则
         const match1 = re.exec(str);
@@ -34,7 +38,8 @@ function mockCore(url, method) {
         return item.switchOn && item.method === method && match1
       })
 
-      console.log('----------------currentRule----------------', rules, currentRule);
+      console.log(currentRule, '-------------------------------------------')
+
 
       if (currentRule) {
          // url 路径

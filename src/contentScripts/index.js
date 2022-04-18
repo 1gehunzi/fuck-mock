@@ -1,3 +1,5 @@
+import { AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT } from '@/store'
+
 const script = document.createElement('script')
 script.setAttribute('type', 'text/javascript')
 script.setAttribute('src', chrome.extension.getURL('interceptor.js'))
@@ -8,13 +10,11 @@ input.setAttribute('id', 'ajaxInterceptor')
 input.setAttribute('style', 'display:none')
 document.documentElement.appendChild(input)
 
-const keys = ['ajaxInterceptor_switchOn', 'ajaxInterceptor_rules']
+const keys = [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT]
 
 window.addEventListener(
       'CUSTOMEVENT',
       function (event) {
-        // chrome.runtime.sendMessage(msg);
-        //  chrome.runtime.sendMessage(chrome.runtime.id, {msg});
          chrome.runtime.sendMessage(chrome.runtime.id, {type: 'ajaxInterceptor', to: 'background', detail: event.detail});
       },
       false
@@ -26,6 +26,7 @@ const executeScript = (data) => {
 }
 const injectGlobalData = () => {
   chrome.storage.local.get(keys, (result) => {
+    console.log('keys-----------', keys, result)
     executeScript(result)
   })
 }

@@ -14,6 +14,7 @@
           <div class="info">
             {{ activeProject.host }}
             <el-switch
+              v-if="activeProject.host"
               v-model="activeProject.toggle"
               :width="30"
               @change="toggleSwitch"
@@ -117,10 +118,8 @@ export default {
   methods: {
     onSubmit(formData) {
       const editKey = this.editKey
-      console.log('---------------------------', editKey)
 
       const current = this.projectList.find(item => item.name === this.editKey)
-      console.log('current 在添加 rules', current)
       let  rules  = current.rules || []
 
       const index = rules.findIndex((item) => {

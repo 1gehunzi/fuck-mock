@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$emit('save-form', this.formData)
+      this.$emit('save-form', {...this.formData})
     },
   },
 }

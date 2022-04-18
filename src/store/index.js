@@ -9,8 +9,8 @@
  *  overrideTxt: 'responce txt'
  * }
  */
-export const AJAX_INTERCEPTOR_SWITCHON = 'ajaxInterceptor_switchOn'
-export const AJAX_INTERCEPTOR_RULES = 'ajaxInterceptor_rules'
+// export const AJAX_INTERCEPTOR_SWITCHON = 'ajaxInterceptor_switchOn'
+// export const AJAX_INTERCEPTOR_RULES = 'ajaxInterceptor_rules'
 export const AJAX_INTERCEPTOR_PROJECTS = 'ajaxInterceptor_projects'
 export const AJAX_INTERCEPTOR_CURRENT_PROJECT = 'ajaxInterceptor_current_project'
 
