@@ -6,7 +6,8 @@
         :project-list="projectList"
         :current-project="currentProject"
         @saveProject="saveProject"
-        @add="addRules"
+        @addRule="addRules"
+        @editRule="editRule"
         @changeActiveProject="changeActiveProject"
       />
       <div class="content">
@@ -26,10 +27,11 @@
           style="overflow-y: scroll; height: 100%"
         >
           <div
+            class="log-item"
             v-for="item in list"
             :key="item.request.url"
           >
-            {{ item.request.url }}
+            {{ formatLog(item.request.url) }}
             <el-tag
               effect="dark"
               type="success"
@@ -37,7 +39,7 @@
               {{ item.request.method }}
             </el-tag>
             <span>{{ item.response.status }}</span>
-            <span>{{ item.request.type }}</span>
+            <span>{{ item.response.isMock ? '拦截' : '穿透' }}</span>
           </div>
         </div>
       </div>
@@ -48,7 +50,7 @@
       :visible.sync="addItem"
       direction="rtl"
     >
-      <EditorForm @save-form="onSubmit" />
+      <EditorForm @save-form="onSubmit" :data="this.formData"/>
     </el-drawer>
   </div>
 </template>
@@ -57,6 +59,7 @@
 import { parse } from 'flatted'
 import EditorForm from './components/form.vue'
 import Menus from './components/menus.vue'
+import Url from 'url-parse'
 import {
   saveStorage,
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
@@ -132,11 +135,17 @@ export default {
         rules = [...rules, formData]
       }
       const activeProject = {...current, rules}
+      this.formData = {}
       this.saveProject(activeProject)
     },
     addRules(projectName) {
       this.addItem = true
       this.editKey = projectName
+    },
+    editRule(projectName, rule) {
+      this.editKey = projectName
+      this.addItem = true
+      this.formData = rule
     },
     changeActiveProject(project) {
       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
@@ -161,6 +170,13 @@ export default {
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
     },
+    formatLog(url) {
+        const targetUrl = new Url(url)
+        const str = targetUrl.pathname
+
+        return str
+
+    }
   },
 }
 </script>
@@ -258,6 +274,13 @@ body {
     flex-grow: 1;
     flex-shrink: 1;
     background-color: #f3f4f6;
+  }
+}
+.log-item {
+  height: 20px;
+  line-height: 20px;
+  &:hover {
+    background: #eee;
   }
 }
 </style>

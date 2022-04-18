@@ -18,8 +18,6 @@ function mockCore(url, method) {
   const config = JSON.parse(configStr)
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
-  console.log(config, 'config configconfigconfigconfigconfigconfig')
-
 
   const {
     ajaxInterceptor_current_project,
@@ -34,17 +32,11 @@ function mockCore(url, method) {
       const currentRule = rules.find(item => {
         const re = pathToRegexp(item.path);     // 匹配规则
         const match1 = re.exec(str);
-        console.log(match1, item.path, str, '----------------------------------')
         return item.switchOn && item.method === method && match1
       })
 
-      console.log(currentRule, '-------------------------------------------')
-
-
       if (currentRule) {
          // url 路径
-        console.log('拦截请求', method, url, currentRule.response)
-
         resolve(currentRule.response)
       }
     }
@@ -81,6 +73,7 @@ proxy({
             statusText: result.statusText,
             url: result.url,
             response: result,
+            isMock: true
           },
         }
 

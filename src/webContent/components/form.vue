@@ -62,8 +62,17 @@
 import VueJsonEditor from 'vue-json-editor'
 
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: {}
+    }
+  },
   components: {
     VueJsonEditor,
+  },
+  mounted() {
+    this.formData = {...this.data}
   },
   data() {
     return {
@@ -77,9 +86,6 @@ export default {
         switchOn: true,
       },
     }
-  },
-  mounted() {
-
   },
   methods: {
     onSubmit() {

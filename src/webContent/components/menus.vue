@@ -45,6 +45,7 @@
             <div
               v-for="rule in rules"
               :key="rule.path"
+              @click="editRule(item.name, rule)"
             >
               {{ rule.path }}
             </div>
@@ -129,8 +130,10 @@ export default {
   mounted() {},
   methods: {
     addRule(projectName) {
-      console.log('add rule', projectName)
-      this.$emit('add', projectName)
+      this.$emit('addRule', projectName)
+    },
+    editRule(projectName, rule) {
+      this.$emit('editRule', projectName, rule)
     },
     addProject() {
       this.dialogFormVisible = true
