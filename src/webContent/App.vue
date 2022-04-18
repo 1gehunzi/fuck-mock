@@ -3,7 +3,9 @@
     <div class="main">
       <menus
         :rules="rules"
+        :current-project="currentProject"
         @add="addRules"
+        @changeActiveProject="changeActiveProject"
       />
       <div class="content">
         <div class="header">
@@ -14,6 +16,7 @@
             <el-switch
               v-model="currentProject.toggle"
               width="30"
+              @change="toggleSwitch"
             />
           </div>
         </div>
@@ -58,7 +61,7 @@ import {
   saveStorage,
   getStorageItem,
   AJAX_INTERCEPTOR_RULES,
-  AJAX_INTERCEPTOR_SWITCHON,
+  // AJAX_INTERCEPTOR_SWITCHON,
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
   AJAX_INTERCEPTOR_PROJECTS
 } from '@/store'
@@ -89,9 +92,6 @@ export default {
       this.currentProject = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
       this.projectList = result[AJAX_INTERCEPTOR_PROJECTS]
     })
-    // getStorageItem(AJAX_INTERCEPTOR_SWITCHON).then((result) => {
-    //   this.toggle = result
-    // })
 
     getStorageItem(AJAX_INTERCEPTOR_RULES).then((result = []) => {
       this.rules = result
@@ -136,14 +136,15 @@ export default {
       this.rules = rules
       saveStorage(AJAX_INTERCEPTOR_RULES, this.rules)
     },
-    toggleSwitch(event) {
-      console.log(event)
-      this.currentProject.toggle = event
-      // saveStorage(AJAX_INTERCEPTOR_SWITCHON, event)
-      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, this.currentProject)
-    },
     addRules() {
       this.addItem = true
+    },
+    changeActiveProject(project) {
+       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
+       this.currentProject = project
+    },
+    toggleSwitch() {
+      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT,  this.currentProject)
     }
   },
 }
@@ -169,8 +170,8 @@ html {
   user-select: none;
   height: 100%;
   width: 100%;
-  min-height: 650px;
-  min-width: 1000px;
+  /* min-height: 650px;
+  min-width: 1000px; */
   -ms-overflow-style: none;
 }
 
@@ -180,8 +181,8 @@ body {
   font-size: 1em;
   height: 100%;
   width: 100%;
-  min-height: 650px;
-  min-width: 1000px;
+  /* min-height: 650px;
+  min-width: 1000px; */
 }
 
 *::-webkit-input-placeholder {

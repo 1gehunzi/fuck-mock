@@ -7,7 +7,7 @@
           :key="item.name"
           :class="['item', item.name === currentProject.name ? 'active' : '']"
         >
-          <div @click="editProject(item)">
+          <div @click="changeProject(item)">
             <span
               class="icon-circle"
               :style="{ background: item.color }"
@@ -101,12 +101,14 @@ export default {
     rules: {
       type: Array,
     },
+    currentProject: {
+      type: Object
+    }
   },
   data() {
     return {
       dialogFormVisible: false,
       projectList: [],
-      currentProject: {},
       form: {
         color: '#409EFF',
       },
@@ -142,9 +144,10 @@ export default {
       this.projectList = projectList
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
     },
-    editProject(project) {
-      this.currentProject = project
-      saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
+    changeProject(project) {
+      this.$emit('changeActiveProject', project)
+      // this.currentProject = project
+      // saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
     },
   },
 }
