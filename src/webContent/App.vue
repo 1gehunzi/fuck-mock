@@ -29,7 +29,7 @@
           class="logs"
           style="overflow-y: scroll; height: 100%"
         >
-          <Logs :list="list" />
+          <Logs :list="list" @editRuleByLog="editRuleByLog" />
         </div>
       </div>
     </div>
@@ -130,13 +130,20 @@ export default {
       this.addItem = false
       this.saveProject(activeProject, activeProject.name)
     },
+    editRuleByLog(item) {
+      this.addItem = true
+      this.editKey = this.currentProject.name
+      const rulePath = item.response.rulePath
+      const method = item.request.method
+      const rule = this.activeProject.rules.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
+      this.formData = rule || {}
+    },
     addRules(projectName) {
       this.formData = {}
       this.addItem = true
       this.editKey = projectName
     },
     editRule(projectName, rule) {
-      console.log(projectName, rule, '--------------------------------------')
       this.editKey = projectName
       this.addItem = true
       this.formData = rule

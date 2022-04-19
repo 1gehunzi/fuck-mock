@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div
-      v-for="item in list"
-      :key="item.request.url"
-      class="log-item"
-    >
-      {{ formatLog(item.request.url) }}
-      <el-tag
-        effect="dark"
-        type="success"
+    <div class="content">
+      <div
+        v-for="item in list"
+        :key="item.request.url"
+        class="log-item"
+        @click="editRule(item)"
       >
-        {{ item.request.method }}
-      </el-tag>
-      <span>{{ item.response.status }}</span>
-      <span>{{ item.response.isMock ? '拦截' : '穿透' }}</span>
+        <span>
+          {{ item.request.method }}
+        </span>
+        {{ formatLog(item.request.url) }}
+        <span>{{ item.response.status }}</span>
+        <span>{{ item.response.isMock ? '拦截' : '穿透' }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -24,20 +24,32 @@ import Url from 'url-parse'
 export default {
   props: {
     list: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   methods: {
     formatLog(url) {
       const targetUrl = new Url(url)
       const str = targetUrl.pathname
-
       return str
+    },
+    editRule(item) {
+      this.$emit('editRuleByLog', item)
     }
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-
+.content {
+  padding: 8px;
+  .log-item {
+    height: 20px;
+    line-height: 20px;
+    cursor: pointer;
+    &:hover {
+      background: #eee;
+    }
+  }
+}
 </style>

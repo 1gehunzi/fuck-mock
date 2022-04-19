@@ -33,12 +33,13 @@ function mockCore(url, method) {
       const currentRule = rules.find(item => {
         const re = pathToRegexp(item.path);     // 匹配规则
         const match1 = re.exec(str);
-        return item.switchOn && item.method === method && match1
+        // return item.switchOn && item.method === method && match1
+        return item.method === method && match1
       })
       console.log('currentRule-----------------------', currentRule)
       if (currentRule) {
          // url 路径
-        resolve(currentRule.response, currentRule.path)
+        resolve({response: currentRule.response, rulePath: currentRule.path})
       }
     }
     reject()
@@ -58,7 +59,8 @@ proxy({
       type: 'xhr',
     }
     mockCore(url.href, config.method)
-      .then((response, pathRule) => {
+      .then(res => {
+        const { response, rulePath } = res || {}
         const result = {
           config,
           status: 200,
@@ -66,6 +68,7 @@ proxy({
           // TODO: 为啥要 stringfy 呢
           response: JSON.stringify(response)
         }
+        console.log(response, rulePath, res, '-------------------------------------------')
         const payload = {
           request,
           response: {
@@ -75,7 +78,7 @@ proxy({
             url: result.url,
             response: result,
             isMock: true,
-            pathRule
+            rulePath
           },
         }
         console.log('payload------', payload)

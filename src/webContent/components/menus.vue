@@ -222,8 +222,8 @@ export default {
   & > .rule-item {
     padding: 0 8px 0 8px;
     cursor: pointer;
-    height: 20px;
-    line-height: 20px;
+    height: 24px;
+    line-height: 24px;
     display: flex;
     justify-content: space-between;
     .delete-btn {
