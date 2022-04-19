@@ -22,16 +22,20 @@
               <el-dropdown>
                 <i class="el-icon-more-outline" />
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                    icon="el-icon-circle-plus"
-                  ><span @click="addRule(item.name)">新增规则</span></el-dropdown-item>
-                  <el-dropdown-item
-                    icon="el-icon-circle-plus-outline"
-                  >重命名</el-dropdown-item>
-                  <el-dropdown-item
-                    icon="el-icon-circle-plus-outline"
-                  >
-                  <div @click="deleteProject(item.name)">删除</div></el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-button type="text" @click="addRule(item.name)">
+                      <i class="el-icon-circle-plus-outline" />
+                      新增规则
+                    </el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-button  type="text" @click="editProject(item.name)"><i class="el-icon-edit"/>编辑项目</el-button>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-popconfirm  title="确定删除吗？" @confirm="deleteProject(item.name)">
+                      <el-button type="text" slot="reference"><i class="el-icon-delete"/> 删除</el-button>
+                    </el-popconfirm>
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </span>
@@ -57,7 +61,7 @@
       </div>
     </div>
     <el-dialog
-      title="新增项目"
+      :title="editProjectName ? '编辑项目' : '新增项目'"
       :visible.sync="dialogFormVisible"
       width="400px"
       :show-close="false"
@@ -108,8 +112,6 @@
 </template>
 
 <script>
-// import { saveStorage, getStorageItem, AJAX_INTERCEPTOR_PROJECTS } from '@/store'
-
 export default {
   props: {
     rules: {
@@ -125,6 +127,7 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
+      editProjectName: '',
       form: {
         color: '#409EFF',
       },
@@ -147,12 +150,18 @@ export default {
     },
     saveProject() {
       this.dialogFormVisible = false;
-      this.$emit('saveProject', {...this.form})
+      this.$emit('saveProject', {...this.form}, this.editProjectName)
       this.form = {color: '#409EFF'}
+      this.editProjectName = ''
 
     },
     deleteProject(projectName) {
       this.$emit('deleteProject', projectName)
+    },
+    editProject(projectName) {
+      this.dialogFormVisible = true
+      this.editProjectName = projectName
+      this.form = this.projectList.find(item => item.name = projectName)
     },
     changeProject(project) {
       this.$emit('changeActiveProject', project)

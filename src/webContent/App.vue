@@ -7,6 +7,7 @@
         :current-project="currentProject"
         @saveProject="saveProject"
         @deleteProject="deleteProject"
+        @editProject="editProject"
         @addRule="addRules"
         @editRule="editRule"
         @deleteRule="deleteRule"
@@ -160,15 +161,15 @@ export default {
       const activeProject = {...this.activeProject, switchOn: event}
       this.saveProject(activeProject)
     },
-    saveProject(project) {
+    saveProject(project, editProjectName) {
       let { projectList } = this
 
       const index = projectList.findIndex((item) => {
-        return item.name === project.name
+        return item.name === editProjectName
       })
 
-      if (index >= 0) {
-        projectList[index] = project
+      if (editProjectName) {
+        projectList[index] = {...projectList[index], ...project}
       } else {
         projectList = [...projectList, project]
       }
@@ -185,6 +186,9 @@ export default {
       projectList.splice(index, 1)
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+    },
+    editProject(projectName) {
+
     }
   },
 }
