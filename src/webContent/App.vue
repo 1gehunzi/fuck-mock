@@ -128,7 +128,7 @@ export default {
       const activeProject = {...current, rules}
       this.formData = {}
       this.addItem = false
-      this.saveProject(activeProject)
+      this.saveProject(activeProject, activeProject.name)
     },
     addRules(projectName) {
       this.formData = {}
@@ -151,7 +151,7 @@ export default {
 
       rules.splice(index, 1);
       const activeProject = {...current, rules}
-       this.saveProject(activeProject)
+       this.saveProject(activeProject, activeProject.name)
     },
     changeActiveProject(project) {
       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
@@ -159,9 +159,10 @@ export default {
     },
     toggleSwitch(event) {
       const activeProject = {...this.activeProject, switchOn: event}
-      this.saveProject(activeProject)
+      this.saveProject(activeProject, activeProject.name)
     },
     saveProject(project, editProjectName) {
+      console.log(project, editProjectName, 'sdddddddddddddddddddddddddddd')
       let { projectList } = this
 
       const index = projectList.findIndex((item) => {

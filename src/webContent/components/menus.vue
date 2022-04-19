@@ -16,7 +16,7 @@
                 :style="{ background: item.color }"
               />{{
                 item.name
-              }}
+              }} {{item.rules && item.rules.length}}
             </div>
             <span>
               <el-dropdown>
