@@ -48,6 +48,11 @@
               @click="editRule(item.name, rule)"
             >
               {{ rule.path }}
+              <i
+                class="el-icon-delete"
+                @click.stop
+                @click="deleteRule(item.name, rule)"
+              />
             </div>
           </div>
         </div>
@@ -135,10 +140,16 @@ export default {
     editRule(projectName, rule) {
       this.$emit('editRule', projectName, rule)
     },
+    deleteRule(projectName, rule) {
+      this.$emit('deleteRule', projectName, rule)
+    },
     addProject() {
+
       this.dialogFormVisible = true
     },
     saveProject() {
+      this.dialogFormVisible = false;
+      this.form = {color: '#409EFF'}
       this.$emit('saveProject', this.form)
     },
     changeProject(project) {

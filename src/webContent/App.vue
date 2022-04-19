@@ -8,6 +8,7 @@
         @saveProject="saveProject"
         @addRule="addRules"
         @editRule="editRule"
+        @deleteRule="deleteRule"
         @changeActiveProject="changeActiveProject"
       />
       <div class="content">
@@ -45,6 +46,7 @@
       </div>
     </div>
     <el-drawer
+      v-if="addItem"
       title="我是标题"
       size="50%"
       :visible.sync="addItem"
@@ -136,16 +138,31 @@ export default {
       }
       const activeProject = {...current, rules}
       this.formData = {}
+      this.addItem = false
       this.saveProject(activeProject)
     },
     addRules(projectName) {
+      this.formData = {}
       this.addItem = true
       this.editKey = projectName
     },
     editRule(projectName, rule) {
+      console.log(projectName, rule, '--------------------------------------')
       this.editKey = projectName
       this.addItem = true
       this.formData = rule
+    },
+    deleteRule(projectName, rule) {
+       const current = this.projectList.find(item => item.name === projectName)
+       let  rules  = current.rules || []
+
+      const index = rules.findIndex((item) => {
+        return item.path === rule.path && item.method === rule.method
+      })
+
+      rules.splice(index, 1);
+      const activeProject = {...current, rules}
+       this.saveProject(activeProject)
     },
     changeActiveProject(project) {
       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
