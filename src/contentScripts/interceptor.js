@@ -34,10 +34,10 @@ function mockCore(url, method) {
         const match1 = re.exec(str);
         return item.switchOn && item.method === method && match1
       })
-
+      console.log('currentRule-----------------------', currentRule)
       if (currentRule) {
          // url 路径
-        resolve(currentRule.response)
+        resolve(currentRule.response, currentRule.path)
       }
     }
     reject()
@@ -57,7 +57,7 @@ proxy({
       type: 'xhr',
     }
     mockCore(url.href, config.method)
-      .then((response) => {
+      .then((response, pathRule) => {
         const result = {
           config,
           status: 200,
@@ -73,10 +73,11 @@ proxy({
             statusText: result.statusText,
             url: result.url,
             response: result,
-            isMock: true
+            isMock: true,
+            pathRule
           },
         }
-
+        console.log('payload------', payload)
         sendMsg(payload)
         handler.resolve(result)
       })
