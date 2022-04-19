@@ -42,19 +42,22 @@
           </div>
           <div
             v-if="item.name === currentProject"
-            class="project-rules"
+            class="rule-items"
           >
             <div
               v-for="rule in rules"
               :key="rule.path"
               @click="editRule(item.name, rule)"
+              class="rule-item"
             >
-              {{ rule.path }}
-              <i
-                class="el-icon-delete"
-                @click.stop
-                @click="deleteRule(item.name, rule)"
-              />
+              <span>{{ rule.path }}</span>
+              <el-popconfirm  title="确定删除吗？" @confirm="deleteRule(item.name, rule)">
+                <span class="delete-btn"  slot="reference" @click.stop>
+                  <i
+                    class="el-icon-delete"
+                  />
+                </span>
+              </el-popconfirm>
             </div>
           </div>
         </div>
@@ -215,14 +218,23 @@ export default {
     }
   }
 }
-.path-items {
-  padding: 0 8px;
-  margin-left: 8px;
-  background-color: #f9f5f5;
-  border-color: #f5f5f5;
-  & > div {
+.rule-items {
+  & > .rule-item {
+    padding: 0 8px 0 8px;
+    cursor: pointer;
     height: 20px;
     line-height: 20px;
+    display: flex;
+    justify-content: space-between;
+    .delete-btn {
+      display: none;
+    }
+    &:hover {
+      .delete-btn {
+        display: inline-block;
+      }
+      background-color: #f5f5f5;
+    }
   }
 }
 .icon-circle {
