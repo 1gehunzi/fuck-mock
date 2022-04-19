@@ -35,8 +35,8 @@
     </div>
     <el-drawer
       v-if="addItem"
-      title="我是标题"
-      size="50%"
+      title="编辑规则"
+      size="60%"
       :visible.sync="addItem"
       direction="rtl"
     >
@@ -131,11 +131,12 @@ export default {
       this.saveProject(activeProject, activeProject.name)
     },
     editRuleByLog(item) {
+      console.log(item, 'log click')
       this.addItem = true
       this.editKey = this.currentProject.name
       const rulePath = item.response.rulePath
       const method = item.request.method
-      const rule = this.activeProject.rules.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
+      const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
       this.formData = rule || {}
     },
     addRules(projectName) {

@@ -59,8 +59,15 @@
 </template>
 
 <script>
-import VueJsonEditor from 'vue-json-editor'
 
+import VueJsonEditor from 'vue-json-editor'
+const defaultForm = {
+  name: '',
+  path: '',
+  method: 'GET',
+  response: '',
+  switchOn: true,
+}
 export default {
   props: {
     data: {
@@ -72,7 +79,7 @@ export default {
     VueJsonEditor,
   },
   mounted() {
-    this.formData = {...this.data}
+    this.formData = {...defaultForm, ...this.data}
   },
   data() {
     return {
