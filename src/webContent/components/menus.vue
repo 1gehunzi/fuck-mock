@@ -30,10 +30,8 @@
                   >重命名</el-dropdown-item>
                   <el-dropdown-item
                     icon="el-icon-circle-plus-outline"
-                  >导出</el-dropdown-item>
-                  <el-dropdown-item
-                    icon="el-icon-circle-plus-outline"
-                  >删除</el-dropdown-item>
+                  >
+                  <div @click="deleteProject(item.name)">删除</div></el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </span>
@@ -101,10 +99,10 @@
       </div>
     </el-dialog>
     <div class="operator">
-      <div @click="addProject()">
+      <el-button type="text" @click="addProject()">
         <i class="el-icon-plus" />
         添加项目
-      </div>
+      </el-button>
     </div>
   </div>
 </template>
@@ -149,8 +147,12 @@ export default {
     },
     saveProject() {
       this.dialogFormVisible = false;
+      this.$emit('saveProject', {...this.form})
       this.form = {color: '#409EFF'}
-      this.$emit('saveProject', this.form)
+
+    },
+    deleteProject(projectName) {
+      this.$emit('deleteProject', projectName)
     },
     changeProject(project) {
       this.$emit('changeActiveProject', project)
@@ -177,15 +179,13 @@ export default {
     height: 100%;
   }
   .operator {
-    cursor: pointer;
-    color: rgb(253, 85, 83);
     font-size: 14px;
     position: absolute;
     bottom: 0;
     width: 100%;
     border-top: 1px solid #f4f4f4;
     background-color: #fff;
-    padding: 8px 12px 10px 12px;
+    padding: 4px 12px 4px 12px;
   }
 }
 .projects-list {

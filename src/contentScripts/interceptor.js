@@ -24,7 +24,8 @@ function mockCore(url, method) {
     ajaxInterceptor_projects
   } = config
 
-  const currentProject = ajaxInterceptor_projects.find(item => item.name === ajaxInterceptor_current_project) || {}
+  console.log(config, 'xxxxxxxxxxxxxxxxxx')
+  const currentProject = ajaxInterceptor_projects?.find(item => item.name === ajaxInterceptor_current_project) || {}
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (currentProject.switchOn) {
