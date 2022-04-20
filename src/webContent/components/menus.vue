@@ -50,7 +50,7 @@
               @click="editRule(item.name, rule)"
               class="rule-item"
             >
-              <span>{{ rule.path }}</span>
+              <span>{{ rule.name }}</span>
               <el-popconfirm  title="确定删除吗？" @confirm="deleteRule(item.name, rule)">
                 <span class="delete-btn"  slot="reference" @click.stop>
                   <i
@@ -105,6 +105,29 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      title="删除项目"
+      :visible.sync="deleteFormVisible"
+      width="300px"
+      :show-close="false"
+      :modal-append-to-body="false"
+    >
+      <div>确认删除xxx项目吗</div>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="deleteFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveProject"
+        >
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
     <div class="operator">
       <el-button type="text" @click="addProject()">
         <i class="el-icon-plus" />
@@ -129,6 +152,7 @@ export default {
   },
   data() {
     return {
+      deleteFormVisible: true,
       dialogFormVisible: false,
       editProjectName: '',
       form: {
@@ -223,7 +247,7 @@ export default {
 }
 .rule-items {
   & > .rule-item {
-    padding: 0 8px 0 8px;
+    padding: 0 8px 0 24px;
     cursor: pointer;
     height: 24px;
     line-height: 24px;
