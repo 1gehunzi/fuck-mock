@@ -36,6 +36,7 @@ const payload = {
 4. path-to-regexp 的优化
 5. logs 页面的清空操作
 6. fetch 的拦截
+7. 表单校验
 
 ## 最重要的事情，把代码优化下。都是demo代码，太乱了
 

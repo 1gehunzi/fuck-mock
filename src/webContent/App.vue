@@ -43,6 +43,11 @@
     >
       <EditorForm @save-form="onSubmit" :data="this.formData"/>
     </el-drawer>
+    <div class="clear-btn" @click="clearLogs">
+      <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
+        <i class="el-icon-delete" />
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -212,6 +217,9 @@ export default {
     },
     editProject(projectName) {
 
+    },
+    clearLogs() {
+      this.list = []
     }
   },
 }
@@ -292,7 +300,6 @@ body {
       justify-content: space-between;
       align-items: center;
     }
-    // box-shadow: 0 0 0px 1px rgb(224 224 224 / 50%);
   }
   .main {
     height: 100%;
@@ -318,5 +325,22 @@ body {
   &:hover {
     background: #eee;
   }
+}
+.clear-btn {
+  right: 40px;
+  bottom: 40px;
+  position: fixed;
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #409eff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 6px rgb(0 0 0 / 12%);
+  cursor: pointer;
+  z-index: 5;
 }
 </style>
