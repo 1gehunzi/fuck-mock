@@ -68,7 +68,6 @@ proxy({
           config,
           status,
           headers: [],
-          // TODO: 为啥要 stringfy 呢
           response: JSON.stringify(response)
         }
         const payload = {
@@ -83,7 +82,6 @@ proxy({
             rulePath
           },
         }
-        console.log('payload------', payload)
         sendMsg(payload)
         handler.resolve(result)
       })
