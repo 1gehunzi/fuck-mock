@@ -24,7 +24,6 @@ function mockCore(url, method) {
     ajaxInterceptor_projects
   } = config
 
-  console.log(config, 'xxxxxxxxxxxxxxxxxx')
   const currentProject = ajaxInterceptor_projects?.find(item => item.name === ajaxInterceptor_current_project) || {}
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
@@ -40,7 +39,7 @@ function mockCore(url, method) {
       if (currentRule) {
          // url 路径
          setTimeout(() => {
-          resolve({response: currentRule.response, rulePath: currentRule.path})
+          resolve({response: currentRule.response, rulePath: currentRule.path, status: currentRule.status})
          }, currentRule.delay || 0)
 
          return
@@ -64,15 +63,14 @@ proxy({
     }
     mockCore(url.href, config.method)
       .then(res => {
-        const { response, rulePath } = res || {}
+        const { response, rulePath, status } = res || {}
         const result = {
           config,
-          status: 200,
+          status,
           headers: [],
           // TODO: 为啥要 stringfy 呢
           response: JSON.stringify(response)
         }
-        console.log(response, rulePath, res, '-------------------------------------------')
         const payload = {
           request,
           response: {

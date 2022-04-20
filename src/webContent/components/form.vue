@@ -19,7 +19,15 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Delay">
-        <el-input v-model="formData.delay" placeholder="请属于延时毫秒" />
+        <el-input v-model="formData.delay" placeholder="请输入响应延时(ms)" />
+      </el-form-item>
+      <el-form-item label="Code">
+        <el-select v-model="formData.status" placeholder="请输入响应状态码">
+          <el-option label="200" :value="200" />
+          <el-option label="500" :value="500" />
+          <el-option label="401" :value="401" />
+          <el-option label="403" :value="403" />
+        </el-select>
       </el-form-item>
       <el-form-item label="Response">
         <VueJsonEditor
@@ -41,6 +49,7 @@ import VueJsonEditor from 'vue-json-editor'
 const defaultForm = {
   name: '',
   path: '',
+  status: 200,
   method: 'GET',
   response: '',
   switchOn: true,
