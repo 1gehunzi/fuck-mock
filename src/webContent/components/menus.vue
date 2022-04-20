@@ -210,9 +210,12 @@ export default {
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
+      & >* {
+        vertical-align: middle;
+      }
       &.active {
-        background-color: #f5f5f5;
-        border-color: #f5f5f5;
+        background-color: #ecf8ff;
+        color: #409EFF;
         border-radius: 4px;
       }
     }

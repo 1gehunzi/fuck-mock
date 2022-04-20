@@ -29,17 +29,20 @@ const payload = {
 }
 ```
 
-## TODO:
-1. 单条规则的开启关闭
-2. 首次安装插件的项目初始化
-3. 项目和规则的编辑重名操作
-4. path-to-regexp 的优化
-6. fetch 的拦截
-7. 表单校验
-8. origin 设置
+## TODO List
+- [x] logs 页面的清空操作
+- [x] 首次安装插件的项目初始化
+- [ ] project Item 用个蓝色
+- [ ] 单条规则的开启关闭
+- [ ] 项目和规则的编辑重名操作
+- [ ] path-to-regexp 的优化
+- [ ] fetch 的拦截
+- [ ] 表单校验
+- [ ] origin 设置
 
-~ logs 页面的清空操作 ~
-
+调试环境：
+微信公众号是 xhr
+leetcode是 fetch
 
 ## 最重要的事情，把代码优化下。都是demo代码，太乱了
 
