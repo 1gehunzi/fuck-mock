@@ -1,3 +1,5 @@
+import { AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT } from '@/store'
+
 let ftdWindow = null;
 
 chrome.windows.onRemoved.addListener((windowId) => {
@@ -8,16 +10,18 @@ chrome.windows.onRemoved.addListener((windowId) => {
 	}
 });
 
-// chrome.notifications.onClicked.addListener((notificationId) => {
-// 	if (ftdWindow && notificationId.startsWith(`net.focustodo`)) {
-// 		console.log(`Click notification!`);
-// 		const info = {
-// 			focused: true
-// 		};
-// 		chrome.windows.update(ftdWindow.id, info);
-// 		chrome.notifications.clear(notificationId);
-// 	}
-// });
+const defaultProject = {
+  name: 'localhost',
+  host: 'http://localhost:8080',
+  color: '#409EFF',
+  switchOn: true
+}
+
+chrome.runtime.onInstalled.addListener(function() {
+  chrome.storage.local.set({[AJAX_INTERCEPTOR_PROJECTS]: [defaultProject], [AJAX_INTERCEPTOR_CURRENT_PROJECT]: defaultProject.name}, function() {
+    console.log('The color is green.');
+  });
+});
 
 chrome.browserAction.onClicked.addListener(function() {
 	console.log(`browserAction.onClicked`);
@@ -56,11 +60,3 @@ chrome.browserAction.onClicked.addListener(function() {
 	}
 });
 
-// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-// 	console.log(sender.tab ? "from a content script:" + sender.tab.url : "from the extension");
-//     if (request.greeting === "hello") {
-//       	sendResponse({farewell: "goodbye"});
-//     }
-// });
-
-console.log(`background.js loaded`);

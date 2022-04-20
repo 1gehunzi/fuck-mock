@@ -36,6 +36,7 @@ const payload = {
 4. path-to-regexp 的优化
 6. fetch 的拦截
 7. 表单校验
+8. origin 设置
 
 ~ logs 页面的清空操作 ~
 
