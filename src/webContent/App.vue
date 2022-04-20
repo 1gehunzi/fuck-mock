@@ -146,10 +146,11 @@ export default {
       }
 
       const {response, request} = item
+      console.log(response, 'editlog--------------------------------')
       this.formData = {
         switchOn: true,
         path: request.method,
-        response: response.response,
+        response: JSON.parse(response.response),
         path: request.url
       }
     },
