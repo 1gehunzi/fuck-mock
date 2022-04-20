@@ -112,7 +112,7 @@ function configFunc(env, argv) {
         chunks: ['popup'],
       }),
       new HtmlWebpackPlugin({
-        title: 'Fuck Mock',
+        title: 'hijack, Just Mock',
         template: './index.html',
         filename: 'webContent.html',
         chunks: ['webContent'],

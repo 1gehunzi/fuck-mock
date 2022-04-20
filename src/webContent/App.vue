@@ -48,6 +48,7 @@
 
 <script>
 import { parse } from 'flatted'
+import Url from 'url-parse'
 import EditorForm from './components/form.vue'
 import Menus from './components/menus.vue'
 import Logs from './components/logs.vue'
@@ -141,12 +142,13 @@ export default {
       }
 
       const {response, request} = item
+      const targetUrl = new Url(request.url)
       this.formData = {
         projectName: this.activeProject.name,
         switchOn: true,
         path: request.method,
         response: JSON.parse(response.response),
-        path: request.url
+        path: targetUrl.pathname
       }
     },
     addRules(projectName) {
@@ -183,7 +185,6 @@ export default {
       this.saveProject(activeProject, activeProject.name)
     },
     saveProject(project, editProjectName) {
-      console.log(project, editProjectName, 'sdddddddddddddddddddddddddddd')
       let { projectList } = this
 
       const index = projectList.findIndex((item) => {

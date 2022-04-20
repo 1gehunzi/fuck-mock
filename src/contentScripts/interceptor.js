@@ -39,7 +39,11 @@ function mockCore(url, method) {
       console.log('currentRule-----------------------', currentRule)
       if (currentRule) {
          // url 路径
-        resolve({response: currentRule.response, rulePath: currentRule.path})
+         setTimeout(() => {
+          resolve({response: currentRule.response, rulePath: currentRule.path})
+         }, currentRule.delay || 0)
+
+         return
       }
     }
     reject()

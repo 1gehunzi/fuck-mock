@@ -26,6 +26,7 @@
           v-model="formData.response"
           :mode="editorMode"
           :modes="modes"
+          :expandedOnStart="true"
         />
       </el-form-item>
       <el-form-item>
@@ -66,7 +67,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.formData, '------------------------------this.formData')
       this.$emit('save-form', { ...this.formData })
     },
   },
