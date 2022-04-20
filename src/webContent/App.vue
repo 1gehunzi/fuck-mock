@@ -19,7 +19,7 @@
             {{ activeProject.host }}
             <el-switch
               v-if="activeProject.host"
-              v-model="activeProject.toggle"
+              :value="toggle"
               :width="30"
               @change="toggleSwitch"
             />
@@ -256,8 +256,6 @@ body {
   font-size: 1em;
   height: 100%;
   width: 100%;
-  /* min-height: 650px;
-  min-width: 1000px; */
 }
 
 *::-webkit-input-placeholder {

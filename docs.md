@@ -32,7 +32,7 @@ const payload = {
 ## TODO List
 - [x] logs 页面的清空操作
 - [x] 首次安装插件的项目初始化
-- [ ] project Item 用个蓝色
+- [x] project Item 用个蓝色
 - [ ] 单条规则的开启关闭
 - [ ] 项目和规则的编辑重名操作
 - [ ] path-to-regexp 的优化

@@ -14,7 +14,6 @@ function injectScriptToPage() {
   document.documentElement.appendChild(input)
 }
 // TODO: 搞下什么界面被mock
-
 chrome.storage.local.get(keys, (result) => {
   const currentName = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
   const projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
@@ -53,6 +52,7 @@ injectGlobalData()
 chrome.storage.onChanged.addListener((changes, namespace) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
+    console.log(namespace, oldValue, newValue)
     if (keys.find((item) => item === key)) {
       injectGlobalData()
     }
