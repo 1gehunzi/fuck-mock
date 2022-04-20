@@ -113,6 +113,8 @@ export default {
     onSubmit(formData) {
       const editKey = this.editKey
 
+      console.log(editKey)
+
       const current = this.projectList.find(item => item.name === this.editKey)
       let  rules  = current.rules || []
 
@@ -133,11 +135,23 @@ export default {
     editRuleByLog(item) {
       console.log(item, 'log click')
       this.addItem = true
-      this.editKey = this.currentProject.name
+      this.editKey = this.activeProject.name
       const rulePath = item.response.rulePath
-      const method = item.request.method
-      const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
-      this.formData = rule || {}
+
+      if (rulePath) {
+        const method = item.request.method
+        const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
+        this.formData = rule || {}
+        return
+      }
+
+      const {response, request} = item
+      this.formData = {
+        switchOn: true,
+        path: request.method,
+        response: response.response,
+        path: request.url
+      }
     },
     addRules(projectName) {
       this.formData = {}

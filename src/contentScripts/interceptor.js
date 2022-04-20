@@ -92,7 +92,7 @@ proxy({
   onResponse: (response, handler) => {
     console.log('onResponse-----------------', response)
     const { statusText, status, config, headers, response: res } = response
-        const url = new Url(config.url)
+    const url = new Url(config.url)
     const payload = {
       request: {
         method: config.method,
@@ -104,11 +104,10 @@ proxy({
         status,
         statusText,
         url: config.url,
-        headers: res.headers,
-        response: res.response,
+        headers: headers,
+        response: res,
       },
     }
-
     sendMsg(payload)
 
     handler.resolve(response)
