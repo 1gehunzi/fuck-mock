@@ -1,6 +1,6 @@
 <template>
   <el-container class="container">
-    <el-header>Fuck Mock</el-header>
+    <el-header>hijack</el-header>
     <el-main>Main</el-main>
   </el-container>
 </template>

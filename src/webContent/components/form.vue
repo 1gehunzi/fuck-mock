@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 0 20px;">
     <el-form
       :inline="false"
       :model="formData"

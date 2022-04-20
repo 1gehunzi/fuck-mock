@@ -39,6 +39,7 @@
       size="60%"
       :visible.sync="addItem"
       direction="rtl"
+      custom-class="demo-drawer"
     >
       <EditorForm @save-form="onSubmit" :data="this.formData"/>
     </el-drawer>
