@@ -65,7 +65,6 @@ export default {
   data() {
     return {
       currentProject: '',
-      editKey: '',
       projectList: [],
       addItem: false,
       formData: {
@@ -110,12 +109,9 @@ export default {
     })
   },
   methods: {
-    onSubmit(formData) {
-      const editKey = this.editKey
-
-      console.log(editKey)
-
-      const current = this.projectList.find(item => item.name === this.editKey)
+    onSubmit(data) {
+      const {projectName, ...formData} = data
+      const current = this.projectList.find(item => item.name === projectName)
       let  rules  = current.rules || []
 
       const index = rules.findIndex((item) => {
@@ -133,21 +129,19 @@ export default {
       this.saveProject(activeProject, activeProject.name)
     },
     editRuleByLog(item) {
-      console.log(item, 'log click')
       this.addItem = true
-      this.editKey = this.activeProject.name
       const rulePath = item.response.rulePath
 
       if (rulePath) {
         const method = item.request.method
-        const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method)
-        this.formData = rule || {}
+        const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method) || {}
+        this.formData = {...rule, projectName: this.activeProject.name}
         return
       }
 
       const {response, request} = item
-      console.log(response, 'editlog--------------------------------')
       this.formData = {
+        projectName: this.activeProject.name,
         switchOn: true,
         path: request.method,
         response: JSON.parse(response.response),
@@ -155,14 +149,17 @@ export default {
       }
     },
     addRules(projectName) {
-      this.formData = {}
+      this.formData = {
+        projectName: projectName,
+      }
       this.addItem = true
-      this.editKey = projectName
     },
     editRule(projectName, rule) {
-      this.editKey = projectName
       this.addItem = true
-      this.formData = rule
+      this.formData = {
+        ...rule,
+        projectName
+      }
     },
     deleteRule(projectName, rule) {
        const current = this.projectList.find(item => item.name === projectName)
