@@ -6,9 +6,9 @@
       label-width="80px"
       label-position="left"
     >
-      <el-form-item label="Name">
+      <!-- <el-form-item label="Name">
         <el-input v-model="formData.name" placeholder="请输入接口名称" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="Path">
         <el-input v-model="formData.path" placeholder="请输入接口路径" />
       </el-form-item>

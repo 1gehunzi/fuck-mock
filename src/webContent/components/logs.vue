@@ -2,8 +2,8 @@
   <div>
     <div class="content">
       <div
-        v-for="item in list"
-        :key="item.request.url"
+        v-for="(item, index) in list"
+        :key="item.request.url + index"
         class="log-item"
         @click="editRule(item)"
       >
