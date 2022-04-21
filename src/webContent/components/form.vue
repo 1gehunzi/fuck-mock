@@ -3,13 +3,16 @@
     <el-form
       :inline="false"
       :model="formData"
+      :rules="formRules"
+      ref="ruleForm"
       label-width="80px"
       label-position="left"
+
     >
-      <el-form-item label="Name">
+      <el-form-item label="Name" prop="name">
         <el-input v-model="formData.name" placeholder="请输入接口名称" />
       </el-form-item>
-      <el-form-item label="Path">
+      <el-form-item label="Path" prop="path">
         <el-input v-model="formData.path" placeholder="请输入接口路径" />
       </el-form-item>
       <el-form-item label="Method">
@@ -19,7 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Delay">
-        <el-input v-model="formData.delay" placeholder="请输入响应延时(ms)" />
+        <el-input-number v-model="formData.delay" placeholder="响应延时" controls-position="right" /> （ms）
       </el-form-item>
       <el-form-item label="Code">
         <el-select v-model="formData.status" placeholder="请输入响应状态码">
@@ -31,6 +34,7 @@
       </el-form-item>
       <el-form-item label="Response">
         <VueJsonEditor
+          style="height: 400px"
           v-model="formData.response"
           :mode="editorMode"
           :modes="modes"
@@ -68,10 +72,25 @@ export default {
     this.formData = { ...defaultForm, ...this.data }
   },
   data() {
+    const checkRuleNameUnique = (_rule, value, callback) => {
+      callback()
+    }
     return {
+      formRules: {
+        name: [
+          { required: true, message: '请输入规则名称', trigger: 'blur' },
+          { min: 5, max: 60, message: '长度在 5 到 60 个字符', trigger: 'blur' },
+          { validator: checkRuleNameUnique, trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: '请输入规则', trigger: 'blur' },
+        ],
+      },
       editorMode: 'code',
       modes: ['code', 'tree', 'text'],
-      formData: {},
+      formData: {
+
+      },
     }
   },
   methods: {
@@ -81,3 +100,17 @@ export default {
   },
 }
 </script>
+<style>
+.jsoneditor-vue {
+  height: 100%;
+}
+.el-drawer__header {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #72767b;
+  display: flex;
+  margin-bottom: 16px;
+  padding: 12px 12px 0;
+}
+</style>
