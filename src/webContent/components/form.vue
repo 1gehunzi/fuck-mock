@@ -10,7 +10,10 @@
 
     >
       <el-form-item label="Name" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入接口名称" :disabled="!formData.isAdd"/>
+        <el-input v-model="formData.name" placeholder="请输入规则名称" :disabled="!formData.isAdd"/>
+      </el-form-item>
+      <el-form-item label="switchOn" prop="switchOn">
+        <el-switch v-model="formData.switchOn"></el-switch>
       </el-form-item>
       <el-form-item label="Path" prop="path">
         <el-input v-model="formData.path" placeholder="请输入接口路径" />

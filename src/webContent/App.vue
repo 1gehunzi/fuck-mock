@@ -248,8 +248,6 @@ html {
   user-select: none;
   height: 100%;
   width: 100%;
-  /* min-height: 650px;
-  min-width: 1000px; */
   -ms-overflow-style: none;
 }
 
