@@ -138,4 +138,10 @@ export default {
   margin-bottom: 16px;
   padding: 12px 12px 0;
 }
+.el-form-item__label:before {
+    display: none;
+    color: #F56C6C;
+    margin-right: 0;
+    font-size: 0;
+}
 </style>
