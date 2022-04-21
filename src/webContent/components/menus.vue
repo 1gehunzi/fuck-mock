@@ -83,7 +83,7 @@
         <el-form-item label="项目域名" prop="host">
           <el-input
             v-model="form.host"
-            placeholder="项目域名"
+            :placeholder="hostPlaceholder"
           />
         </el-form-item>
         <el-form-item label="标识色">
@@ -142,6 +142,8 @@
 </template>
 
 <script>
+const originRegx = /^(?=^.{3,255}$)(http(s)?:\/\/)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62}){0,}(:\d+)*$/
+const hostPlaceholder = 'protocal://hostname[:port]'
 export default {
   props: {
     rules: {
@@ -158,6 +160,7 @@ export default {
     return {
       deleteFormVisible: true,
       dialogFormVisible: false,
+      hostPlaceholder,
       editProjectName: '',
       deleteProjectName: '',
       form: {
@@ -170,6 +173,9 @@ export default {
         ],
         host: [
           { required: true, message: '请输入项目域名', trigger: 'blur' },
+          {
+            pattern: originRegx, message: `请输入符合规格的域名，${hostPlaceholder}`
+          }
         ]
       }
     }
