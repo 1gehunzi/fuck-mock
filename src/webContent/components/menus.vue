@@ -70,15 +70,17 @@
     >
       <el-form
         :model="form"
+        :rules="formRules"
+        ref="projectForm"
         label-width="80px"
       >
-        <el-form-item label="项目名称">
+        <el-form-item label="项目名称" prop="name">
           <el-input
             v-model="form.name"
             placeholder="项目名称"
           />
         </el-form-item>
-        <el-form-item label="项目域名">
+        <el-form-item label="项目域名" prop="host">
           <el-input
             v-model="form.host"
             placeholder="项目域名"
@@ -161,6 +163,15 @@ export default {
       form: {
         color: '#409EFF',
       },
+      formRules: {
+        name: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' },
+          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+        ],
+        host: [
+          { required: true, message: '请输入项目域名', trigger: 'blur' },
+        ]
+      }
     }
   },
   mounted() {},
@@ -179,11 +190,15 @@ export default {
       this.dialogFormVisible = true
     },
     saveProject() {
-      this.dialogFormVisible = false;
-      this.$emit('saveProject', {...this.form}, this.editProjectName)
-      this.form = {color: '#409EFF'}
-      this.editProjectName = ''
-
+      this.$refs.projectForm.validate((valid) => {
+        if (valid) {
+          this.dialogFormVisible = false;
+          this.$emit('saveProject', {...this.form}, this.editProjectName)
+          this.form = {color: '#409EFF'}
+          this.editProjectName = ''
+          return
+        }
+      })
     },
     deleteProjectByName(projectName) {
       this.deleteProjectName = projectName
