@@ -157,6 +157,17 @@ export default {
     },
   },
   data() {
+    const checkProjectNameUnique = (_rule, value, callback) => {
+      const editProjectName = this.editProjectName
+      const exitsProjectList = this.projectList.filter(item => item.name !== editProjectName)
+
+      const index = exitsProjectList.findIndex(item => item.name === value)
+      if (index >= 0) {
+        callback('已存在同名的项目，请换个名吧')
+      } else {
+        callback()
+      }
+    }
     return {
       deleteFormVisible: true,
       dialogFormVisible: false,
@@ -169,7 +180,8 @@ export default {
       formRules: {
         name: [
           { required: true, message: '请输入项目名称', trigger: 'blur' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' },
+          { validator: checkProjectNameUnique, trigger: 'blur' }
         ],
         host: [
           { required: true, message: '请输入项目域名', trigger: 'blur' },
