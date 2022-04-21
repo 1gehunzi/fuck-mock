@@ -32,13 +32,14 @@
           <el-option label="403" :value="403" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Response">
+      <el-form-item label="Response" prop="response">
         <VueJsonEditor
           style="height: 400px"
           v-model="formData.response"
           :mode="editorMode"
           :modes="modes"
           :expandedOnStart="true"
+          ref="jsonEditor"
         />
       </el-form-item>
       <el-form-item>
@@ -72,7 +73,11 @@ export default {
     this.formData = { ...defaultForm, ...this.data }
   },
   data() {
-    const checkRuleNameUnique = (_rule, value, callback) => {
+    const checkJsonInput = (_rule, value, callback) => {
+      this.$refs.jsonEditor
+      if (this.$refs.jsonEditor.error) {
+        callback('请检查 Json 输入')
+      }
       callback()
     }
     return {
@@ -80,10 +85,13 @@ export default {
         name: [
           { required: true, message: '请输入规则名称', trigger: 'blur' },
           { min: 5, max: 60, message: '长度在 5 到 60 个字符', trigger: 'blur' },
-          { validator: checkRuleNameUnique, trigger: 'blur' }
+          // { validator: checkRuleNameUnique, trigger: 'blur' }
         ],
         path: [
           { required: true, message: '请输入规则', trigger: 'blur' },
+        ],
+        response: [
+          { validator: checkJsonInput },
         ],
       },
       editorMode: 'code',
@@ -95,7 +103,12 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$emit('save-form', { ...this.formData })
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+        this.$emit('save-form', { ...this.formData })
+
+        }
+      })
     },
   },
 }
