@@ -204,7 +204,9 @@ export default {
       this.$emit('deleteRule', projectName, rule)
     },
     addProject() {
-
+      this.form = {
+        color: '#409EFF',
+      }
       this.dialogFormVisible = true
     },
     saveProject() {
