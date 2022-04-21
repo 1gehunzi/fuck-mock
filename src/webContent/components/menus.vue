@@ -113,10 +113,10 @@
       :modal-append-to-body="false"
     >
       <div slot="title">
-        <i class="el-icon-warning-outline" style="color: #E6A23C"/>
+        <i class="el-icon-warning-outline" style="color: #E6A23C;font-weight: bold;"/>
         删除<span style="font-weight: bold;">{{ deleteProjectName }}</span> 项目
       </div>
-      <div>确认删除 {{ deleteProjectName }} 项目吗？ <div style="color: #909399;line-height: 40px;">项目下的所有 mock 配置随之清空</div></div>
+      <div style="color: #909399;line-height: 40px;margin: -20px 0;">项目下的所有配置随之清空</div>
       <div
         slot="footer"
         class="dialog-footer"
