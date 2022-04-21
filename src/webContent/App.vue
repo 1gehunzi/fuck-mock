@@ -8,7 +8,7 @@
         @saveProject="saveProject"
         @deleteProject="deleteProject"
         @editProject="editProject"
-        @addRule="addRules"
+        @addRule="addRule"
         @editRule="editRule"
         @deleteRule="deleteRule"
         @changeActiveProject="changeActiveProject"
@@ -34,14 +34,14 @@
       </div>
     </div>
     <el-drawer
-      v-if="addItem"
+      v-if="ruleFormVisible"
       title="编辑规则"
       size="60%"
-      :visible.sync="addItem"
+      :visible.sync="ruleFormVisible"
       direction="rtl"
       custom-class="demo-drawer"
     >
-      <EditorForm @save-form="onSubmit" :data="this.formData"/>
+      <EditorForm @save-form="onSubmit" :data="this.formData" :projectList="projectList" />
     </el-drawer>
     <div class="clear-btn" @click="clearLogs">
       <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
@@ -73,7 +73,7 @@ export default {
     return {
       currentProject: '',
       projectList: [],
-      addItem: false,
+      ruleFormVisible: false,
       formData: {
         path: '',
         method: 'GET',
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     onSubmit(data) {
-      const {projectName, ...formData} = data
+      const { projectName, isEdit, ...formData } = data
       const current = this.projectList.find(item => item.name === projectName)
       let  rules  = current.rules || []
 
@@ -132,20 +132,20 @@ export default {
       }
       const activeProject = {...current, rules}
       this.formData = {}
-      this.addItem = false
+      this.ruleFormVisible = false
       this.saveProject(activeProject, activeProject.name)
     },
     editRuleByLog(item) {
-      this.addItem = true
+      this.ruleFormVisible = true
       const rulePath = item.response.rulePath
 
       if (rulePath) {
         const method = item.request.method
         const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method) || {}
-        this.formData = {...rule, projectName: this.activeProject.name}
+        this.formData = {...rule, projectName: this.activeProject.name, isAdd: false}
         return
       }
-
+      // TODO: 接口 404 的时候有 bug
       const {response, request} = item
       const targetUrl = new Url(request.url)
       this.formData = {
@@ -153,19 +153,22 @@ export default {
         switchOn: true,
         path: request.method,
         response: JSON.parse(response.response),
-        path: targetUrl.pathname
+        path: targetUrl.pathname,
+        isAdd: true
       }
     },
-    addRules(projectName) {
+    addRule(projectName) {
       this.formData = {
         projectName: projectName,
+        isAdd: true
       }
-      this.addItem = true
+      this.ruleFormVisible = true
     },
     editRule(projectName, rule) {
-      this.addItem = true
+      this.ruleFormVisible = true
       this.formData = {
         ...rule,
+        isAdd: false,
         projectName
       }
     },

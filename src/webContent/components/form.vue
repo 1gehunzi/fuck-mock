@@ -10,7 +10,7 @@
 
     >
       <el-form-item label="Name" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入接口名称" />
+        <el-input v-model="formData.name" placeholder="请输入接口名称" :disabled="!formData.isAdd"/>
       </el-form-item>
       <el-form-item label="Path" prop="path">
         <el-input v-model="formData.path" placeholder="请输入接口路径" />
@@ -65,6 +65,10 @@ export default {
       type: Object,
       default: {},
     },
+    projectList: {
+      type: Array,
+      default: []
+    }
   },
   components: {
     VueJsonEditor,
@@ -80,11 +84,23 @@ export default {
       }
       callback()
     }
+
+    const checkUniqueName = (_rule, value, callback) => {
+      const projectList = this.projectList
+      const { isAdd, projectName } = this.data
+      const rules = projectList.find(item => item.name === projectName).rules || []
+      const exits = rules.findIndex(item => item.name === value) >= 0
+      if (isAdd && exits) {
+        callback('规则名已经存在')
+      }
+      callback()
+    }
     return {
       formRules: {
         name: [
           { required: true, message: '请输入规则名称', trigger: 'blur' },
-          { min: 5, max: 60, message: '长度在 5 到 60 个字符', trigger: 'blur' },
+          { min: 4, max: 60, message: '长度在 4 到 60 个字符', trigger: 'blur' },
+          { validator: checkUniqueName }
         ],
         path: [
           { required: true, message: '请输入规则', trigger: 'blur' },
