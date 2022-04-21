@@ -32,9 +32,7 @@
                     <el-button  type="text" @click="editProject(item.name)"><i class="el-icon-edit"/>编辑项目</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-popconfirm  title="确定删除吗？" @confirm="deleteProject(item.name)">
-                      <el-button type="text" slot="reference"><i class="el-icon-delete"/> 删除</el-button>
-                    </el-popconfirm>
+                    <el-button @click="deleteProjectByName(item.name)"  type="text"><i class="el-icon-delete"/> 删除</el-button>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -107,22 +105,22 @@
     </el-dialog>
     <el-dialog
       title="删除项目"
-      :visible.sync="deleteFormVisible"
+      :visible="!!deleteProjectName"
       width="300px"
       :show-close="false"
       :modal-append-to-body="false"
     >
-      <div>确认删除xxx项目吗</div>
+      <div>确认删除 {{ deleteProjectName }} 项目吗</div>
       <div
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="deleteFormVisible = false">
+        <el-button @click="deleteProjectName = ''">
           取 消
         </el-button>
         <el-button
           type="primary"
-          @click="saveProject"
+          @click="confirmDeleteProject"
         >
           确 定
         </el-button>
@@ -155,6 +153,7 @@ export default {
       deleteFormVisible: true,
       dialogFormVisible: false,
       editProjectName: '',
+      deleteProjectName: '',
       form: {
         color: '#409EFF',
       },
@@ -182,8 +181,14 @@ export default {
       this.editProjectName = ''
 
     },
-    deleteProject(projectName) {
+    deleteProjectByName(projectName) {
+      this.deleteProjectName = projectName
+    },
+    confirmDeleteProject() {
+      const projectName = this.deleteProjectName
       this.$emit('deleteProject', projectName)
+
+      this.deleteProjectName = ''
     },
     editProject(projectName) {
       this.dialogFormVisible = true
