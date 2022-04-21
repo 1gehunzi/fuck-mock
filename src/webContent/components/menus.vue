@@ -14,9 +14,11 @@
               <span
                 class="icon-circle"
                 :style="{ background: item.color }"
-              />{{
+              />
+              {{
                 item.name
-              }} {{item.rules && item.rules.length}}
+              }}
+              <!-- {{item.rules && item.rules.length}} -->
             </div>
             <span>
               <el-dropdown>
@@ -232,7 +234,8 @@ export default {
     editProject(projectName) {
       this.dialogFormVisible = true
       this.editProjectName = projectName
-      this.form = this.projectList.find(item => item.name = projectName)
+      const editProject = this.projectList.find(item => item.name = projectName)
+      this.form = {...editProject}
     },
     changeProject(project) {
       this.$emit('changeActiveProject', project)
@@ -243,6 +246,7 @@ export default {
 
 <style lang="scss" scoped>
 .menu {
+  overflow: hidden;
   position: relative;
   flex-basis: 280px;
   flex-grow: 0;
@@ -278,6 +282,14 @@ export default {
       justify-content: space-between;
       align-items: center;
       background-color: #fff;
+      &>div {
+        height: 38px;
+        line-height: 38px;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
       & >* {
         vertical-align: middle;
       }
