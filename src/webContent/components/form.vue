@@ -36,10 +36,10 @@
         <VueJsonEditor
           style="height: 400px"
           v-model="formData.response"
+          ref="jsonEditor"
           :mode="editorMode"
           :modes="modes"
           :expandedOnStart="true"
-          ref="jsonEditor"
         />
       </el-form-item>
       <el-form-item>
@@ -85,7 +85,6 @@ export default {
         name: [
           { required: true, message: '请输入规则名称', trigger: 'blur' },
           { min: 5, max: 60, message: '长度在 5 到 60 个字符', trigger: 'blur' },
-          // { validator: checkRuleNameUnique, trigger: 'blur' }
         ],
         path: [
           { required: true, message: '请输入规则', trigger: 'blur' },
@@ -96,17 +95,14 @@ export default {
       },
       editorMode: 'code',
       modes: ['code', 'tree', 'text'],
-      formData: {
-
-      },
+      formData: {},
     }
   },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-        this.$emit('save-form', { ...this.formData })
-
+          this.$emit('save-form', { ...this.formData })
         }
       })
     },
