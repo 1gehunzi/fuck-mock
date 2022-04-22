@@ -1,6 +1,54 @@
 <template>
-  <div>
-    <div class="content">
+  <div style="height:100%;">
+    <el-table
+      size="mini"
+      :data="list"
+      stripe
+      height="100%"
+      style="width: 100%"
+    >
+      <el-table-column
+        prop="request.url"
+        label="Name"
+      >
+        <template slot-scope="scope">
+          <div
+            class="rule-name"
+            @click="editRule(scope.row)"
+          >
+            <el-tag
+              :type="scope.row.request.method === 'GET' ? 'success' : 'primary'"
+              disable-transitions
+            >
+              {{ scope.row.request.method }}
+            </el-tag>
+            {{ formatLog(scope.row.request.url) }}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="response.status"
+        label="Status"
+        width="80"
+      />
+      <el-table-column
+        prop="request.type"
+        label="Type"
+        width="80"
+      />
+      <el-table-column
+        prop="response.isMock"
+        label="Others"
+        width="80"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.response.isMock ? '拦截' : '穿透' }}
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- <div
+      class="content"
+    >
       <div
         v-for="(item, index) in list"
         :key="item.request.url + index"
@@ -14,7 +62,7 @@
         <span>{{ item.response.status }}</span>
         <span>{{ item.response.isMock ? '拦截' : '穿透' }}</span>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -27,8 +75,12 @@ export default {
       type: Array,
     },
   },
+  mounted() {
+  },
   methods: {
     formatLog(url) {
+      console.log(this.list)
+
       const targetUrl = new Url(url)
       const str = targetUrl.pathname
       return str
@@ -51,5 +103,8 @@ export default {
       background: #eee;
     }
   }
+}
+.rule-name {
+  cursor: pointer;
 }
 </style>
