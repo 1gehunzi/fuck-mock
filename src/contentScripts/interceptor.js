@@ -3,12 +3,11 @@
 import { proxy } from 'ajax-hook'
 import { stringify } from 'flatted'
 import Url from 'url-parse'
-import {pathToRegexp, match } from 'path-to-regexp'
+import { pathToRegexp, match } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
 
 const sendMsg = (msg) => {
   const str = stringify(msg)
-  // msg.toStri
   const event = new CustomEvent('CUSTOMEVENT', { detail: str })
   window.dispatchEvent(event)
 }
@@ -19,29 +18,33 @@ function mockCore(url, method) {
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
 
-  const {
-    ajaxInterceptor_current_project,
-    ajaxInterceptor_projects
-  } = config
+  const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
-  const currentProject = ajaxInterceptor_projects?.find(item => item.name === ajaxInterceptor_current_project) || {}
+  const currentProject =
+    ajaxInterceptor_projects?.find(
+      (item) => item.name === ajaxInterceptor_current_project
+    ) || {}
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (currentProject.switchOn) {
       const rules = currentProject.rules || []
-      const currentRule = rules.find(item => {
-        const re = pathToRegexp(item.path);     // 匹配规则
-        const match1 = re.exec(str);
+      const currentRule = rules.find((item) => {
+        const re = pathToRegexp(item.path) // 匹配规则
+        const match1 = re.exec(str)
         return item.method === method && match1
       })
       console.log('currentRule-----------------------', currentRule)
       if (currentRule && currentRule.switchOn) {
-         // url 路径
-         setTimeout(() => {
-          resolve({response: currentRule.response, rulePath: currentRule.path, status: currentRule.status})
-         }, currentRule.delay || 0)
+        // url 路径
+        setTimeout(() => {
+          resolve({
+            response: currentRule.response,
+            rulePath: currentRule.path,
+            status: currentRule.status,
+          })
+        }, currentRule.delay || 0)
 
-         return
+        return
       }
     }
     reject()
@@ -61,13 +64,13 @@ proxy({
       type: 'xhr',
     }
     mockCore(url.href, config.method)
-      .then(res => {
+      .then((res) => {
         const { response, rulePath, status } = res || {}
         const result = {
           config,
           status,
           headers: [],
-          response: JSON.stringify(response)
+          response: JSON.stringify(response),
         }
         const payload = {
           request,
@@ -78,7 +81,7 @@ proxy({
             url: result.url,
             response: result,
             isMock: true,
-            rulePath
+            rulePath,
           },
         }
         sendMsg(payload)
@@ -104,7 +107,7 @@ proxy({
         statusText,
         url: config.url,
         headers: headers,
-        response:  res,
+        response: res,
       },
     }
     sendMsg(payload)
@@ -152,13 +155,30 @@ if (window.fetch) {
       // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
       if (response.mock) {
         response.json().then((res) => {
-          payload.response = res
+          const result = {
+            // config,
+            status,
+            headers: response.headers,
+            response: JSON.stringify(res),
+          }
+          payload.response = result
           sendMsg(payload)
         })
       } else {
         const cloneRes = response.clone()
         cloneRes.json().then((res) => {
-          payload.response = res
+          // payload.response = res
+          const result = {
+            // config,
+            status,
+            headers: response.headers,
+            response: JSON.stringify(res),
+          }
+          payload.response = result
+          console.log(
+            res,
+            '--------- const cloneRes = response.clone() ------------'
+          )
           sendMsg(payload)
         })
       }
