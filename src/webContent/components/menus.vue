@@ -74,8 +74,9 @@
       :title="editProjectName ? '编辑项目' : '新增项目'"
       :visible.sync="dialogFormVisible"
       width="400px"
-      :show-close="false"
+      :show-close="true"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
     >
       <el-form
         :model="form"
