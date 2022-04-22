@@ -41,7 +41,7 @@
       direction="rtl"
       custom-class="demo-drawer"
     >
-      <EditorForm @save-form="onSubmit" :data="this.formData" :projectList="projectList" />
+      <EditorForm @save-form="onSubmit" :data="formData" :projectList="projectList" />
     </el-drawer>
     <div class="clear-btn" @click="clearLogs">
       <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
@@ -147,12 +147,18 @@ export default {
       }
       // TODO: 接口 404 的时候有 bug
       const {response, request} = item
+      let tmpRes = ''
+      try {
+        tmpRes = JSON.parse(response.response)
+      } catch(e) {
+
+      }
       const targetUrl = new Url(request.url)
       this.formData = {
         projectName: this.activeProject.name,
         switchOn: true,
         path: request.method,
-        response: JSON.parse(response.response),
+        response: tmpRes,
         path: targetUrl.pathname,
         isAdd: true
       }

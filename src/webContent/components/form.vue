@@ -91,6 +91,7 @@ export default {
     const checkUniqueName = (_rule, value, callback) => {
       const projectList = this.projectList
       const { isAdd, projectName } = this.data
+      console.log(projectName, '---------------------------------------')
       const rules = projectList.find(item => item.name === projectName).rules || []
       const exits = rules.findIndex(item => item.name === value) >= 0
       if (isAdd && exits) {
