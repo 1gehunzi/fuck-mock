@@ -26,25 +26,29 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column
+        align="center"
         prop="response.status"
         label="Status"
-        width="80"
+        width="100"
       />
       <el-table-column
-        prop="request.type"
-        label="Type"
-        width="80"
-      />
-      <el-table-column
+        align="center"
         prop="response.isMock"
-        label="Others"
+        label="Mock"
         width="80"
       >
         <template slot-scope="scope">
           {{ scope.row.response.isMock ? '拦截' : '穿透' }}
         </template>
       </el-table-column>
+      <el-table-column
+        align="center"
+        prop="request.type"
+        label="Type"
+        width="80"
+      />
     </el-table>
     <!-- <div
       class="content"
