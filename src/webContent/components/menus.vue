@@ -50,7 +50,13 @@
               @click="editRule(item.name, rule)"
               class="rule-item"
             >
-              <span>{{ rule.name }}</span>
+              <span>
+                <span class="get-info" v-if="rule.method === 'GET'">GET</span>
+                <span class="post-info"  v-if="rule.method === 'POST'">POST</span>
+                {{ rule.name }}
+              </span>
+              <span>
+              <span class="rule-status" :style="{ background: rule.switchOn ? '#67C23A' : '#CDCECF'}">*</span>
               <el-popconfirm  title="确定删除吗？" @confirm="deleteRule(item.name, rule)">
                 <span class="delete-btn"  slot="reference" @click.stop>
                   <i
@@ -58,6 +64,7 @@
                   />
                 </span>
               </el-popconfirm>
+              </span>
             </div>
           </div>
         </div>
@@ -303,18 +310,34 @@ export default {
 }
 .rule-items {
   & > .rule-item {
+    font-size: 14px;
+    color: #909399;
     padding: 0 8px 0 24px;
     cursor: pointer;
     height: 24px;
     line-height: 24px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     .delete-btn {
       display: none;
+      cursor: pointer;
+    }
+    .rule-status {
+      display: inline-block;
+      font-size: 0;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      // background: #67C23A;
+      margin-top: 15px;
     }
     &:hover {
       .delete-btn {
         display: inline-block;
+      }
+      .rule-status {
+        display: none;
       }
       background-color: #f5f5f5;
     }
@@ -328,4 +351,17 @@ export default {
   height: 10px;
   border-radius: 50%;
 }
+.get-info {
+  display: inline-block;
+  width: 2.8em;
+  color: #23966C;
+  font-weight: bold;
+}
+.post-info {
+  display: inline-block;
+  width: 2.8em;
+  color: #B3680C;
+  font-weight: bold;;
+}
+
 </style>

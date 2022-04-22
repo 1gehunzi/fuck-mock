@@ -32,11 +32,10 @@ function mockCore(url, method) {
       const currentRule = rules.find(item => {
         const re = pathToRegexp(item.path);     // 匹配规则
         const match1 = re.exec(str);
-        // return item.switchOn && item.method === method && match1
         return item.method === method && match1
       })
       console.log('currentRule-----------------------', currentRule)
-      if (currentRule) {
+      if (currentRule && currentRule.switchOn) {
          // url 路径
          setTimeout(() => {
           resolve({response: currentRule.response, rulePath: currentRule.path, status: currentRule.status})
