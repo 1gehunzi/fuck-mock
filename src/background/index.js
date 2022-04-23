@@ -18,9 +18,9 @@ const defaultProject = {
 }
 
 chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.local.set({[AJAX_INTERCEPTOR_PROJECTS]: [defaultProject], [AJAX_INTERCEPTOR_CURRENT_PROJECT]: defaultProject.name}, function() {
-    console.log('The color is green.');
-  });
+  //   chrome.storage.local.set({[AJAX_INTERCEPTOR_PROJECTS]: [defaultProject], [AJAX_INTERCEPTOR_CURRENT_PROJECT]: defaultProject.name}, function() {
+  //   console.log('The color is green.');
+  // });
 });
 
 chrome.browserAction.onClicked.addListener(function() {

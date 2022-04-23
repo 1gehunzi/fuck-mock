@@ -20,7 +20,6 @@ chrome.storage.local.get(keys, (result) => {
   // eslint-disable-next-line no-restricted-globals
   const {origin} = location
   const currentProject = projectList.find(item => item.name === currentName) || {}
-  console.log(origin, currentProject.host)
   // 注意host和origin是否带结尾的 slush
   if (origin === currentProject.host) {
     injectScriptToPage()
