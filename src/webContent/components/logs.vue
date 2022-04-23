@@ -83,8 +83,6 @@ export default {
   },
   methods: {
     formatLog(url) {
-      console.log(this.list)
-
       const targetUrl = new Url(url)
       const str = targetUrl.pathname
       return str
