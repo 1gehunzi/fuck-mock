@@ -45,8 +45,9 @@ const payload = {
 - [x] fetch 的拦截的bug  (zhihu的网站好像不太对)
 - [x] get 和 状态码的默认值不对
 - [x] 侧导航的name要...啊
-- [ ] rule 编辑的时候，get 和 post 不算作一个接口？
-- [ ] rule 表单编辑允许重命名吧，
+- [x] rule 编辑的时候，get 和 post 不算作一个接口？
+- [x] rule 表单编辑允许重命名吧
+- [x] 删除和点击日志展示详情有bug
 - [ ] 鼠标点击的锚点均有问题
 - [ ] path-to-regexp 的优化
 - [ ] 搜索功能添加

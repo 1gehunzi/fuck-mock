@@ -35,7 +35,7 @@ function mockCore(url, method) {
         return item.method === method && match1
       })
 
-      console.log('currentRule', currentRule)
+      // console.log('currentRule', currentRule)
       if (currentRule && currentRule.switchOn) {
         // url 路径
         setTimeout(() => {
@@ -131,7 +131,7 @@ if (window.fetch) {
 
       return mockCore(request.url, request.method).then((res) => {
         try {
-          console.log('fetch mock ', res)
+          // console.log('fetch mock ', res)
           const { rulePath, status } = res || {}
           const text = JSON.stringify(res.response)
           const response = new Response()
@@ -142,7 +142,7 @@ if (window.fetch) {
           response.rulePath = rulePath
           return response
         } catch (err) {
-          console.log('mock----------err', err)
+          // console.log('mock----------err', err)
         }
       })
     },

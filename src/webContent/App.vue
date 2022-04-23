@@ -116,12 +116,14 @@ export default {
   },
   methods: {
     onSubmit(data) {
-      const { projectName, isEdit, ...formData } = data
+      const { projectName, isAdd, ...formData } = data
+      console.log(data, 'rule form 的实体对象')
       const current = this.projectList.find(item => item.name === projectName)
       let  rules  = current.rules || []
 
       const index = rules.findIndex((item) => {
-        return item.path === formData.path && item.method === formData.method
+        const ruleName = isAdd ? formData.name : this.formData.name
+        return item.name === ruleName
       })
 
       if (index >= 0) {
@@ -179,16 +181,18 @@ export default {
       }
     },
     deleteRule(projectName, rule) {
-       const current = this.projectList.find(item => item.name === projectName)
-       let  rules  = current.rules || []
+      const current = this.projectList.find(item => item.name === projectName)
+      let  rules  = current.rules || []
 
       const index = rules.findIndex((item) => {
-        return item.path === rule.path && item.method === rule.method
+        return item.name === rule.name
       })
+
+      console.log(rules, rule, index, 'delete----index')
 
       rules.splice(index, 1);
       const activeProject = {...current, rules}
-       this.saveProject(activeProject, activeProject.name)
+      this.saveProject(activeProject, activeProject.name)
     },
     changeActiveProject(project) {
       saveStorage(AJAX_INTERCEPTOR_CURRENT_PROJECT, project)
@@ -199,7 +203,6 @@ export default {
       this.saveProject(activeProject, activeProject.name)
     },
     saveProject(project, editProjectName) {
-      console.log('project, ----------', project)
       let { projectList } = this
 
       const index = projectList.findIndex((item) => {

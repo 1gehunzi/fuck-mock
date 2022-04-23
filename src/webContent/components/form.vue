@@ -10,7 +10,7 @@
 
     >
       <el-form-item label="Name" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入规则名称" :disabled="!formData.isAdd"/>
+        <el-input v-model="formData.name" placeholder="请输入规则名称" />
       </el-form-item>
       <el-form-item label="switchOn" prop="switchOn">
         <el-switch v-model="formData.switchOn"></el-switch>
@@ -78,7 +78,16 @@ export default {
   components: {
     VueJsonEditor,
   },
+  computed: {
+    rules() {
+      const projectName = this.data.projectName
+      const currentProject = this.projectList.find(item => item.name === projectName)
+
+      return currentProject.rules || []
+    }
+  },
   mounted() {
+    console.log(this.data, 'init data')
     this.formData = { ...defaultForm, ...this.data }
   },
   data() {
@@ -91,11 +100,10 @@ export default {
     }
 
     const checkUniqueName = (_rule, value, callback) => {
-      const projectList = this.projectList
-      const { isAdd, projectName } = this.data
-      const rules = projectList.find(item => item.name === projectName).rules || []
+      const { name } = this.data
+      const rules = this.rules.filter(item => item.name !== name)
       const exits = rules.findIndex(item => item.name === value) >= 0
-      if (isAdd && exits) {
+      if (exits) {
         callback('规则名已经存在')
       }
       callback()

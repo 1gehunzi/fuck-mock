@@ -51,7 +51,7 @@ injectGlobalData()
 chrome.storage.onChanged.addListener((changes, namespace) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
-    console.log(namespace, oldValue, newValue)
+    // console.log(namespace, oldValue, newValue)
     if (keys.find((item) => item === key)) {
       injectGlobalData()
     }
