@@ -50,7 +50,7 @@
               @click="editRule(item.name, rule)"
               class="rule-item"
             >
-              <span>
+              <span class="rule-name">
                 <span class="get-info" v-if="rule.method === 'GET'">GET</span>
                 <span class="post-info"  v-if="rule.method === 'POST'">POST</span>
                 {{ rule.name }}
@@ -324,6 +324,12 @@ export default {
     align-items: center;
     .delete-btn {
       display: none;
+      cursor: pointer;
+    }
+    .rule-name {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       cursor: pointer;
     }
     .rule-status {
