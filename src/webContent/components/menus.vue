@@ -186,6 +186,7 @@ export default {
       deleteProjectName: '',
       form: {
         color: '#409EFF',
+        switchOn: true
       },
       formRules: {
         name: [
@@ -216,6 +217,7 @@ export default {
     addProject() {
       this.form = {
         color: '#409EFF',
+        switchOn: true
       }
       this.dialogFormVisible = true
     },

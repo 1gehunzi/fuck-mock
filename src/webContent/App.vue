@@ -198,6 +198,7 @@ export default {
       this.saveProject(activeProject, activeProject.name)
     },
     saveProject(project, editProjectName) {
+      console.log('project, ----------', project)
       let { projectList } = this
 
       const index = projectList.findIndex((item) => {
