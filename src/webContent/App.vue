@@ -156,8 +156,9 @@ export default {
       this.formData = {
         projectName: this.activeProject.name,
         switchOn: true,
-        path: request.method,
+        method: request.method,
         response: tmpRes,
+        // status: response.status,
         path: targetUrl.pathname,
         isAdd: true
       }
@@ -209,6 +210,7 @@ export default {
         projectList[index] = {...projectList[index], ...project}
       } else {
         projectList = [...projectList, project]
+        this.changeActiveProject(project.name)
       }
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)

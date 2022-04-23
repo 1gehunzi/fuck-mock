@@ -22,6 +22,8 @@
         <el-select v-model="formData.method" placeholder="请选择请求方法">
           <el-option label="GET" value="GET" />
           <el-option label="POST" value="POST" />
+          <el-option label="PUT" value="PUT" />
+          <el-option label="DELETE" value="DELETE" />
         </el-select>
       </el-form-item>
       <el-form-item label="Delay">

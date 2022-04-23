@@ -88,6 +88,7 @@ export default {
       return str
     },
     editRule(item) {
+      console.log('item----', item)
       this.$emit('editRuleByLog', item)
     }
   },
