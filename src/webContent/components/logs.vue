@@ -40,7 +40,9 @@
         width="80"
       >
         <template slot-scope="scope">
-          {{ scope.row.response.isMock ? '拦截' : '穿透' }}
+          <span :style="{color: scope.row.response.isMock ? '#E6A23C' : ''}">
+            {{ scope.row.response.isMock ? '拦截' : '穿透' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column

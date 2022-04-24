@@ -18,6 +18,8 @@ function mockCore(url, method) {
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
 
+  console.log('匹配的计算', targetUrl)
+
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
   const currentProject =

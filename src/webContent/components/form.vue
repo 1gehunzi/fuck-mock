@@ -32,9 +32,11 @@
       <el-form-item label="Code">
         <el-select v-model="formData.status" placeholder="请输入响应状态码">
           <el-option label="200" :value="200" />
+          <el-option label="202" :value="202" />
           <el-option label="500" :value="500" />
           <el-option label="401" :value="401" />
           <el-option label="403" :value="403" />
+          <el-option label="404" :value="403" />
         </el-select>
       </el-form-item>
       <el-form-item label="Response" prop="response">
