@@ -7,7 +7,6 @@
         :current-project="currentProject"
         @saveProject="saveProject"
         @deleteProject="deleteProject"
-        @editProject="editProject"
         @addRule="addRule"
         @editRule="editRule"
         @deleteRule="deleteRule"
@@ -217,6 +216,10 @@ export default {
       }
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+
+      if (editProjectName === this.currentProject) {
+        this.changeActiveProject(project.name)
+      }
     },
     deleteProject(projectName) {
       let { projectList } = this
@@ -228,9 +231,6 @@ export default {
       projectList.splice(index, 1)
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
-    },
-    editProject(projectName) {
-
     },
     clearLogs() {
       this.list = []

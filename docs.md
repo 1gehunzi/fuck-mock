@@ -49,6 +49,7 @@ const payload = {
 - [x] rule 表单编辑允许重命名吧
 - [x] 删除和点击日志展示详情有bug
 - [x] fetch 404的处理
+- [ ] 编辑项目名称，currentName的问题修复
 - [ ] 鼠标点击的锚点均有问题
 - [ ] path-to-regexp 的优化
 - [ ] 搜索功能添加
