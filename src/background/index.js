@@ -7,7 +7,6 @@ let ftdWindow = null
 
 chrome.windows.onRemoved.addListener((windowId) => {
   if (ftdWindow && ftdWindow.id === windowId) {
-    console.log(`Close the window!`)
     chrome.browserAction.setBadgeText({ text: '' })
     ftdWindow = null
   }
@@ -33,7 +32,6 @@ chrome.runtime.onInstalled.addListener(function () {
 })
 
 chrome.browserAction.onClicked.addListener(function () {
-  console.log(`browserAction.onClicked`)
   if (ftdWindow) {
     console.log('The window exists!')
     const info = {
@@ -41,7 +39,6 @@ chrome.browserAction.onClicked.addListener(function () {
     }
     chrome.windows.update(ftdWindow.id, info, (w) => {
       if (!w) {
-        console.log(`Error: The window does not exist!`)
         ftdWindow = null
       }
     })
@@ -56,7 +53,6 @@ chrome.browserAction.onClicked.addListener(function () {
       }
       const left = parseInt((window.screen.width - width) / 2)
       const top = parseInt((window.screen.height - height) / 2)
-      console.log(`${left} ${top} ${width} ${height}`)
 
       chrome.windows.create(
         {

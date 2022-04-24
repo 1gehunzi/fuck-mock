@@ -116,7 +116,6 @@ export default {
   methods: {
     onSubmit(data) {
       const { projectName, isAdd, ...formData } = data
-      console.log(data, 'rule form 的实体对象')
       const current = this.projectList.find(item => item.name === projectName)
       let  rules  = current.rules || []
 
@@ -187,8 +186,6 @@ export default {
         return item.name === rule.name
       })
 
-      console.log(rules, rule, index, 'delete----index')
-
       rules.splice(index, 1);
       const activeProject = {...current, rules}
       this.saveProject(activeProject, activeProject.name)
@@ -231,6 +228,10 @@ export default {
       projectList.splice(index, 1)
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
+
+      if (projectName === this.currentProject && projectList.length) {
+         this.changeActiveProject(projectList[0].name)
+      }
     },
     clearLogs() {
       this.list = []

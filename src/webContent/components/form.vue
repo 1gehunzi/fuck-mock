@@ -87,7 +87,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.data, 'init data')
     this.formData = { ...defaultForm, ...this.data }
   },
   data() {

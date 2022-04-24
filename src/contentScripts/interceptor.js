@@ -123,7 +123,6 @@ if (window.fetch) {
     onBeforeRequest(request, controller) {
       return mockCore(request.url, request.method).then((res) => {
         try {
-          // console.log('fetch mock ', res)
           const { rulePath, status } = res || {}
           const text = JSON.stringify(res.response)
           const response = new Response()
@@ -134,7 +133,6 @@ if (window.fetch) {
           response.rulePath = rulePath
           return response
         } catch (err) {
-          // console.log('mock----------err', err)
         }
       })
     },
@@ -172,7 +170,6 @@ if (window.fetch) {
       } else {
         const cloneRes = response.clone()
         cloneRes.json().then((res) => {
-          console.log('mock ', res)
           const result = {
             // config,
             status: response.status,
@@ -185,8 +182,26 @@ if (window.fetch) {
       }
     },
     onRequestFailure(response, request, controller) {
-      // Hook on response failure
-      // console.log('onRequestFailure', response, request)
+      const payload = {
+        request: {
+          type: 'fetch',
+          method: request.method,
+          url: request.url,
+          headers: request.headers,
+        },
+        response: {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          headers: response.headers,
+          response: {
+            headers: [],
+            response: '',
+          }
+        },
+      }
+
+      sendMsg(payload)
     },
   })
 }
