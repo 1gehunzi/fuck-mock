@@ -31,7 +31,7 @@ function mockCore(url, method) {
     if (currentProject.switchOn) {
       const rules = currentProject.rules || []
       const currentRule = rules.find((item) => {
-        const re = pathToRegexp(item.path, [], {end: false}) // 匹配规则
+        const re = pathToRegexp(item.path) // 匹配规则
         const match1 = re.exec(str)
 
         return item.method === method && match1
