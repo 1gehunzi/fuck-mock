@@ -48,6 +48,7 @@ const payload = {
 - [x] rule 编辑的时候，get 和 post 不算作一个接口？
 - [x] rule 表单编辑允许重命名吧
 - [x] 删除和点击日志展示详情有bug
+- [x] fetch 404的处理
 - [ ] 鼠标点击的锚点均有问题
 - [ ] path-to-regexp 的优化
 - [ ] 搜索功能添加

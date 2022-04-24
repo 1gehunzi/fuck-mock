@@ -121,14 +121,6 @@ proxy({
 if (window.fetch) {
   FetchInterceptor.register({
     onBeforeRequest(request, controller) {
-      // Hook before request
-      // const tmp = payload
-      // const text = JSON.stringify(tmp)
-      // const responce = new Response()
-      // responce.json = () => Promise.resolve(tmp)
-      // responce.text = () => Promise.resolve(text)
-      //  return Promise.resolve(responce)
-
       return mockCore(request.url, request.method).then((res) => {
         try {
           // console.log('fetch mock ', res)

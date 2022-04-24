@@ -42,6 +42,7 @@ chrome.storage.local.get(keys, (result) => {
   }
 })
 
+// CUSTOMEVENT 事件的作用是什么： 让页面的请求信息, 反馈给插件页面
 window.addEventListener(
   'CUSTOMEVENT',
   (event) => {
