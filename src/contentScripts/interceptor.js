@@ -16,9 +16,7 @@ function mockCore(url, method) {
   const configStr = document.getElementById('ajaxInterceptor').value
   const config = JSON.parse(configStr)
   const targetUrl = new Url(url)
-  const str = targetUrl.pathname + targetUrl.query
-
-  console.log('匹配的计算', str)
+  const str = targetUrl.pathname
 
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
