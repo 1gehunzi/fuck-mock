@@ -32,10 +32,10 @@ function mockCore(url, method) {
         const re = pathToRegexp(item.path) // 匹配规则
         const match1 = re.exec(str)
 
-        return item.method === method && match1
+        return item.method === method && match1 && currentRule.switchOn
       })
 
-      if (currentRule && currentRule.switchOn) {
+      if (currentRule) {
         setTimeout(() => {
           resolve({
             response: currentRule.response,
