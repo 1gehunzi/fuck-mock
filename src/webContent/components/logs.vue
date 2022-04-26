@@ -22,7 +22,19 @@
             >
               {{ scope.row.request.method }}
             </el-tag>
-            {{ formatLog(scope.row.request.url) }}
+            <el-tooltip
+              effect="dark"
+              placement="top-start"
+              class="tooltip"
+            >
+              <div slot="content">
+                <div class="tooltip">
+                  {{ formatLog(scope.row.request.url).href }}
+                </div>
+                <!-- 多行信息<br>第二行信息 -->
+              </div>
+              <span>{{ formatLog(scope.row.request.url).pathname }}</span>
+            </el-tooltip>
           </div>
         </template>
       </el-table-column>
@@ -86,8 +98,15 @@ export default {
   methods: {
     formatLog(url) {
       const targetUrl = new Url(url)
-      const str = targetUrl.pathname
-      return str
+      // const {pathname, query} = targetUrl
+      // const href = targetUrl.pathname + targetUrl.query
+      // console.log(targetUrl, '================')
+      // return str
+      return targetUrl;
+      // return {
+      //   pathname,
+      //   href
+      // }
     },
     editRule(item) {
       this.$emit('editRuleByLog', item)
@@ -110,5 +129,8 @@ export default {
 }
 .rule-name {
   cursor: pointer;
+}
+.tooltip {
+  max-width: 400px;
 }
 </style>
