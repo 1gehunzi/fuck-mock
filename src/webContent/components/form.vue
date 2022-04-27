@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import VueJsonEditor from 'vue-json-editor'
+import VueJsonEditor from 'vue-json-tool'
 const defaultForm = {
   name: '',
   path: '',

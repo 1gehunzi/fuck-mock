@@ -11,7 +11,7 @@
     "path-to-regexp": "^6.2.0",
     "url-parse": "^1.5.10",
     "vue": "^2.6.11",
-    "vue-json-editor": "^1.4.3"
+    "vue-json-tool": "^1.0.4"
   },
   "description": "help fe mock data",
   "devDependencies": {
