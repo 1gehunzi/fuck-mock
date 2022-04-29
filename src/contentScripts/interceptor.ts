@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 /* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
@@ -7,7 +6,7 @@ import { stringify } from 'flatted'
 import Url from 'url-parse'
 import { pathToRegexp } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
-import type { Project, ProjectStorage, NetworkItem , MethodType, Request, Response } from './type'
+import type { Project, ProjectStorage, NetworkItem , MethodType, Request, Response, StatusType } from './type'
 export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
 export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
 /**
@@ -80,8 +79,9 @@ proxy({
           config,
           status,
           headers: [],
-          response: JSON.stringify(response),
+          responseTxt: JSON.stringify(response),
         }
+        // FIXME: 这里的数据结构好像是错误的
         const payload: NetworkItem = {
           request,
           response: {
@@ -89,13 +89,13 @@ proxy({
             headers: result.headers,
             statusText: result.statusText,
             url: result.url,
-            response: result,
+            responseTxt: JSON.stringify(response),
             isMock: true,
             rulePath,
           },
         }
         sendMsg(payload)
-        handler.resolve(result)
+        handler.resolve(result as any)
       })
       .catch(() => {
         // console.log(config, 'dddddddddddddd')
@@ -114,11 +114,13 @@ proxy({
         type: 'xhr',
       },
       response: {
-        status,
+        status: status as StatusType,
         statusText,
         url: config.url,
         headers: headers,
-        response: res,
+        responseTxt: res,
+        isMock: false,
+        rulePath: ''
       } ,
     }
     sendMsg(payload)
@@ -138,7 +140,6 @@ if (window.fetch !== undefined) {
           response.json = () => Promise.resolve(res.response)
           response.text = () => Promise.resolve(text)
           response.isMock = true
-          // response.status = status
           response.rulePath = rulePath
           return response
         } catch (err) {
@@ -147,7 +148,7 @@ if (window.fetch !== undefined) {
       })
     },
     onRequestSuccess(response, request) {
-      const payload = {
+      const payload: NetworkItem = {
         request: {
           type: 'fetch',
           method: request.method,
@@ -155,43 +156,50 @@ if (window.fetch !== undefined) {
           headers: request.headers,
         },
         response: {
-          status: response.status,
+          status: response.status as StatusType,
           statusText: response.statusText,
           url: response.url,
           headers: response.headers,
-          response: '',
+          responseTxt: '',
+          isMock: false,
+          rulePath: ''
         },
       }
 
       // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
       if (response.isMock) {
         response.json().then((res) => {
-          const result = {
+          const result: Response = {
             // config,
             status: response.status,
+            url: request.url,
             headers: [],
-            response: JSON.stringify(res),
+            responseTxt: JSON.stringify(res),
             isMock: true,
             rulePath: response.rulePath
           }
           payload.response = result
+          console.log('fetch mock', payload)
           sendMsg(payload)
         })
       } else {
         const cloneRes = response.clone()
         cloneRes.json().then((res) => {
-          const result = {
+          const result: Response = {
             // config,
             status: response.status,
+            url: request.url,
             headers: [],
-            response: JSON.stringify(res),
+            responseTxt: JSON.stringify(res),
+            isMock: false,
+            rulePath: ''
           }
           payload.response = result
           sendMsg(payload)
         })
       }
     },
-    onRequestFailure(response, request) {
+    onRequestFailure(response: any, request: any) {
       const payload:NetworkItem = {
         request: {
           type: 'fetch',
@@ -204,10 +212,9 @@ if (window.fetch !== undefined) {
           statusText: response.statusText,
           url: response.url,
           headers: response.headers,
-          response: {
-            headers: [],
-            response: '',
-          }
+          responseTxt: '',
+          isMock: false,
+          rulePath: ''
         },
       }
 

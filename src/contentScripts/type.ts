@@ -33,10 +33,11 @@ export interface Request {
 
 export interface Response {
   headers: any[]
+  config?: any
   // 用于替换 response 字段
   responseTxt: string
   status: StatusType
-  statusText: string
+  statusText?: string
   isMock: boolean
   rulePath: string
   url: string
