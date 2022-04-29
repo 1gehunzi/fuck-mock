@@ -21,8 +21,8 @@ const defaultProject = {
 
 chrome.runtime.onInstalled.addListener(function () {
   console.log('当前环境变量NODE_ENV => ', process.env.NODE_ENV)
-  // TODO: 区分开发环境还是生产环境
-  if (process.env.NODE_ENV === 'development') {
+  // 区分开发环境还是生产环境
+  if (process.env.NODE_ENV !== 'development') {
     chrome.storage.local.set(
       {
         [AJAX_INTERCEPTOR_PROJECTS]: [defaultProject],

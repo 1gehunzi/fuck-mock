@@ -20,6 +20,8 @@ export interface Rule {
   method: MethodType
 }
 
+export type MockResult = Pick<Rule, 'response' | 'status' | 'path'>
+
 export interface ProjectStorage {
   ajaxInterceptor_projects: Project[]
   ajaxInterceptor_current_project: string
@@ -32,7 +34,7 @@ export interface Request {
 }
 
 export interface Response {
-  headers: any[]
+  headers: any
   config?: any
   // 用于替换 response 字段
   responseTxt: string

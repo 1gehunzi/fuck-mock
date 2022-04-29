@@ -163,7 +163,7 @@ export default {
       const {response, request} = item
       let tmpRes = ''
       try {
-        tmpRes = JSON.parse(response.response)
+        tmpRes = JSON.parse(response.responseTxt)
       } catch(e) {
         console.log(e)
       }
@@ -173,7 +173,6 @@ export default {
         switchOn: true,
         method: request.method,
         response: tmpRes,
-        // status: response.status,
         path: targetUrl.pathname,
         isAdd: true
       }

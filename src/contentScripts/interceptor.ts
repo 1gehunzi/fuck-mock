@@ -6,7 +6,16 @@ import { stringify } from 'flatted'
 import Url from 'url-parse'
 import { pathToRegexp } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
-import type { Project, ProjectStorage, NetworkItem , MethodType, Request, Response, StatusType } from './type'
+import type {
+  Project,
+  ProjectStorage,
+  NetworkItem,
+  MethodType,
+  Request,
+  Response,
+  StatusType,
+  MockResult,
+} from './type'
 export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
 export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
 /**
@@ -20,8 +29,10 @@ const sendMsg = (msg: NetworkItem) => {
   window.dispatchEvent(event)
 }
 //
-function mockCore(url: string, method: string) {
-  const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
+function mockCore(url: string, method: string):Promise<MockResult> {
+  const inputElem = document.getElementById(
+    INJECT_ELEMENT_ID
+  ) as HTMLInputElement
   const configStr = inputElem.value
   const config: ProjectStorage = JSON.parse(configStr)
   // 看下插件设置的数据结构
@@ -49,9 +60,9 @@ function mockCore(url: string, method: string) {
         setTimeout(() => {
           resolve({
             response: currentRule.response,
-            rulePath: currentRule.path,
+            path: currentRule.path,
             status: currentRule.status,
-          })
+          } as MockResult)
         }, currentRule.delay || 0)
 
         return
@@ -74,7 +85,7 @@ proxy({
     }
     mockCore(url.href, config.method)
       .then((res) => {
-        const { response, rulePath, status } = res || {}
+        const { response, path: rulePath, status } = res
         const result = {
           config,
           status,
@@ -87,8 +98,8 @@ proxy({
           response: {
             status: result.status,
             headers: result.headers,
-            statusText: result.statusText,
-            url: result.url,
+            // statusText: result.statusText,
+            url: config.url,
             responseTxt: JSON.stringify(response),
             isMock: true,
             rulePath,
@@ -120,8 +131,8 @@ proxy({
         headers: headers,
         responseTxt: res,
         isMock: false,
-        rulePath: ''
-      } ,
+        rulePath: '',
+      },
     }
     sendMsg(payload)
 
@@ -131,15 +142,17 @@ proxy({
 
 if (window.fetch !== undefined) {
   FetchInterceptor.register({
-    onBeforeRequest(request, controller) {
+    onBeforeRequest(request: globalThis.Request) {
       return mockCore(request.url, request.method).then((res) => {
         try {
-          const { rulePath, status } = res || {}
+          const { path: rulePath } = res
           const text = JSON.stringify(res.response)
           const response = new Response()
           response.json = () => Promise.resolve(res.response)
           response.text = () => Promise.resolve(text)
+          // @ts-ignore
           response.isMock = true
+          // @ts-ignore
           response.rulePath = rulePath
           return response
         } catch (err) {
@@ -147,11 +160,14 @@ if (window.fetch !== undefined) {
         }
       })
     },
-    onRequestSuccess(response, request) {
+    onRequestSuccess(
+      response: globalThis.Response,
+      request: globalThis.Request
+    ) {
       const payload: NetworkItem = {
         request: {
           type: 'fetch',
-          method: request.method,
+          method: request.method as MethodType,
           url: request.url,
           headers: request.headers,
         },
@@ -162,21 +178,22 @@ if (window.fetch !== undefined) {
           headers: response.headers,
           responseTxt: '',
           isMock: false,
-          rulePath: ''
+          rulePath: '',
         },
       }
 
       // TODO: 数据格式化，流是不能直接转成字符串的, 如何获取到 response 中的字符串返回
+      // @ts-ignore
       if (response.isMock) {
         response.json().then((res) => {
           const result: Response = {
-            // config,
-            status: response.status,
+            status: response.status as StatusType,
             url: request.url,
             headers: [],
             responseTxt: JSON.stringify(res),
             isMock: true,
-            rulePath: response.rulePath
+            // @ts-ignore
+            rulePath: response.rulePath,
           }
           payload.response = result
           console.log('fetch mock', payload)
@@ -186,13 +203,12 @@ if (window.fetch !== undefined) {
         const cloneRes = response.clone()
         cloneRes.json().then((res) => {
           const result: Response = {
-            // config,
-            status: response.status,
+            status: response.status as StatusType,
             url: request.url,
             headers: [],
             responseTxt: JSON.stringify(res),
             isMock: false,
-            rulePath: ''
+            rulePath: '',
           }
           payload.response = result
           sendMsg(payload)
@@ -200,7 +216,7 @@ if (window.fetch !== undefined) {
       }
     },
     onRequestFailure(response: any, request: any) {
-      const payload:NetworkItem = {
+      const payload: NetworkItem = {
         request: {
           type: 'fetch',
           method: request.method,
@@ -214,7 +230,7 @@ if (window.fetch !== undefined) {
           headers: response.headers,
           responseTxt: '',
           isMock: false,
-          rulePath: ''
+          rulePath: '',
         },
       }
 
