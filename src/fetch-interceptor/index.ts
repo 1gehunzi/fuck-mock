@@ -1,8 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 /**
+ * FIXME: 类型设计
  * 使用开源库进行改造
  * https://github.com/itsfadnis/fetch-interceptor/blob/master/src/index.js
  */
 export default class FetchInterceptor {
+  env: any
+  fetch: any
+  // _instance: typeof FetchInterceptor
+  private static _instance: FetchInterceptor
   /**
    * Recognize global environment and attach fetch
    */
@@ -39,7 +46,7 @@ export default class FetchInterceptor {
    * @param {object} hooks - The intercept hooks
    * @return {FetchInterceptor} An interceptor object
    */
-  static register(hooks = {}) {
+  static register(hooks: any = {}) {
     if (this._instance) {
       return this._instance
     }
@@ -47,6 +54,8 @@ export default class FetchInterceptor {
     for (let i = 0; i < this.hooks.length; i++) {
       const hook = this.hooks[i]
       if (typeof hooks[hook] === 'function') {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         interceptor[hook] = hooks[hook]
       }
     }
@@ -72,7 +81,7 @@ export default class FetchInterceptor {
     this.env.fetch = (...a) => {
       let request
       if (a[0] instanceof Request) {
-        let object = {}
+        const object = {}
         ;[
           'cache',
           'context',

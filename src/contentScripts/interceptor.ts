@@ -5,25 +5,35 @@ import { stringify } from 'flatted'
 import Url from 'url-parse'
 import { pathToRegexp } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
-
+import type { Project, ProjectStorage  } from './type'
+export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
+export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
+/**
+ * 用户界面的 ajax 请求log，发给插件层
+ * @param {*} msg
+ */
 const sendMsg = (msg) => {
   const str = stringify(msg)
-  const event = new CustomEvent('CUSTOMEVENT', { detail: str })
+  const event = new CustomEvent(CUSTOM_EVENT_NAME, { detail: str })
   window.dispatchEvent(event)
 }
 //
-function mockCore(url, method) {
-  const configStr = document.getElementById('ajaxInterceptor').value
-  const config = JSON.parse(configStr)
+function mockCore(url: string, method: string) {
+   const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
+  const configStr = inputElem.value
+  // TODO: 搞下类型
+  const config: ProjectStorage = JSON.parse(configStr)
+  // 看下插件设置的数据结构
+  console.log(config, '-----------')
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
-
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
   const currentProject =
     ajaxInterceptor_projects?.find(
       (item) => item.name === ajaxInterceptor_current_project
-    ) || {}
+    ) || ({} as Project)
+
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (currentProject.switchOn) {
@@ -116,7 +126,7 @@ proxy({
   },
 })
 
-if (window.fetch) {
+if (window.fetch !== undefined) {
   FetchInterceptor.register({
     onBeforeRequest(request, controller) {
       return mockCore(request.url, request.method).then((res) => {
@@ -180,7 +190,7 @@ if (window.fetch) {
         })
       }
     },
-    onRequestFailure(response, request, controller) {
+    onRequestFailure(response, request) {
       const payload = {
         request: {
           type: 'fetch',

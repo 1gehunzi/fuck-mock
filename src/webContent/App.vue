@@ -15,9 +15,9 @@
       <div class="content">
         <div class="header">
           <div class="info">
-            {{ activeProject.host }}
+            {{ activeProject.origin }}
             <el-switch
-              v-if="activeProject.host"
+              v-if="activeProject.origin"
               :value="toggle"
               :width="30"
               @change="toggleSwitch"
@@ -75,6 +75,7 @@ import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
   AJAX_INTERCEPTOR_PROJECTS,
 } from '@/store'
+import { EXTENSION_EVENT_NAME } from '@/contentScripts'
 
 export default {
   components: {
@@ -118,7 +119,7 @@ export default {
     )
     chrome.runtime.onMessage.addListener((event) => {
       try {
-        if (event.type === 'ajaxInterceptor') {
+        if (event.type === EXTENSION_EVENT_NAME) {
           const result = parse(event.detail)
           this.list = [...this.list, result]
         }

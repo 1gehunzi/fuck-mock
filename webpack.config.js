@@ -22,8 +22,8 @@ function configFunc(env, argv) {
       popup: './popup/index.js',
       webContent: './webContent/index.js',
       background: './background/index.js',
-      contentScripts: './contentScripts/index.js',
-      interceptor: './contentScripts/interceptor.js',
+      contentScripts: './contentScripts/index.ts',
+      interceptor: './contentScripts/interceptor.ts',
     },
     output: {
       path: path.resolve(__dirname, './dist'),
@@ -46,13 +46,20 @@ function configFunc(env, argv) {
         },
         {
           test: /\.tsx?$/,
-          loader: 'ts-loader',
           exclude: /node_modules/,
-          options: {
-            transpileOnly: true,
-            appendTsSuffixTo: [/\.vue$/],
-            happyPackMode: false,
-          },
+          use: [
+            {
+              loader: 'babel-loader',
+            },
+            {
+              loader: 'ts-loader',
+              options: {
+                transpileOnly: true,
+                appendTsSuffixTo: [/\.vue$/],
+                happyPackMode: false,
+              },
+            },
+          ],
         },
         {
           test: /\.scss$/,
