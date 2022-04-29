@@ -1,56 +1,118 @@
 <template>
   <div style="padding: 0 20px;">
     <el-form
+      ref="ruleForm"
       :inline="false"
       :model="formData"
       :rules="formRules"
-      ref="ruleForm"
       label-width="80px"
       label-position="left"
-
     >
-      <el-form-item label="Name" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入规则名称" />
+      <el-form-item
+        label="Name"
+        prop="name"
+      >
+        <el-input
+          v-model="formData.name"
+          placeholder="请输入规则名称"
+        />
       </el-form-item>
-      <el-form-item label="switchOn" prop="switchOn">
-        <el-switch v-model="formData.switchOn"></el-switch>
+      <el-form-item
+        label="switchOn"
+        prop="switchOn"
+      >
+        <el-switch v-model="formData.switchOn" />
       </el-form-item>
-      <el-form-item label="Path" prop="path">
-        <el-input v-model="formData.path" placeholder="请输入接口路径" />
+      <el-form-item
+        label="Path"
+        prop="path"
+      >
+        <el-input
+          v-model="formData.path"
+          placeholder="请输入接口路径"
+        />
       </el-form-item>
       <el-form-item label="Method">
-        <el-select v-model="formData.method" placeholder="请选择请求方法">
-          <el-option label="GET" value="GET" />
-          <el-option label="POST" value="POST" />
-          <el-option label="PUT" value="PUT" />
-          <el-option label="DELETE" value="DELETE" />
+        <el-select
+          v-model="formData.method"
+          placeholder="请选择请求方法"
+        >
+          <el-option
+            label="GET"
+            value="GET"
+          />
+          <el-option
+            label="POST"
+            value="POST"
+          />
+          <el-option
+            label="PUT"
+            value="PUT"
+          />
+          <el-option
+            label="DELETE"
+            value="DELETE"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="Delay">
-        <el-input-number v-model="formData.delay" placeholder="响应延时" controls-position="right" /> （ms）
+        <el-input-number
+          v-model="formData.delay"
+          placeholder="响应延时"
+          controls-position="right"
+        /> （ms）
       </el-form-item>
       <el-form-item label="Code">
-        <el-select v-model="formData.status" placeholder="请输入响应状态码">
-          <el-option label="200" :value="200" />
-          <el-option label="202" :value="202" />
-          <el-option label="500" :value="500" />
-          <el-option label="401" :value="401" />
-          <el-option label="403" :value="403" />
-          <el-option label="404" :value="403" />
+        <el-select
+          v-model="formData.status"
+          placeholder="请输入响应状态码"
+        >
+          <el-option
+            label="200"
+            :value="200"
+          />
+          <el-option
+            label="202"
+            :value="202"
+          />
+          <el-option
+            label="500"
+            :value="500"
+          />
+          <el-option
+            label="401"
+            :value="401"
+          />
+          <el-option
+            label="403"
+            :value="403"
+          />
+          <el-option
+            label="404"
+            :value="403"
+          />
         </el-select>
       </el-form-item>
-      <el-form-item label="Response" prop="response">
+      <el-form-item
+        label="Response"
+        prop="response"
+      >
         <VueJsonEditor
-          style="height: 400px"
-          v-model="formData.response"
           ref="jsonEditor"
+          v-model="formData.response"
+          style="height: 400px"
           :mode="editorMode"
           :modes="modes"
-          :expandedOnStart="true"
+          :expanded-on-start="true"
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit"> 保存 </el-button>
+        <el-button
+          type="primary"
+          @click="onSubmit"
+        >
+          保存
+        </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -67,29 +129,18 @@ const defaultForm = {
   switchOn: true,
 }
 export default {
-  props: {
-    data: {
-      type: Object,
-      default: {},
-    },
-    projectList: {
-      type: Array,
-      default: []
-    }
-  },
   components: {
     VueJsonEditor,
   },
-  computed: {
-    rules() {
-      const projectName = this.data.projectName
-      const currentProject = this.projectList.find(item => item.name === projectName)
-
-      return currentProject.rules || []
+  props: {
+    data: {
+      type: Object,
+      default: () => ({}),
+    },
+    projectList: {
+      type: Array,
+      default: () => []
     }
-  },
-  mounted() {
-    this.formData = { ...defaultForm, ...this.data }
   },
   data() {
     const checkJsonInput = (_rule, value, callback) => {
@@ -127,6 +178,17 @@ export default {
       modes: ['code', 'tree', 'text'],
       formData: {},
     }
+  },
+  computed: {
+    rules() {
+      const projectName = this.data.projectName
+      const currentProject = this.projectList.find(item => item.name === projectName)
+
+      return currentProject.rules || []
+    }
+  },
+  mounted() {
+    this.formData = { ...defaultForm, ...this.data }
   },
   methods: {
     onSubmit() {

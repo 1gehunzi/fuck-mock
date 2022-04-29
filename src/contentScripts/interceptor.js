@@ -3,7 +3,7 @@
 import { proxy } from 'ajax-hook'
 import { stringify } from 'flatted'
 import Url from 'url-parse'
-import { pathToRegexp, match } from 'path-to-regexp'
+import { pathToRegexp } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
 
 const sendMsg = (msg) => {
@@ -86,7 +86,7 @@ proxy({
         sendMsg(payload)
         handler.resolve(result)
       })
-      .catch((err) => {
+      .catch(() => {
         // console.log(config, 'dddddddddddddd')
         handler.next(config)
       })
@@ -131,6 +131,7 @@ if (window.fetch) {
           response.rulePath = rulePath
           return response
         } catch (err) {
+          console.error(err)
         }
       })
     },

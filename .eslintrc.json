@@ -1,8 +1,9 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
-  "extends": ["airbnb", "plugin:vue/recommended", "prettier"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:vue/recommended",  "prettier"],
   "globals": {
     "Vue": true,
     "chrome": true,
@@ -10,8 +11,10 @@
     "window": true
   },
   "parserOptions": {
+     "parser": "@typescript-eslint/parser",
     "ecmaVersion": 8,
-    "sourceType": "module"
+    "sourceType": "module",
+    "experimentalObjectRestSpread": true
   },
   "plugins": ["vue"],
   "rules": {

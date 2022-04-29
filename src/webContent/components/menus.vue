@@ -25,16 +25,25 @@
                 <i class="el-icon-more-outline" />
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>
-                    <el-button type="text" @click="addRule(item.name)">
+                    <el-button
+                      type="text"
+                      @click="addRule(item.name)"
+                    >
                       <i class="el-icon-circle-plus-outline" />
                       新增规则
                     </el-button>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button  type="text" @click="editProject(item.name)"><i class="el-icon-edit"/>编辑项目</el-button>
+                    <el-button
+                      type="text"
+                      @click="editProject(item.name)"
+                    ><i class="el-icon-edit" />编辑项目</el-button>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <el-button @click="deleteProjectByName(item.name)"  type="text"><i class="el-icon-delete"/> 删除</el-button>
+                    <el-button
+                      type="text"
+                      @click="deleteProjectByName(item.name)"
+                    ><i class="el-icon-delete" /> 删除</el-button>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -47,23 +56,39 @@
             <div
               v-for="rule in rules"
               :key="rule.path"
-              @click="editRule(item.name, rule)"
               class="rule-item"
+              @click="editRule(item.name, rule)"
             >
               <span class="rule-name">
-                <span class="get-info" v-if="rule.method === 'GET'">GET</span>
-                <span class="post-info"  v-if="rule.method === 'POST'">POST</span>
+                <span
+                  v-if="rule.method === 'GET'"
+                  class="get-info"
+                >GET</span>
+                <span
+                  v-if="rule.method === 'POST'"
+                  class="post-info"
+                >POST</span>
                 {{ rule.name }}
               </span>
               <span>
-              <span class="rule-status" :style="{ background: rule.switchOn ? '#67C23A' : '#CDCECF'}">*</span>
-              <el-popconfirm  title="确定删除吗？" @confirm="deleteRule(item.name, rule)">
-                <span class="delete-btn"  slot="reference" @click.stop>
-                  <i
-                    class="el-icon-delete"
-                  />
-                </span>
-              </el-popconfirm>
+                <span
+                  class="rule-status"
+                  :style="{ background: rule.switchOn ? '#67C23A' : '#CDCECF'}"
+                >*</span>
+                <el-popconfirm
+                  title="确定删除吗？"
+                  @confirm="deleteRule(item.name, rule)"
+                >
+                  <span
+                    slot="reference"
+                    class="delete-btn"
+                    @click.stop
+                  >
+                    <i
+                      class="el-icon-delete"
+                    />
+                  </span>
+                </el-popconfirm>
               </span>
             </div>
           </div>
@@ -79,18 +104,24 @@
       :close-on-click-modal="false"
     >
       <el-form
+        ref="projectForm"
         :model="form"
         :rules="formRules"
-        ref="projectForm"
         label-width="80px"
       >
-        <el-form-item label="项目名称" prop="name">
+        <el-form-item
+          label="项目名称"
+          prop="name"
+        >
           <el-input
             v-model="form.name"
             placeholder="项目名称"
           />
         </el-form-item>
-        <el-form-item label="项目域名" prop="host">
+        <el-form-item
+          label="项目域名"
+          prop="host"
+        >
           <el-input
             v-model="form.host"
             :placeholder="hostPlaceholder"
@@ -123,10 +154,15 @@
       :modal-append-to-body="false"
     >
       <div slot="title">
-        <i class="el-icon-warning-outline" style="color: #E6A23C;font-weight: bold;"/>
+        <i
+          class="el-icon-warning-outline"
+          style="color: #E6A23C;font-weight: bold;"
+        />
         删除<span style="font-weight: bold;">{{ deleteProjectName }}</span> 项目
       </div>
-      <div style="color: #909399;line-height: 40px;margin: -20px 0;">项目下的所有配置随之清空</div>
+      <div style="color: #909399;line-height: 40px;margin: -20px 0;">
+        项目下的所有配置随之清空
+      </div>
       <div
         slot="footer"
         class="dialog-footer"
@@ -143,7 +179,10 @@
       </div>
     </el-dialog>
     <div class="operator">
-      <el-button type="text" @click="addProject()">
+      <el-button
+        type="text"
+        @click="addProject()"
+      >
         <i class="el-icon-plus" />
         添加项目
       </el-button>
@@ -158,12 +197,15 @@ export default {
   props: {
     rules: {
       type: Array,
+      default: () => []
     },
     currentProject: {
       type: String,
+      default: ''
     },
     projectList: {
       type: Array,
+      default: () => []
     },
   },
   data() {
@@ -203,7 +245,6 @@ export default {
       }
     }
   },
-  mounted() {},
   methods: {
     addRule(projectName) {
       this.$emit('addRule', projectName)

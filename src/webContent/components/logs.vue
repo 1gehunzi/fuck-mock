@@ -91,9 +91,8 @@ export default {
   props: {
     list: {
       type: Array,
+      default: () => []
     },
-  },
-  mounted() {
   },
   methods: {
     formatLog(url) {

@@ -28,7 +28,10 @@
           class="logs"
           style="overflow-y: scroll; height: 100%"
         >
-          <Logs :list="list" @editRuleByLog="editRuleByLog" />
+          <Logs
+            :list="list"
+            @editRuleByLog="editRuleByLog"
+          />
         </div>
       </div>
     </div>
@@ -40,10 +43,21 @@
       direction="rtl"
       custom-class="demo-drawer"
     >
-      <EditorForm @save-form="onSubmit" :data="formData" :projectList="projectList" />
+      <EditorForm
+        :data="formData"
+        :project-list="projectList"
+        @save-form="onSubmit"
+      />
     </el-drawer>
-    <div class="clear-btn" @click="clearLogs">
-      <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
+    <div
+      class="clear-btn"
+      @click="clearLogs"
+    >
+      <el-tooltip
+        effect="dark"
+        content="清空请求日志"
+        placement="top-start"
+      >
         <i class="el-icon-delete" />
       </el-tooltip>
     </div>
@@ -150,7 +164,7 @@ export default {
       try {
         tmpRes = JSON.parse(response.response)
       } catch(e) {
-
+        console.log(e)
       }
       const targetUrl = new Url(request.url)
       this.formData = {

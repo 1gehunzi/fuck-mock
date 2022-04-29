@@ -6,8 +6,9 @@ const ExtensionReloader = require('webpack-extension-reloader')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
-const resolve = dir => path.resolve(__dirname, dir);
+const resolve = (dir) => path.resolve(__dirname, dir)
 
 // eslint-disable-next-line
 function configFunc(env, argv) {
@@ -42,6 +43,16 @@ function configFunc(env, argv) {
           test: /\.js$/,
           loader: 'babel-loader',
           exclude: /(node_modules|bower_components)/,
+        },
+        {
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          exclude: /node_modules/,
+          options: {
+            transpileOnly: true,
+            appendTsSuffixTo: [/\.vue$/],
+            happyPackMode: false,
+          },
         },
         {
           test: /\.scss$/,
@@ -84,9 +95,9 @@ function configFunc(env, argv) {
     resolve: {
       alias: {
         vue$: 'vue/dist/vue.runtime.esm.js',
-         '@': resolve('src')// 这样配置后 @ 可以指向 src 目录
+        '@': resolve('src'), // 这样配置后 @ 可以指向 src 目录
       },
-      // extensions: ['.js'],
+      extensions: ['.js', '.ts'],
     },
     plugins: [
       new VueLoaderPlugin(),
@@ -116,6 +127,16 @@ function configFunc(env, argv) {
         template: './index.html',
         filename: 'webContent.html',
         chunks: ['webContent'],
+      }),
+      // 用于提供完善的报错信息
+      new ForkTsCheckerWebpackPlugin({
+        async: false,
+        typescript: {
+          // 提供对 .vue 单文件的检测支持
+          extensions: {
+            vue: true,
+          },
+        },
       }),
     ],
   }

@@ -50,14 +50,24 @@ const payload = {
 - [x] 删除和点击日志展示详情有bug
 - [x] fetch 404的处理
 - [x] 编辑项目名称，currentName的问题修复
+- [x] json 的中文编辑问题
 - [ ] 鼠标点击的锚点均有问题
-- [ ] json 的中文编辑问题
 - [ ] path-to-regexp 的优化
 - [ ] 搜索功能添加
 - [ ] 支持改用户请求的request, 类似postman的穿透
 - [ ] 文档和宣传
 - res query
 -
+
+## 环境
+接入 typescript
+https://dev.to/codeoz/webpack-academy-bonus-use-webpack-with-typescript-vuejs-sass-38ff
+https://cherrow.top/posts/5141e527
+
+http://forbeslindesay.github.io/express-route-tester/
+https://www.npmjs.com/package/path-to-regexp
+
+https://www.cnblogs.com/Ewarm/p/12965069.html 的教程
 
 调试环境：
 微信公众号是 xhr
