@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 /* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
@@ -5,26 +7,25 @@ import { stringify } from 'flatted'
 import Url from 'url-parse'
 import { pathToRegexp } from 'path-to-regexp'
 import FetchInterceptor from '@/fetch-interceptor'
-import type { Project, ProjectStorage  } from './type'
+import type { Project, ProjectStorage, NetworkItem , MethodType, Request, Response } from './type'
 export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
 export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
 /**
  * 用户界面的 ajax 请求log，发给插件层
  * @param {*} msg
  */
-const sendMsg = (msg) => {
+const sendMsg = (msg: NetworkItem) => {
+  console.log(msg, '------------------------ log')
   const str = stringify(msg)
   const event = new CustomEvent(CUSTOM_EVENT_NAME, { detail: str })
   window.dispatchEvent(event)
 }
 //
 function mockCore(url: string, method: string) {
-   const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
+  const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
   const configStr = inputElem.value
-  // TODO: 搞下类型
   const config: ProjectStorage = JSON.parse(configStr)
   // 看下插件设置的数据结构
-  console.log(config, '-----------')
   const targetUrl = new Url(url)
   const str = targetUrl.pathname
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
@@ -66,9 +67,9 @@ proxy({
     // TODO: url 对象里面的信息非常有用啊
     const url = new Url(config.url)
 
-    const request = {
+    const request: Request = {
       url: url.href,
-      method: config.method,
+      method: config.method as MethodType,
       headers: config.headers,
       type: 'xhr',
     }
@@ -81,7 +82,7 @@ proxy({
           headers: [],
           response: JSON.stringify(response),
         }
-        const payload = {
+        const payload: NetworkItem = {
           request,
           response: {
             status: result.status,
@@ -105,9 +106,9 @@ proxy({
     const { statusText, status, config, headers, response: res } = response
 
     const url = new Url(config.url)
-    const payload = {
+    const payload: NetworkItem = {
       request: {
-        method: config.method,
+        method: config.method as MethodType,
         url: url.href,
         headers: config.headers,
         type: 'xhr',
@@ -118,7 +119,7 @@ proxy({
         url: config.url,
         headers: headers,
         response: res,
-      },
+      } ,
     }
     sendMsg(payload)
 
@@ -191,7 +192,7 @@ if (window.fetch !== undefined) {
       }
     },
     onRequestFailure(response, request) {
-      const payload = {
+      const payload:NetworkItem = {
         request: {
           type: 'fetch',
           method: request.method,
