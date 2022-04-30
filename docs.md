@@ -54,7 +54,7 @@ const payload = {
 - [ ] 鼠标点击的锚点均有问题
 - [ ] path-to-regexp 的优化
 - [ ] 搜索功能添加
-- [ ] 支持改用户请求的request, 类似postman的穿透
+- [ ] 支持改用户请求的request, 类似 postman 的穿透
 - [ ] 文档和宣传
 - res query
 -

@@ -2,10 +2,13 @@ import {
   AJAX_INTERCEPTOR_PROJECTS,
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
 } from '@/store'
-import './test'
-
+import { CUSTOM_EVENT_NAME, INJECT_ELEMENT_ID } from './interceptor'
+import type { Project, ProjectStorage } from './type'
 const keys = [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT]
-
+export const EXTENSION_EVENT_NAME = 'ajaxInterceptor'
+/**
+ * 将插件的 ajax hooks 文件注册到用户目标页面中去
+ */
 function injectScriptToPage() {
   const script = document.createElement('script')
   script.setAttribute('type', 'text/javascript')
@@ -13,53 +16,55 @@ function injectScriptToPage() {
   document.documentElement.appendChild(script)
 
   const input = document.createElement('input')
-  input.setAttribute('id', 'ajaxInterceptor')
+  input.setAttribute('id', INJECT_ELEMENT_ID)
   input.setAttribute('style', 'display:none')
   document.documentElement.appendChild(input)
 }
-const executeScript = (data) => {
+const executeScript = (data: ProjectStorage) => {
   const code = JSON.stringify(data)
-  if (document.getElementById('ajaxInterceptor')) {
-    document.getElementById('ajaxInterceptor').value = code
+  const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
+  if (inputElem !== null) {
+    inputElem.value = code
   }
 }
 // 让 storage 的数据实时反映到页面上
 const setGlobalData = () => {
   chrome.storage.local.get(keys, (result) => {
-    executeScript(result)
+    executeScript(result as ProjectStorage)
   })
 }
 chrome.storage.local.get(keys, (result) => {
   const currentName = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
-  const projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
+  const projectList: Project[] = result[AJAX_INTERCEPTOR_PROJECTS] || []
   // eslint-disable-next-line no-restricted-globals
   const { origin } = location
   const currentProject =
-    projectList.find((item) => item.name === currentName) || {}
-  // 注意host和origin是否带结尾的 slush
-  if (origin === currentProject.host) {
+    projectList.find((item) => item.name === currentName) || ({} as Project)
+  if (origin === currentProject.origin) {
     injectScriptToPage()
     setGlobalData()
   }
 })
 
-// CUSTOMEVENT 事件的作用是什么： 让页面的请求信息, 反馈给插件页面
+// CUSTOMEVENT 事件的作用是什么： 让页面的请求信息 （network logs）, 反馈给插件页面
 window.addEventListener(
-  'CUSTOMEVENT',
-  (event) => {
+  CUSTOM_EVENT_NAME,
+  (event: any) => {
     chrome.runtime.sendMessage(chrome.runtime.id, {
-      type: 'ajaxInterceptor',
+      type: EXTENSION_EVENT_NAME,
       to: 'background',
       detail: event.detail,
     })
   },
   false
 )
-
-chrome.storage.onChanged.addListener((changes, namespace) => {
+/**
+ * 监听插件的操作界面，设置拦截规则，设置项目的打开关闭或者规则的开启关闭，实时通知给用户的页面
+ */
+chrome.storage.onChanged.addListener((changes) => {
   // eslint-disable-next-line no-restricted-syntax
-  for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
-    // console.log(namespace, oldValue, newValue)
+  // for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
+  for (const [key] of Object.entries(changes)) {
     if (keys.find((item) => item === key)) {
       setGlobalData()
     }

@@ -120,11 +120,11 @@
         </el-form-item>
         <el-form-item
           label="项目域名"
-          prop="host"
+          prop="origin"
         >
           <el-input
-            v-model="form.host"
-            :placeholder="hostPlaceholder"
+            v-model="form.origin"
+            :placeholder="originPlaceholder"
           />
         </el-form-item>
         <el-form-item label="标识色">
@@ -192,7 +192,7 @@
 
 <script>
 const originRegx = /^(?=^.{3,255}$)(http(s)?:\/\/)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62}){0,}(:\d+)*$/
-const hostPlaceholder = 'protocal://hostname[:port]'
+const originPlaceholder = 'protocal://hostname[:port]'
 export default {
   props: {
     rules: {
@@ -223,7 +223,7 @@ export default {
     return {
       deleteFormVisible: true,
       dialogFormVisible: false,
-      hostPlaceholder,
+      originPlaceholder,
       editProjectName: '',
       deleteProjectName: '',
       form: {
@@ -236,10 +236,10 @@ export default {
           { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' },
           { validator: checkProjectNameUnique, trigger: 'blur' }
         ],
-        host: [
+        origin: [
           { required: true, message: '请输入项目域名', trigger: 'blur' },
           {
-            pattern: originRegx, message: `请输入符合规格的域名，${hostPlaceholder}`
+            pattern: originRegx, message: `请输入符合规格的域名，${originPlaceholder}`
           }
         ]
       }

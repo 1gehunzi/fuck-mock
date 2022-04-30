@@ -1,32 +1,16 @@
 <template>
-  <div style="height:100%;">
-    <el-table
-      size="mini"
-      :data="list"
-      stripe
-      height="100%"
-      style="width: 100%"
-    >
-      <el-table-column
-        prop="request.url"
-        label="Name"
-      >
+  <div style="height: 100%">
+    <el-table size="mini" :data="list" stripe height="100%" style="width: 100%">
+      <el-table-column prop="request.url" label="Name">
         <template slot-scope="scope">
-          <div
-            class="rule-name"
-            @click="editRule(scope.row)"
-          >
+          <div class="rule-name" @click="editRule(scope.row)">
             <el-tag
               :type="scope.row.request.method === 'GET' ? 'success' : 'primary'"
               disable-transitions
             >
               {{ scope.row.request.method }}
             </el-tag>
-            <el-tooltip
-              effect="dark"
-              placement="top-start"
-              class="tooltip"
-            >
+            <el-tooltip effect="dark" placement="top-start" class="tooltip">
               <div slot="content">
                 <div class="tooltip">
                   {{ formatLog(scope.row.request.url).href }}
@@ -52,7 +36,11 @@
         width="80"
       >
         <template slot-scope="scope">
-          <span :style="{color: scope.row.response.isMock ? '#E6A23C' : '#909399'}">
+          <span
+            :style="{
+              color: scope.row.response.isMock ? '#E6A23C' : '#909399',
+            }"
+          >
             {{ scope.row.response.isMock ? '拦截' : '穿透' }}
           </span>
         </template>
@@ -64,23 +52,6 @@
         width="80"
       />
     </el-table>
-    <!-- <div
-      class="content"
-    >
-      <div
-        v-for="(item, index) in list"
-        :key="item.request.url + index"
-        class="log-item"
-        @click="editRule(item)"
-      >
-        <span>
-          {{ item.request.method }}
-        </span>
-        {{ formatLog(item.request.url) }}
-        <span>{{ item.response.status }}</span>
-        <span>{{ item.response.isMock ? '拦截' : '穿透' }}</span>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -91,25 +62,18 @@ export default {
   props: {
     list: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
   },
   methods: {
     formatLog(url) {
       const targetUrl = new Url(url)
-      // const {pathname, query} = targetUrl
-      // const href = targetUrl.pathname + targetUrl.query
-      // console.log(targetUrl, '================')
-      // return str
-      return targetUrl;
-      // return {
-      //   pathname,
-      //   href
-      // }
+
+      return targetUrl
     },
     editRule(item) {
       this.$emit('editRuleByLog', item)
-    }
+    },
   },
 }
 </script>

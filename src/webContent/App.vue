@@ -15,23 +15,17 @@
       <div class="content">
         <div class="header">
           <div class="info">
-            {{ activeProject.host }}
+            {{ activeProject.origin }}
             <el-switch
-              v-if="activeProject.host"
+              v-if="activeProject.origin"
               :value="toggle"
               :width="30"
               @change="toggleSwitch"
             />
           </div>
         </div>
-        <div
-          class="logs"
-          style="overflow-y: scroll; height: 100%"
-        >
-          <Logs
-            :list="list"
-            @editRuleByLog="editRuleByLog"
-          />
+        <div class="logs" style="overflow-y: scroll; height: 100%">
+          <Logs :list="list" @editRuleByLog="editRuleByLog" />
         </div>
       </div>
     </div>
@@ -49,15 +43,8 @@
         @save-form="onSubmit"
       />
     </el-drawer>
-    <div
-      class="clear-btn"
-      @click="clearLogs"
-    >
-      <el-tooltip
-        effect="dark"
-        content="清空请求日志"
-        placement="top-start"
-      >
+    <div class="clear-btn" @click="clearLogs">
+      <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
         <i class="el-icon-delete" />
       </el-tooltip>
     </div>
@@ -75,12 +62,13 @@ import {
   AJAX_INTERCEPTOR_CURRENT_PROJECT,
   AJAX_INTERCEPTOR_PROJECTS,
 } from '@/store'
+import { EXTENSION_EVENT_NAME } from '@/contentScripts'
 
 export default {
   components: {
     EditorForm,
     Menus,
-    Logs
+    Logs,
   },
   data() {
     return {
@@ -98,7 +86,8 @@ export default {
   },
   computed: {
     activeProject() {
-      const current = this.projectList.find(item => item.name === this.currentProject) || {}
+      const current =
+        this.projectList.find((item) => item.name === this.currentProject) || {}
       return current
     },
     rules() {
@@ -106,7 +95,7 @@ export default {
     },
     toggle() {
       return this.activeProject.switchOn
-    }
+    },
   },
   mounted() {
     chrome.storage.local.get(
@@ -118,7 +107,7 @@ export default {
     )
     chrome.runtime.onMessage.addListener((event) => {
       try {
-        if (event.type === 'ajaxInterceptor') {
+        if (event.type === EXTENSION_EVENT_NAME) {
           const result = parse(event.detail)
           this.list = [...this.list, result]
         }
@@ -130,8 +119,8 @@ export default {
   methods: {
     onSubmit(data) {
       const { projectName, isAdd, ...formData } = data
-      const current = this.projectList.find(item => item.name === projectName)
-      let  rules  = current.rules || []
+      const current = this.projectList.find((item) => item.name === projectName)
+      let rules = current.rules || []
 
       const index = rules.findIndex((item) => {
         const ruleName = isAdd ? formData.name : this.formData.name
@@ -143,7 +132,7 @@ export default {
       } else {
         rules = [...rules, formData]
       }
-      const activeProject = {...current, rules}
+      const activeProject = { ...current, rules }
       this.formData = {}
       this.ruleFormVisible = false
       this.saveProject(activeProject, activeProject.name)
@@ -154,16 +143,24 @@ export default {
 
       if (rulePath) {
         const method = item.request.method
-        const rule = this.activeProject.rules?.find(ruleItem => ruleItem.path === rulePath && method === ruleItem.method) || {}
-        this.formData = {...rule, projectName: this.activeProject.name, isAdd: false}
+        const rule =
+          this.activeProject.rules?.find(
+            (ruleItem) =>
+              ruleItem.path === rulePath && method === ruleItem.method
+          ) || {}
+        this.formData = {
+          ...rule,
+          projectName: this.activeProject.name,
+          isAdd: false,
+        }
         return
       }
       // TODO: 接口 404 的时候有 bug
-      const {response, request} = item
+      const { response, request } = item
       let tmpRes = ''
       try {
-        tmpRes = JSON.parse(response.response)
-      } catch(e) {
+        tmpRes = JSON.parse(response.responseTxt)
+      } catch (e) {
         console.log(e)
       }
       const targetUrl = new Url(request.url)
@@ -172,15 +169,14 @@ export default {
         switchOn: true,
         method: request.method,
         response: tmpRes,
-        // status: response.status,
         path: targetUrl.pathname,
-        isAdd: true
+        isAdd: true,
       }
     },
     addRule(projectName) {
       this.formData = {
         projectName: projectName,
-        isAdd: true
+        isAdd: true,
       }
       this.ruleFormVisible = true
     },
@@ -189,19 +185,19 @@ export default {
       this.formData = {
         ...rule,
         isAdd: false,
-        projectName
+        projectName,
       }
     },
     deleteRule(projectName, rule) {
-      const current = this.projectList.find(item => item.name === projectName)
-      let  rules  = current.rules || []
+      const current = this.projectList.find((item) => item.name === projectName)
+      let rules = current.rules || []
 
       const index = rules.findIndex((item) => {
         return item.name === rule.name
       })
 
-      rules.splice(index, 1);
-      const activeProject = {...current, rules}
+      rules.splice(index, 1)
+      const activeProject = { ...current, rules }
       this.saveProject(activeProject, activeProject.name)
     },
     changeActiveProject(project) {
@@ -209,7 +205,7 @@ export default {
       this.currentProject = project
     },
     toggleSwitch(event) {
-      const activeProject = {...this.activeProject, switchOn: event}
+      const activeProject = { ...this.activeProject, switchOn: event }
       this.saveProject(activeProject, activeProject.name)
     },
     saveProject(project, editProjectName) {
@@ -220,7 +216,7 @@ export default {
       })
 
       if (editProjectName) {
-        projectList[index] = {...projectList[index], ...project}
+        projectList[index] = { ...projectList[index], ...project }
       } else {
         projectList = [...projectList, project]
         this.changeActiveProject(project.name)
@@ -244,12 +240,12 @@ export default {
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, this.projectList)
 
       if (projectName === this.currentProject && projectList.length) {
-         this.changeActiveProject(projectList[0].name)
+        this.changeActiveProject(projectList[0].name)
       }
     },
     clearLogs() {
       this.list = []
-    }
+    },
   },
 }
 </script>

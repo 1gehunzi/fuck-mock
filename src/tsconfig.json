@@ -15,18 +15,21 @@
     "baseUrl": ".",
     "types": [
       "webpack-env",
-      "jest"
+      "jest",
+      "chrome",
+      "node",
     ],
     "paths": {
       "@/*": [
-        "src/*"
-      ]
+        "../src/*"
+      ],
     },
     "lib": [
       "esnext",
       "dom",
       "dom.iterable",
-      "scripthost"
+      "scripthost",
+      "webworker"
     ]
   },
   "vueCompilerOptions": {

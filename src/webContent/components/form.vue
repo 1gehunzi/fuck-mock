@@ -72,8 +72,8 @@
             :value="200"
           />
           <el-option
-            label="202"
-            :value="202"
+            label="201"
+            :value="201"
           />
           <el-option
             label="500"
@@ -89,7 +89,7 @@
           />
           <el-option
             label="404"
-            :value="403"
+            :value="404"
           />
         </el-select>
       </el-form-item>

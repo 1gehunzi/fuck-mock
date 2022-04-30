@@ -14,21 +14,25 @@ chrome.windows.onRemoved.addListener((windowId) => {
 
 const defaultProject = {
   name: 'localhost',
-  host: 'http://localhost:8080',
+  origin: 'http://localhost:8080',
   color: '#409EFF',
   switchOn: true,
 }
 
 chrome.runtime.onInstalled.addListener(function () {
-  chrome.storage.local.set(
-    {
-      [AJAX_INTERCEPTOR_PROJECTS]: [defaultProject],
-      [AJAX_INTERCEPTOR_CURRENT_PROJECT]: defaultProject.name,
-    },
-    function () {
-      console.log('The color is green.')
-    }
-  )
+  console.log('当前环境变量NODE_ENV => ', process.env.NODE_ENV)
+  // 区分开发环境还是生产环境
+  if (process.env.NODE_ENV !== 'development') {
+    chrome.storage.local.set(
+      {
+        [AJAX_INTERCEPTOR_PROJECTS]: [defaultProject],
+        [AJAX_INTERCEPTOR_CURRENT_PROJECT]: defaultProject.name,
+      },
+      function () {
+        console.log('The color is green.')
+      }
+    )
+  }
 })
 
 chrome.browserAction.onClicked.addListener(function () {
