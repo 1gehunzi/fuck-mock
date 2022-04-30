@@ -23,7 +23,6 @@ export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
  * @param {*} msg
  */
 const sendMsg = (msg: NetworkItem) => {
-  console.log(msg, '------------------------ log')
   const str = stringify(msg)
   const event = new CustomEvent(CUSTOM_EVENT_NAME, { detail: str })
   window.dispatchEvent(event)
