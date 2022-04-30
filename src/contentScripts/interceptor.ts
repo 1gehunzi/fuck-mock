@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-continue */
 // 在页面上插入代码
 import { proxy } from 'ajax-hook'
