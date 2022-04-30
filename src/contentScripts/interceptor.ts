@@ -90,7 +90,7 @@ proxy({
           config,
           status,
           headers: [],
-          responseTxt: JSON.stringify(response),
+          response: JSON.stringify(response),
         }
         // FIXME: 这里的数据结构好像是错误的
         const payload: NetworkItem = {
