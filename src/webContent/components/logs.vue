@@ -1,7 +1,10 @@
 <template>
   <div style="height: 100%">
-    <el-table size="mini" :data="list" stripe height="100%" style="width: 100%">
+    <el-table size="mini" :data="tableList" stripe height="100%" style="width: 100%">
       <el-table-column prop="request.url" label="Name">
+        <template slot="header" slot-scope="scope">
+          <el-input v-model="searchName" size="mini" placeholder="输入关键字搜索" clearable style="width: 260px"/>
+        </template>
         <template slot-scope="scope">
           <div class="rule-name" @click="editRule(scope.row)">
             <el-tag
@@ -34,6 +37,11 @@
         prop="response.isMock"
         label="Mock"
         width="80"
+        :filters="[
+          { text: '拦截', value: true },
+          { text: '穿透', value: false },
+        ]"
+        :filter-method="mockFilterHandler"
       >
         <template slot-scope="scope">
           <span
@@ -50,6 +58,11 @@
         prop="request.type"
         label="Type"
         width="80"
+        :filters="[
+          { text: 'fetch', value: 'fetch' },
+          { text: 'xhr', value: 'xhr' },
+        ]"
+        :filter-method="typeFilterHandler"
       />
     </el-table>
   </div>
@@ -65,6 +78,19 @@ export default {
       default: () => [],
     },
   },
+  computed:{
+    tableList() {
+      if (this.searchName === '') {
+        return this.list
+      }
+      return this.list.filter(item => item.request.url.indexOf(this.searchName) > -1)
+    }
+  },
+  data() {
+    return {
+      searchName: ''
+    }
+  },
   methods: {
     formatLog(url) {
       const targetUrl = new Url(url)
@@ -73,6 +99,14 @@ export default {
     },
     editRule(item) {
       this.$emit('editRuleByLog', item)
+    },
+    typeFilterHandler(value, row, column) {
+      // const property = column['property'];
+
+      return row.request.type === value
+    },
+    mockFilterHandler(value, row, column) {
+      return row.response.isMock === value
     },
   },
 }
