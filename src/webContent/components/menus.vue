@@ -256,6 +256,7 @@ export default {
       this.$emit('deleteRule', projectName, rule)
     },
     addProject() {
+      this.editProjectName = ''
       this.form = {
         color: '#409EFF',
         switchOn: true
@@ -266,8 +267,9 @@ export default {
       this.$refs.projectForm.validate((valid) => {
         if (valid) {
           this.dialogFormVisible = false;
-          this.$emit('saveProject', {...this.form}, this.editProjectName)
-          this.form = {color: '#409EFF'}
+          const editProjectName = this.editProjectName
+          this.$emit('saveProject', { ...this.form }, editProjectName)
+          this.form = { color: '#409EFF' }
           this.editProjectName = ''
           return
         }
@@ -285,7 +287,8 @@ export default {
     editProject(projectName) {
       this.dialogFormVisible = true
       this.editProjectName = projectName
-      const editProject = this.projectList.find(item => item.name = projectName)
+      const editProject = this.projectList.find(item => item.name === projectName)
+
       this.form = {...editProject}
     },
     changeProject(project) {

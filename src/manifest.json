@@ -23,10 +23,10 @@
   ],
   "description": "hijack, just mock",
   "icons": {
-    "16": "assets/icons/icon_16.png",
-    "32": "assets/icons/icon_32.png",
-    "64": "assets/icons/icon_64.png",
-    "128": "assets/icons/icon_128.png"
+    "16": "assets/icons_1/logo.png",
+    "32": "assets/icons_1/logo.png",
+    "64": "assets/icons_1/logo.png",
+    "128": "assets/icons_1/logo.png"
   },
   "manifest_version": 2,
   "name": "Just Mock",
