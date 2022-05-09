@@ -24,12 +24,12 @@
         <el-switch v-model="formData.switchOn" />
       </el-form-item>
       <el-form-item
-        label="Path"
+        label="Path Rule"
         prop="path"
       >
         <el-input
           v-model="formData.path"
-          placeholder="请输入接口路径"
+          placeholder="请输入接口路径规则"
         />
       </el-form-item>
       <el-form-item label="Method">
