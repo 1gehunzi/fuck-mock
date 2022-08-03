@@ -21,29 +21,20 @@
               <!-- {{item.rules && item.rules.length}} -->
             </div>
             <span>
-              <el-dropdown>
+              <el-dropdown @command="(c) => handleCommand(item, c)">
                 <i class="el-icon-more-outline" />
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>
-                    <el-button
-                      type="text"
-                      @click="addRule(item.name)"
-                    >
-                      <i class="el-icon-circle-plus-outline" />
-                      新增规则
-                    </el-button>
+                  <el-dropdown-item command="addRule">
+                    <i class="el-icon-circle-plus-outline" />新增规则
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      type="text"
-                      @click="editProject(item.name)"
-                    ><i class="el-icon-edit" />编辑项目</el-button>
+                  <el-dropdown-item command="editProject">
+                    <i class="el-icon-edit" />编辑项目
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      type="text"
-                      @click="deleteProjectByName(item.name)"
-                    ><i class="el-icon-delete" /> 删除</el-button>
+                  <el-dropdown-item
+                    command="deleteProject"
+                    @click="deleteProjectByName(item.name)"
+                  >
+                    <i class="el-icon-delete" />删除项目
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -262,6 +253,19 @@ export default {
       }
       this.dialogFormVisible = true
     },
+    handleCommand(item, command) {
+      if (command === 'deleteProject') {
+        this.deleteProjectByName(item.name)
+      }
+
+      if (command === 'editProject') {
+        this.editProject(item.name)
+      }
+
+      if (command === 'addRule') {
+        this.addRule(item.name)
+      }
+    },
     saveProject() {
       this.$refs.projectForm.validate((valid) => {
         if (valid) {
@@ -415,5 +419,8 @@ export default {
   color: #B3680C;
   font-weight: bold;;
 }
-
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
 </style>
