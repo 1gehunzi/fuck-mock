@@ -13,7 +13,7 @@
         prop="name"
       >
         <el-input
-          v-model="formData.name"
+          v-model.trim="formData.name"
           placeholder="请输入规则名称"
         />
       </el-form-item>
@@ -164,7 +164,6 @@ export default {
       formRules: {
         name: [
           { required: true, message: '请输入规则名称', trigger: 'blur' },
-          { min: 4, max: 60, message: '长度在 4 到 60 个字符', trigger: 'blur' },
           { validator: checkUniqueName }
         ],
         path: [

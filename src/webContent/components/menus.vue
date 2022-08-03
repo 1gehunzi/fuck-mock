@@ -114,7 +114,7 @@
           prop="name"
         >
           <el-input
-            v-model="form.name"
+            v-model.trim="form.name"
             placeholder="项目名称"
           />
         </el-form-item>
@@ -233,7 +233,6 @@ export default {
       formRules: {
         name: [
           { required: true, message: '请输入项目名称', trigger: 'blur' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' },
           { validator: checkProjectNameUnique, trigger: 'blur' }
         ],
         origin: [
