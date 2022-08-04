@@ -175,15 +175,25 @@
         @click="addProject()"
       >
         <i class="el-icon-plus" />
-        添加项目
+        添加
+      </el-button>
+      <el-button
+        type="text"
+        @click="exportData()"
+      >
+        <i class="el-icon-plus" />
+        导出
       </el-button>
     </div>
   </div>
 </template>
 
 <script>
+import {exportJSON} from '../utils'
+
 const originRegx = /^(?=^.{3,255}$)(http(s)?:\/\/)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62}){0,}(:\d+)*$/
 const originPlaceholder = 'protocal://hostname[:port]'
+
 export default {
   props: {
     rules: {
@@ -252,6 +262,9 @@ export default {
         switchOn: true
       }
       this.dialogFormVisible = true
+    },
+    exportData() {
+      exportJSON(this.projectList, 'just-mock-config.json')
     },
     handleCommand(item, command) {
       if (command === 'deleteProject') {
