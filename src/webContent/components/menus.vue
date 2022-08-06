@@ -86,6 +86,7 @@
         </div>
       </div>
     </div>
+    <import-dialog v-model="importDialogVisible" />
     <el-dialog
       :title="editProjectName ? '编辑项目' : '新增项目'"
       :visible.sync="dialogFormVisible"
@@ -184,6 +185,31 @@
         <i class="el-icon-plus" />
         导出
       </el-button>
+      <el-button
+        type="text"
+        @click="showImportDialog()"
+      >
+        <i class="el-icon-plus" />
+        导入
+      </el-button>
+      <a
+        href="https://just-mock.vercel.app/"
+        target="_blank"
+        style="color:#409EFF;text-decoration: none;"
+      >
+
+        <i
+          class="el-icon-link"
+        />
+        docs
+      </a>
+      <!-- <el-button
+        type="text"
+        @click="linkToDocs()"
+      >
+        <i class="el-icon-link" />
+        docs
+      </el-button> -->
     </div>
   </div>
 </template>
@@ -193,8 +219,12 @@ import {exportJSON} from '../utils'
 
 const originRegx = /^(?=^.{3,255}$)(http(s)?:\/\/)(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62}){0,}(:\d+)*$/
 const originPlaceholder = 'protocal://hostname[:port]'
+import ImportDialog from './import-dialog.vue'
 
 export default {
+  components: {
+    ImportDialog
+  },
   props: {
     rules: {
       type: Array,
@@ -227,6 +257,7 @@ export default {
       originPlaceholder,
       editProjectName: '',
       deleteProjectName: '',
+      importDialogVisible: false,
       form: {
         color: '#409EFF',
         switchOn: true
@@ -310,6 +341,12 @@ export default {
     changeProject(project) {
       this.$emit('changeActiveProject', project)
     },
+    showImportDialog() {
+      this.importDialogVisible = true
+    },
+    // linkToDocs() {
+    //   location.href = 'https://just-mock.vercel.app/'
+    // }
   },
 }
 </script>
