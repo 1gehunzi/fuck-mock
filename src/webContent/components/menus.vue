@@ -178,20 +178,28 @@
         <i class="el-icon-plus" />
         添加
       </el-button>
-      <el-button
-        type="text"
-        @click="exportData()"
+      <el-tooltip
+        content="将插件配置以 JSON 文件的形式导出，方便迁移共享配置"
       >
-        <i class="el-icon-plus" />
-        导出
-      </el-button>
-      <el-button
-        type="text"
-        @click="showImportDialog()"
+        <el-button
+          type="text"
+          @click="exportData()"
+        >
+          <i class="el-icon-download" />
+          导出
+        </el-button>
+      </el-tooltip>
+      <el-tooltip
+        content="导入插件的 JSON 共享配置"
       >
-        <i class="el-icon-plus" />
-        导入
-      </el-button>
+        <el-button
+          type="text"
+          @click="showImportDialog()"
+        >
+          <i class="el-icon-upload2" />
+          导入
+        </el-button>
+      </el-tooltip>
       <a
         href="https://just-mock.vercel.app/"
         target="_blank"
@@ -201,15 +209,9 @@
         <i
           class="el-icon-link"
         />
-        docs
+        文档
       </a>
-      <!-- <el-button
-        type="text"
-        @click="linkToDocs()"
-      >
-        <i class="el-icon-link" />
-        docs
-      </el-button> -->
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -359,7 +361,7 @@ export default {
   flex-grow: 0;
   flex-shrink: 0;
   background: #fff;
-  box-shadow: 0 0 3px 1px rgb(237 237 237 / 50%);
+  box-shadow: 0 0 3px 1px rgb(237 237 237 / 70%);
   padding-bottom: 42px;
   z-index: 10;
   .box {
@@ -370,13 +372,16 @@ export default {
     height: 100%;
   }
   .operator {
-    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: absolute;
     bottom: 0;
     width: 100%;
     border-top: 1px solid #f4f4f4;
     background-color: #fff;
     padding: 4px 12px 4px 12px;
+    font-size: 12px;
   }
 }
 .projects-list {
