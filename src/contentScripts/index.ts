@@ -22,7 +22,9 @@ function injectScriptToPage() {
 }
 const executeScript = (data: ProjectStorage) => {
   const code = JSON.stringify(data)
-  const inputElem = document.getElementById(INJECT_ELEMENT_ID) as HTMLInputElement
+  const inputElem = document.getElementById(
+    INJECT_ELEMENT_ID
+  ) as HTMLInputElement
   if (inputElem !== null) {
     inputElem.value = code
   }
@@ -37,7 +39,6 @@ chrome.storage.local.get(keys, (result) => {
   const currentName = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
   const projectList: Project[] = result[AJAX_INTERCEPTOR_PROJECTS] || []
 
-  console.log(projectList, 'projectList-----')
   // eslint-disable-next-line no-restricted-globals
   const { origin } = location
   const currentProject =

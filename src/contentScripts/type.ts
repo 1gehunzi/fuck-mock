@@ -48,7 +48,3 @@ export interface NetworkItem {
   request: Request
   response: Response
 }
-// 自定义的 Event 类型该设置成什么呢
-// export interface MyEvent {
-//   detail: string
-// }

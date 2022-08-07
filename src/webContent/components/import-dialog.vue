@@ -6,10 +6,14 @@
   >
     <div style="text-align: center;">
       <el-upload
+        ref="upload"
         class="upload-demo"
         drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        multiple
+        accept=".json"
+        :limit="1"
+        :auto-upload="false"
+        :on-change="handleChange"
+        action="/"
       >
         <i class="el-icon-upload" />
         <div class="el-upload__text">
@@ -33,7 +37,7 @@
       </el-button>
       <el-button
         type="primary"
-        @click="closeDialog"
+        @click="handleMerge"
       >
         确 定
       </el-button>
@@ -42,6 +46,13 @@
 </template>
 
 <script>
+import {
+  saveStorage,
+  AJAX_INTERCEPTOR_CURRENT_PROJECT,
+  AJAX_INTERCEPTOR_PROJECTS,
+} from '@/store'
+import { validProjectList, mergeProject } from './validate'
+
 export default {
     props: {
       value: {
@@ -50,13 +61,48 @@ export default {
     },
     data() {
         return {
-          // dialogFormVisible: true
+          importJson: []
         }
     },
     methods: {
       closeDialog() {
-        console.log('ffffffff', 'closeDialog')
         this.$emit("input", false);
+      },
+      handleChange (file) {
+        const thisBak = this
+        const reader = new FileReader()
+        reader.readAsText(file?.raw, 'utf-8')
+        reader.onload = function () {
+          const json = JSON.parse(reader.result)
+          console.log('xxxxxxxxxxxxxxxxxxx', JSON.stringify(json))
+
+          thisBak.importJson = json
+
+        }
+      },
+      handleMerge() {
+        const importJson = [...this.importJson]
+          const thisBak = this
+        chrome.storage.local.get(
+          [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT],
+          (result) => {
+            const projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
+
+
+
+
+            console.log('importJson--------', importJson)
+
+            if (validProjectList(importJson)) {
+              const newProjects = mergeProject(projectList, importJson)
+              saveStorage(AJAX_INTERCEPTOR_PROJECTS, newProjects)
+              location.reload()
+              thisBak.closeDialog()
+            } else {
+               thisBak.$message.error('导入的文件不符合 Just Mock 插件规格');
+            }
+          }
+        )
       }
     }
 };

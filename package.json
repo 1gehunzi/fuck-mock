@@ -8,6 +8,7 @@
     "ajax-hook": "^2.0.3",
     "element-ui": "^2.15.6",
     "flatted": "^3.2.5",
+    "lodash-es": "^4.17.21",
     "path-to-regexp": "^6.2.0",
     "url-parse": "^1.5.10",
     "vue": "^2.6.11",
