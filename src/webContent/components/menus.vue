@@ -9,8 +9,9 @@
         >
           <div
             :class="['project-name', item.name === currentProject ? 'active' : '']"
+            @click="changeProject(item.name)"
           >
-            <div @click="changeProject(item.name)">
+            <div>
               <span
                 class="icon-circle"
                 :style="{ background: item.color }"
@@ -171,47 +172,55 @@
       </div>
     </el-dialog>
     <div class="operator">
-      <el-button
-        type="text"
-        @click="addProject()"
-      >
-        <i class="el-icon-plus" />
-        添加
-      </el-button>
-      <el-tooltip
-        content="将插件配置以 JSON 文件的形式导出，方便迁移共享配置"
-      >
+      <div>
         <el-button
           type="text"
-          @click="exportData()"
+          @click="addProject()"
         >
-          <i class="el-icon-download" />
-          导出
+          <span>
+            <i class="el-icon-plus" />
+            添加
+          </span>
         </el-button>
-      </el-tooltip>
-      <el-tooltip
-        content="导入插件的 JSON 共享配置"
-      >
-        <el-button
-          type="text"
-          @click="showImportDialog()"
+        <el-tooltip
+          content="将插件配置以 JSON 文件的形式导出，方便迁移共享配置"
         >
-          <i class="el-icon-upload2" />
-          导入
-        </el-button>
-      </el-tooltip>
-      <a
-        href="https://just-mock.vercel.app/"
-        target="_blank"
-        style="color:#409EFF;text-decoration: none;"
-      >
-
-        <i
-          class="el-icon-link"
-        />
-        文档
-      </a>
-      </el-tooltip>
+          <el-button
+            type="text"
+            @click="exportData()"
+          >
+            <span>
+              <i class="el-icon-download" />
+              导出
+            </span>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+          content="导入插件的 JSON 共享配置"
+        >
+          <el-button
+            type="text"
+            @click="showImportDialog()"
+          >
+            <span>
+              <i class="el-icon-upload2" />
+              导入
+            </span>
+          </el-button>
+        </el-tooltip>
+        <a
+          href="https://just-mock.vercel.app/"
+          target="_blank"
+          style="color:#409EFF;text-decoration: none;"
+        >
+          <span>
+            <i
+              class="el-icon-link"
+            />
+            文档
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -372,15 +381,21 @@ export default {
     height: 100%;
   }
   .operator {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    &>div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        cursor: pointer;
+      }
+    }
     position: absolute;
     bottom: 0;
+    z-index: 4;
     width: 100%;
     border-top: 1px solid #f4f4f4;
     background-color: #fff;
-    padding: 4px 12px 4px 12px;
+    padding: 2px 12px;
     font-size: 12px;
   }
 }
