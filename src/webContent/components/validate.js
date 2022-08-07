@@ -18,12 +18,10 @@ export const validProjectList = (arr) => {
 
 
 export const mergeProject = (origin, target) => {
-  console.log(origin, target, 'xxxxxxxaray')
   const originNames = origin?.map(item => item.name) || []
   const targetNames = target?.map(item => item.name) || []
 
   const names = Array.from(new Set([...originNames, ...targetNames]))
-  console.log('names -------', names)
   return names.map(name => {
     const originItem = origin.find(item => item.name === name)
     const targetItem = target.find(item => item.name === name)
@@ -32,7 +30,6 @@ export const mergeProject = (origin, target) => {
     })
 
     const object = originItem || targetItem
-    console.log('-------x---------', {...object, rules})
 
     return {...object, rules}
   })

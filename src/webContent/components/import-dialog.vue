@@ -52,6 +52,7 @@ import {
   AJAX_INTERCEPTOR_PROJECTS,
 } from '@/store'
 import { validProjectList, mergeProject } from './validate'
+import { Message } from 'element-ui';
 
 export default {
     props: {
@@ -74,33 +75,32 @@ export default {
         reader.readAsText(file?.raw, 'utf-8')
         reader.onload = function () {
           const json = JSON.parse(reader.result)
-          console.log('xxxxxxxxxxxxxxxxxxx', JSON.stringify(json))
 
           thisBak.importJson = json
 
         }
       },
+
       handleMerge() {
-        const importJson = [...this.importJson]
-          const thisBak = this
+        const thisBak = this
         chrome.storage.local.get(
           [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT],
           (result) => {
             const projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
-
-
-
-
-            console.log('importJson--------', importJson)
-
-            if (validProjectList(importJson)) {
-              const newProjects = mergeProject(projectList, importJson)
-              saveStorage(AJAX_INTERCEPTOR_PROJECTS, newProjects)
-              location.reload()
-              thisBak.closeDialog()
-            } else {
-               thisBak.$message.error('导入的文件不符合 Just Mock 插件规格');
+            try {
+              const importJson = [...thisBak.importJson]
+              if (validProjectList(importJson)) {
+                const newProjects = mergeProject(projectList, importJson)
+                saveStorage(AJAX_INTERCEPTOR_PROJECTS, newProjects)
+                location.reload()
+                thisBak.closeDialog()
+              } else {
+                Message({type: 'error', message: '导入的文件不符合 Just Mock 插件规格'});
+              }
+            } catch(err) {
+              Message({type: 'error', message: '导入的文件不符合 Just Mock 插件规格'});
             }
+
           }
         )
       }
