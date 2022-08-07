@@ -193,7 +193,6 @@ if (window.fetch !== undefined) {
             rulePath: response.rulePath,
           }
           payload.response = result
-          console.log('fetch mock', payload)
           sendMsg(payload)
         })
       } else {
