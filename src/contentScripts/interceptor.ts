@@ -18,7 +18,6 @@ import type {
 export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
 export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
 
-const isRealRequest = false;
 /**
  * 用户界面的 ajax 请求log，发给插件层
  * @param {*} msg
@@ -28,23 +27,33 @@ const sendMsg = (msg: NetworkItem) => {
   const event = new CustomEvent(CUSTOM_EVENT_NAME, { detail: str })
   window.dispatchEvent(event)
 }
-//
-function mockCore(url: string, method: string): Promise<MockResult> {
+
+function getCurrentProject() {
   const inputElem = document.getElementById(
     INJECT_ELEMENT_ID
   ) as HTMLInputElement
+  if(!inputElem) {
+    return {} as Project;
+  }
   const configStr = inputElem.value
   const config: ProjectStorage = JSON.parse(configStr)
-  // 看下插件设置的数据结构
-  const targetUrl = new Url(url)
-  const str = targetUrl.pathname
+
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
   const currentProject =
     ajaxInterceptor_projects?.find(
       (item) => item.name === ajaxInterceptor_current_project
     ) || ({} as Project)
+  return currentProject;
+}
+//
+function mockCore(url: string, method: string): Promise<MockResult> {
+  
 
+  // 看下插件设置的数据结构
+  const targetUrl = new Url(url)
+  const str = targetUrl.pathname
+  const currentProject = getCurrentProject()
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (currentProject.switchOn) {
@@ -96,7 +105,7 @@ function handMockResult({ res, request, config }: any) {
 }
 proxy({
   onRequest: (config, handler) => {
-    if (isRealRequest) {
+    if (getCurrentProject().isRealRequest) {
       handler.next(config)
     } else {
       // TODO: url 对象里面的信息非常有用啊
@@ -257,5 +266,5 @@ if (window.fetch !== undefined) {
 
       sendMsg(payload)
     },
-  }, isRealRequest)
+  }, getCurrentProject().isRealRequest)
 }

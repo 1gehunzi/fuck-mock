@@ -16,22 +16,34 @@
         <div class="header">
           <div class="info">
             {{ activeProject.origin }}
-            <el-switch
-              v-if="activeProject.origin"
-              :value="toggle"
-              :width="30"
-              @change="toggleSwitch"
-            />
+            <div class="switch">
+              <div class="realRequest">
+                <el-switch
+                  v-if="activeProject.origin"
+                  :value="isRealRequest"
+                  :width="30"
+                  @change="isRealRequestSwitch"
+                />
+                <el-tooltip class="tooltip" content="开启后添加了 mock 数据的请求也会发送给后端，在控制台 Network 可看到网络请求" placement="top" effect="light">
+                  <i class="el-icon-question" style="color: #409EFF" />
+                </el-tooltip>
+              </div>
+              <div class="realRequest">
+                <el-switch
+                  v-if="activeProject.origin"
+                  :value="toggle"
+                  :width="30"
+                  @change="toggleSwitch"
+                />
+                <el-tooltip class="tooltip" content="开启后将根据配置拦截该网站的请求" placement="top" effect="light">
+                  <i class="el-icon-question" style="color: #409EFF" />
+                </el-tooltip>
+              </div>
+            </div>
           </div>
         </div>
-        <div
-          class="logs"
-          style="overflow-y: scroll; height: 100%"
-        >
-          <Logs
-            :list="list"
-            @editRuleByLog="editRuleByLog"
-          />
+        <div class="logs" style="overflow-y: scroll; height: 100%">
+          <Logs :list="list" @editRuleByLog="editRuleByLog" />
         </div>
       </div>
     </div>
@@ -49,15 +61,8 @@
         @save-form="onSubmit"
       />
     </el-drawer>
-    <div
-      class="clear-btn"
-      @click="clearLogs"
-    >
-      <el-tooltip
-        effect="dark"
-        content="清空请求日志"
-        placement="top-start"
-      >
+    <div class="clear-btn" @click="clearLogs">
+      <el-tooltip effect="dark" content="清空请求日志" placement="top-start">
         <i class="el-icon-delete" />
       </el-tooltip>
     </div>
@@ -100,7 +105,7 @@ export default {
   computed: {
     activeProject() {
       const current =
-        this.projectList.find((item) => item.name === this.currentProject) || {}
+        this.projectList.find(item => item.name === this.currentProject) || {}
       return current
     },
     rules() {
@@ -109,16 +114,19 @@ export default {
     toggle() {
       return this.activeProject.switchOn
     },
+    isRealRequest() {
+      return this.activeProject.isRealRequest
+    },
   },
   mounted() {
     chrome.storage.local.get(
       [AJAX_INTERCEPTOR_PROJECTS, AJAX_INTERCEPTOR_CURRENT_PROJECT],
-      (result) => {
+      result => {
         this.currentProject = result[AJAX_INTERCEPTOR_CURRENT_PROJECT]
         this.projectList = result[AJAX_INTERCEPTOR_PROJECTS] || []
       }
     )
-    chrome.runtime.onMessage.addListener((event) => {
+    chrome.runtime.onMessage.addListener(event => {
       try {
         if (event.type === EXTENSION_EVENT_NAME) {
           const result = parse(event.detail)
@@ -132,10 +140,10 @@ export default {
   methods: {
     onSubmit(data) {
       const { projectName, isAdd, ...formData } = data
-      const current = this.projectList.find((item) => item.name === projectName)
+      const current = this.projectList.find(item => item.name === projectName)
       let rules = current.rules || []
 
-      const index = rules.findIndex((item) => {
+      const index = rules.findIndex(item => {
         const ruleName = isAdd ? formData.name : this.formData.name
         return item.name === ruleName
       })
@@ -158,8 +166,7 @@ export default {
         const method = item.request.method
         const rule =
           this.activeProject.rules?.find(
-            (ruleItem) =>
-              ruleItem.path === rulePath && method === ruleItem.method
+            ruleItem => ruleItem.path === rulePath && method === ruleItem.method
           ) || {}
         this.formData = {
           ...rule,
@@ -202,10 +209,10 @@ export default {
       }
     },
     deleteRule(projectName, rule) {
-      const current = this.projectList.find((item) => item.name === projectName)
+      const current = this.projectList.find(item => item.name === projectName)
       let rules = current.rules || []
 
-      const index = rules.findIndex((item) => {
+      const index = rules.findIndex(item => {
         return item.name === rule.name
       })
 
@@ -221,10 +228,14 @@ export default {
       const activeProject = { ...this.activeProject, switchOn: event }
       this.saveProject(activeProject, activeProject.name)
     },
+    isRealRequestSwitch(event) {
+      const activeProject = { ...this.activeProject, isRealRequest: event }
+      this.saveProject(activeProject, activeProject.name)
+    },
     saveProject(project, editProjectName) {
       let { projectList } = this
 
-      const index = projectList.findIndex((item) => {
+      const index = projectList.findIndex(item => {
         return item.name === editProjectName
       })
 
@@ -239,13 +250,11 @@ export default {
       }
       this.projectList = [...projectList]
       saveStorage(AJAX_INTERCEPTOR_PROJECTS, [...projectList])
-
-
     },
     deleteProject(projectName) {
       let { projectList } = this
 
-      const index = projectList.findIndex((item) => {
+      const index = projectList.findIndex(item => {
         return item.name === projectName
       })
 
@@ -334,6 +343,20 @@ body {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .switch {
+        display: flex;
+        align-items: center;
+        .realRequest {
+          display: flex;
+          align-items: center;
+          .tooltip {
+            margin-left: 5px;
+          }
+        }
+      }
+      .realRequest:not(:last-child) {
+        margin-right: 20px;
+      }
     }
   }
   .main {
