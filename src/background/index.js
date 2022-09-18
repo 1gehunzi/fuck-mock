@@ -17,6 +17,7 @@ const defaultProject = {
   origin: 'http://localhost:8080',
   color: '#409EFF',
   switchOn: true,
+  isRealRequest: false,
 }
 
 chrome.runtime.onInstalled.addListener(function () {
