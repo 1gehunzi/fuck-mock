@@ -8,6 +8,7 @@
 export default class FetchInterceptor {
   env: any
   fetch: any
+  isRealRequest: boolean // 是否真的发送请求给后端
   // _instance: typeof FetchInterceptor
   private static _instance: FetchInterceptor
   /**
@@ -46,7 +47,7 @@ export default class FetchInterceptor {
    * @param {object} hooks - The intercept hooks
    * @return {FetchInterceptor} An interceptor object
    */
-  static register(hooks: any = {}) {
+  static register(hooks: any = {}, isRealRequest = false) {
     if (this._instance) {
       return this._instance
     }
@@ -59,6 +60,7 @@ export default class FetchInterceptor {
         interceptor[hook] = hooks[hook]
       }
     }
+    interceptor.isRealRequest = isRealRequest
     interceptor.hijack()
     this._instance = interceptor
     return interceptor
@@ -97,7 +99,7 @@ export default class FetchInterceptor {
           'url',
           'body',
           'bodyUsed',
-        ].forEach((prop) => {
+        ].forEach(prop => {
           if (prop in a[0]) {
             object[prop] = a[0][prop]
           }
@@ -121,16 +123,30 @@ export default class FetchInterceptor {
       }
       // 如果 request 之前返回了 promise, 则将 promise 给
       // const promise = beforeReqPromise || this.fetch.call(this.env, request)
-      const promise = beforeReqPromise.then(res => res).catch(() => {
-        return this.fetch.call(this.env, request)
-      });
+      const promise = this.isRealRequest
+        ? this.fetch.call(this.env, request)
+        : beforeReqPromise
+            .then(res => res)
+            .catch(() => {
+              return this.fetch.call(this.env, request)
+            })
       if (typeof this.onAfterRequest === 'function') {
         this.onAfterRequest(request, controller)
       }
 
       /** end 改造 fetch request end 的位置, 需要把 promise  xyy */
       return promise
-        .then((response) => {
+        .then(async response => {
+          if (this.isRealRequest) {
+            try {
+              const mockResponse = await beforeReqPromise
+              if (mockResponse) {
+                response = mockResponse
+              }
+            } catch (error) {
+              // noop
+            }
+          }
           if (response.ok) {
             if (typeof this.onRequestSuccess === 'function') {
               this.onRequestSuccess(response, request, controller)
@@ -142,7 +158,7 @@ export default class FetchInterceptor {
           }
           return response
         })
-        .catch((error) => {
+        .catch(error => {
           if (typeof this.onRequestFailure === 'function') {
             this.onRequestFailure(error, request, controller)
           }
@@ -151,4 +167,3 @@ export default class FetchInterceptor {
     }
   }
 }
-

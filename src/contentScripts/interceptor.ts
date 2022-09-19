@@ -17,6 +17,7 @@ import type {
 } from './type'
 export const CUSTOM_EVENT_NAME = 'CUSTOMEVENT'
 export const INJECT_ELEMENT_ID = 'ajaxInterceptor'
+
 /**
  * 用户界面的 ajax 请求log，发给插件层
  * @param {*} msg
@@ -26,23 +27,33 @@ const sendMsg = (msg: NetworkItem) => {
   const event = new CustomEvent(CUSTOM_EVENT_NAME, { detail: str })
   window.dispatchEvent(event)
 }
-//
-function mockCore(url: string, method: string):Promise<MockResult> {
+
+function getCurrentProject() {
   const inputElem = document.getElementById(
     INJECT_ELEMENT_ID
   ) as HTMLInputElement
+  if(!inputElem) {
+    return {} as Project;
+  }
   const configStr = inputElem.value
   const config: ProjectStorage = JSON.parse(configStr)
-  // 看下插件设置的数据结构
-  const targetUrl = new Url(url)
-  const str = targetUrl.pathname
+
   const { ajaxInterceptor_current_project, ajaxInterceptor_projects } = config
 
   const currentProject =
     ajaxInterceptor_projects?.find(
       (item) => item.name === ajaxInterceptor_current_project
     ) || ({} as Project)
+  return currentProject;
+}
+//
+function mockCore(url: string, method: string): Promise<MockResult> {
+  
 
+  // 看下插件设置的数据结构
+  const targetUrl = new Url(url)
+  const str = targetUrl.pathname
+  const currentProject = getCurrentProject()
   return new Promise((resolve, reject) => {
     // 进入 mock 的逻辑判断
     if (currentProject.switchOn) {
@@ -69,71 +80,94 @@ function mockCore(url: string, method: string):Promise<MockResult> {
     reject()
   })
 }
-
+function handMockResult({ res, request, config }: any) {
+  const { response, path: rulePath, status } = res
+  const result = {
+    config,
+    status,
+    headers: [],
+    response: JSON.stringify(response),
+  }
+  // FIXME: 这里的数据结构好像是错误的
+  const payload: NetworkItem = {
+    request,
+    response: {
+      status: result.status,
+      headers: result.headers,
+      // statusText: result.statusText,
+      url: config.url,
+      responseTxt: JSON.stringify(response),
+      isMock: true,
+      rulePath,
+    },
+  }
+  return { result, payload }
+}
 proxy({
   onRequest: (config, handler) => {
-    // TODO: url 对象里面的信息非常有用啊
-    const url = new Url(config.url)
+    if (getCurrentProject().isRealRequest) {
+      handler.next(config)
+    } else {
+      // TODO: url 对象里面的信息非常有用啊
+      const url = new Url(config.url)
 
-    const request: Request = {
-      url: url.href,
-      method: config.method as MethodType,
-      headers: config.headers,
-      type: 'xhr',
+      const request: Request = {
+        url: url.href,
+        method: config.method as MethodType,
+        headers: config.headers,
+        type: 'xhr',
+      }
+      mockCore(url.href, config.method)
+        .then((res) => {
+          const { payload, result } = handMockResult({ res, request, config })
+          sendMsg(payload)
+          handler.resolve(result as any)
+        })
+        .catch(() => {
+          handler.next(config)
+        })
     }
+
+  },
+  onResponse: (response, handler) => {
+    const { statusText, status, config, headers, response: res } = response
+    const url = new Url(config.url)
     mockCore(url.href, config.method)
       .then((res) => {
-        const { response, path: rulePath, status } = res
-        const result = {
-          config,
-          status,
-          headers: [],
-          response: JSON.stringify(response),
+        const request: Request = {
+          url: url.href,
+          method: config.method as MethodType,
+          headers: config.headers,
+          type: 'xhr',
         }
-        // FIXME: 这里的数据结构好像是错误的
-        const payload: NetworkItem = {
-          request,
-          response: {
-            status: result.status,
-            headers: result.headers,
-            // statusText: result.statusText,
-            url: config.url,
-            responseTxt: JSON.stringify(response),
-            isMock: true,
-            rulePath,
-          },
-        }
+        const { payload, result } = handMockResult({ res, request, config })
         sendMsg(payload)
         handler.resolve(result as any)
       })
       .catch(() => {
-        handler.next(config)
+        const url = new Url(config.url)
+        const payload: NetworkItem = {
+          request: {
+            method: config.method as MethodType,
+            url: url.href,
+            headers: config.headers,
+            type: 'xhr',
+          },
+          response: {
+            status: status as StatusType,
+            statusText,
+            url: config.url,
+            headers: headers,
+            responseTxt: res,
+            isMock: false,
+            rulePath: '',
+          },
+        }
+        sendMsg(payload)
+
+        handler.resolve(response)
       })
-  },
-  onResponse: (response, handler) => {
-    const { statusText, status, config, headers, response: res } = response
 
-    const url = new Url(config.url)
-    const payload: NetworkItem = {
-      request: {
-        method: config.method as MethodType,
-        url: url.href,
-        headers: config.headers,
-        type: 'xhr',
-      },
-      response: {
-        status: status as StatusType,
-        statusText,
-        url: config.url,
-        headers: headers,
-        responseTxt: res,
-        isMock: false,
-        rulePath: '',
-      },
-    }
-    sendMsg(payload)
-
-    handler.resolve(response)
   },
 })
 
@@ -232,5 +266,5 @@ if (window.fetch !== undefined) {
 
       sendMsg(payload)
     },
-  })
+  }, getCurrentProject().isRealRequest)
 }
